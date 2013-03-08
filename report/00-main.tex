@@ -1,0 +1,94 @@
+\documentclass[
+12pt
+% , DIV12
+%, draft
+]{report}
+
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[frenchb]{babel}
+
+\usepackage{makeidx}
+\makeindex
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subfig}
+% \usepackage{wrapfig}
+\usepackage[rflt]{floatflt}
+\usepackage{pdfpages}
+
+\usepackage{hyperref}
+\hypersetup
+{
+	% bookmarks=true,
+	unicode=true,
+    pdfauthor={Habbachi Riadh},
+    pdfsubject={Rapport de project de fin d'etudes},
+    pdftitle={Rapport du stage de fin d'etude cursus ingenieur effectuee au sien de l'entreprise Tunav pour le compt de l'ENIG},
+    pdfkeywords={ENIG, Tunav, Stage, Stage ingenieur, project de fin d'etudes, LaTeX, PDF, hyperlinks}
+}
+
+\usepackage{cite}
+\bibliographystyle{plain}
+\usepackage{url}
+
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{listings}
+\lstloadlanguages{
+	XML,
+	Java
+}
+\lstset{
+	basicstyle=\footnotesize\ttfamily,
+	breaklines=true
+}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+\usepackage{array}
+% \usepackage{tablefootnote}
+
+\newcommand{\en}[1]{\textit{#1}}
+\newcommand{\android}{Androïde}
+\newcommand{\dev}[1]{\textbf{#1}}
+
+\graphicspath{{res/drawable/}}
+
+\include{./00-main/01-glossaries}
+
+\author{Habbachi Riadh}
+\title{pré-Rapport de Projet de Fin d'etude}
+
+\begin{document}
+
+\maketitle % \includepdf[pages=-]{./titlepage.pdf}
+
+\tableofcontents
+\listoftables
+\listoffigures
+\glsaddall
+\printglossary
+
+
+\include{./10-introduction_general/10-introduction_general}
+
+\include{./20-cadre_general/20-cadre_general}
+
+\include{./30-etat_de_lart/30-etat_de_lart}
+
+\include{./40-conception/40-conception}
+
+\include{./50-realisation/50-realisation}
+
+\include{./60-conclusion_general/60-conclusion_general}
+
+\include{./70-annexes/70-annexes.tex}
+
+\bibliography{100-bibliography/bibliography}{}
+
+\end{document}

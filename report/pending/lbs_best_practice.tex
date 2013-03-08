@@ -1,0 +1,7 @@
+Les application qui utilise les services de la localisation doivent prendre en considération les facteurs suivants:
+\begin{description}
+\item[Durée de vie de la batterie contre la précision] Plus le \dev{LocationProvider} est précie, plus la consommation de la charge est grande.
+\item[Temps de demarrage] Dans un environnement mobile, le temps pris pour avoir une localisation initiale peut avoir un impacte négative sur l'expérience de l'utilisatieur.
+\item[Taux de mise à jour] Plus les mises à jours sont fréquants plus les effets sur la battérie est grand. Des mises à jour moins fréquantes peut réduire la consomation de la batterie au prix d'un positionnement moins précie.
+\item[Disponibilité de \dev{Provider}] L'utilisateur peux intervenir sur la disponibilité du \dev{Provider} dans les paramétres du télephone. L'application doit  survéllier le changement dans l'etat du \dev{Provider} pour choisir la meilleur alternative.
+\end{description}
