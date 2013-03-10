@@ -1,0 +1,107 @@
+\documentclass[
+ucs
+% ,13pt
+, xcolor=table
+% , handout
+]{beamer}
+
+\mode<presentation>{
+	\usetheme{Madrid}
+	\setbeamercovered{transparent}
+}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[frenchb]{babel}
+
+\usepackage{hyperref}
+\hypersetup{
+    pdfauthor={Habbachi Riadh},
+    pdfsubject={Présentation de projet de fin d'étude cycle ingénieur},
+    pdftitle={Présentation de projet de fin d'étude: Développement d'une application Android pour médecins},
+    pdfkeywords={ENIG, Stage, ingénieur, LaTeX, PDF, hyper-links}
+}
+
+%\usepackage{time}
+
+\usepackage{graphicx}
+
+%\usepackage{subfigure}
+
+\title[Projet de fin d'etudes]
+{Développement d'une application Android pour médecins}
+\author{Riadh \textsc{Habbachi}}
+\institute[ENIG]{Ecole Nationale d'Ingénieurs de Gabes}
+\date[]{\today}
+\subject{}
+
+\AtBeginSubsection[]{
+	\begin{frame}<beamer>{Outline}
+	\tableofcontents[currentsection, currentsubsection]
+	\end{frame}
+}
+
+\makeindex
+
+\pgfdeclareimage[height=0.1\textheight]{tunav-logo}{res/drawable/tunav-logo.png}
+\logo{\pgfuseimage{tunav-logo}}
+
+\begin{document}%%%%%%
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}{Plan}
+	\tableofcontents
+\end{frame}
+
+\section{Conclusion \& Pérspectives}
+\subsection{Conclusion}
+
+\subsection{Pérspectives}
+
+\begin{frame}{Pérspectives}
+\only<+>{
+	\centerline{4 mois c'est un peut court pour un projet...}
+	%Speech: ce qui peut en parti justifié les travaux médiocre présenté par les éleves...
+}
+\only<+>{
+	\begin{itemize}
+	\item Perspectives immédiat.
+	\item Perspectives future.
+	\end{itemize}
+}
+\end{frame}
+
+\begin{frame}{Perspectives Immédiat}
+
+\end{frame}
+
+\begin{frame}{Perspectives Future}
+\only<+>{
+	Intégration à un (des) système(s) d'Information de gestion des hôpitaux et services de santé.
+	\begin{itemize}
+	\item GNU Health.
+	\end{itemize}
+}
+\only<+>{
+	Système d'identification des patients admit
+	%%%Speech
+	% Un des goulot pour les systèmes de santé est l'admission des 
+	% nouveaux patients. Particulièrement le comment notifier les parties concerné par l'arrivé de ce patient dans l’établissement, exemple si le malade à besoin d'un scan RMI, il devrait étre automatiquement reconnu quant il se présente devant le service en question.
+	\begin{itemize}
+	\item NFC?
+	\item QRcode?
+	\end{itemize}
+}
+\end{frame}
+
+\section*{Références \& Remerciement}
+\begin{frame}
+%%%Speech
+%Donc voyons que vous êtes encore là, et éveiller en plus! ^_^...
+\centerline{Merci!}
+\end{frame}
+
+\end{document}
