@@ -8,3 +8,8 @@ The application is copyrighted @ tunav [www.tunav.com] under the MIT license
 
 The report, presentation and poster are under the Creative Commons Attribution
 3.0 Unported.
+
+To view the report [http://goo.gl/XyGtG].
+To view the presentation [http://goo.gl/txuyd]
+
+This is a work on progress!
