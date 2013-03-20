@@ -11,8 +11,9 @@ ucs
 }
 
 \usepackage[utf8x]{inputenc}
-\usepackage[T1]{fontenc}
+\usepackage[OT1]{fontenc}
 \usepackage[frenchb]{babel}
+\usefonttheme{serif}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -30,7 +31,7 @@ ucs
 
 \title[Projet de fin d'etudes]
 {Développement d'une application Android pour médecins}
-\author{Riadh \textsc{Habbachi}}
+\author{Riadh Habbachi}
 \institute[ENIG]{Ecole Nationale d'Ingénieurs de Gabes}
 \date[]{\today}
 \subject{}
@@ -43,9 +44,10 @@ ucs
 
 \makeindex
 
-\pgfdeclareimage[height=0.1\textheight]{tunav-logo}{res/drawable/tunav-logo.png}
-\logo{\pgfuseimage{tunav-logo}}
+% \pgfdeclareimage[height=0.1\textheight]{tunav-logo}{res/drawable/tunav-logo.png}
+% \logo{\pgfuseimage{tunav-logo}}
 
+\let\Tiny=\tiny% Gets rid of Font shape `OT1/cmss/m/n' warning
 \begin{document}%%%%%%
 
 \begin{frame}
@@ -56,12 +58,79 @@ ucs
 	\tableofcontents
 \end{frame}
 
-\section{Conclusion \& Pérspectives}
-\subsection{Conclusion}
+\section{Introduction}
+\subsection{Pourquoi Android?}
 
-\subsection{Pérspectives}
+\begin{frame}{Généralités}%FIXME
+%%% HISTORIQUE
+\only<+>{
+	
+}
+%%% MARKET SHARE AND POPULARITY
+\only<+>{
+	
+}
+\end{frame}
 
-\begin{frame}{Pérspectives}
+\begin{frame}{Développement dans un environnement mobile Android} %FIXME
+%%% 
+%Régle de si un processus est irrosponsive pandants 5s...
+\end{frame}
+
+\subsection{Pourquoi TunavMédi?}%FIXME
+\begin{frame}{Objectifs}
+
+\end{frame}
+
+\begin{frame}{Scénarios de déploiement}
+%%% MAIN SECTION
+%%% SCENARIO 1
+\only<+>{
+	
+}
+
+%%% SCENARIO 2
+\only<+>{
+	
+}
+\end{frame}
+
+\section{Présentation du travail}%FIXME
+
+\subsection{Point de vu architectural}
+\begin{frame}{Diagramme de packages}
+
+\end{frame}
+
+\subsection{Point de vu design \& ergonomie}
+
+%%% LAST SECTION
+\section{Conclusion \& Perspectives}
+
+\begin{frame}{Conclusion}
+%%% THE GOOD
+\only<+>{
+	\begin{block}{Ce qu'on a aimé}
+	
+	\end{block}
+}
+
+%%% THE BAD
+\only{
+	\begin{block}{Ce qu'on peut amélioré}
+	
+	\end{block}
+}
+
+%%% THE UGLY
+\only{
+	\begin{block}{Ce qu'on aurai dû faire}
+	
+	\end{block}
+}
+\end{frame}
+
+\begin{frame}{Perspectives}
 \only<+>{
 	\centerline{4 mois c'est un peut court pour un projet...}
 	%Speech: ce qui peut en parti justifié les travaux médiocre présenté par les éleves...

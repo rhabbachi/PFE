@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TunavMedi</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="branding_name">Your Name Here</string>
+    <string name="Splash_ImageViewContentDescription">The Image of the Application Centrend</string>
+
+</resources>
