@@ -48,6 +48,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="com.tunav.tunavmedi.providers.TasksProvider"
+            android:authorities="com.tunav.provider.tunavmedi" />
     </application>
 
 </manifest>
