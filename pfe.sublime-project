@@ -1,0 +1,63 @@
+{
+    "folders":
+    [
+        {
+            "path": "/home/riadh/Projects/PFE/report",
+            "name": "Report",
+            "file_exclude_patterns": 
+            [".*",
+            "*.aux",
+            "*.pdf",
+            "*.toc",
+            "*.gz*",
+            "*.out",
+            "*.lot",
+            "*.log",
+            "*.lof",
+            "*.ist",
+            "*.ind",
+            "*.ilg",
+            "*.idx",
+            "*.gls",
+            "*.glo",
+            "*.glg",
+            "*.fls",
+            "*.acn",
+            "*.acr",
+            "*.alg",
+            "*.bbl",
+            "*.blg",
+            "*latexmk*",
+            "*.sublime*"]
+        },
+        {
+            "path": "/home/riadh/Projects/PFE/presentation",
+            "name": "Presentation",
+            "file_exclude_patterns": 
+            [".*",
+            "*.aux",
+            "*.pdf",
+            "*.toc",
+            "*.gz",
+            "*.out",
+            "*.lot",
+            "*.log",
+            "*.lof",
+            "*.ist",
+            "*.ind",
+            "*.ilg",
+            "*.idx",
+            "*.gls",
+            "*.glo",
+            "*.glg",
+            "*.fls",
+            "*.acn",
+            "*.acr",
+            "*.alg",
+            "*.bbl",
+            "*.blg",
+            "*latexmk*",
+            "*.sublime*"]
+        }
+    ]
+}

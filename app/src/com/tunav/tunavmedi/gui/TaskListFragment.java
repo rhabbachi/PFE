@@ -1,59 +1,48 @@
 package com.tunav.tunavmedi.gui;
 
-import android.app.Fragment;
-import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
+import android.app.ListFragment;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.ListView;
 
 import com.tunav.tunavmedi.R;
-import com.tunav.tunavmedi.providers.TasksProvider;
+import com.tunav.tunavmedi.helpers.sqlite.TasksHelper;
+import com.tunav.tunavmedi.interfaces.TasksHandler;
+import com.tunav.tunavmedi.interfaces.TasksListener;
 
-public class TaskListFragment extends Fragment implements
-	LoaderCallbacks<Cursor> {
+public class TaskListFragment extends ListFragment implements TasksListener {
 
-    private CursorAdapter cursorAdapter = null;
-    private ContentResolver contentResolver = null;;
+    private static final String TAG = "TaskListFragment";
+
+    private Context mContext = null;
+    private TasksAdapter mTaskAdapter = null;
+    private TasksHandler mHelper = null;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	    Bundle savedInstanceState) {
-	//XXX
-	// Create, or inflate the Fragment’s UI, and return it.
-	// If this Fragment has no UI then return null.
-	return inflater.inflate(R.layout.fragment_tasks_list, container, false);
+    public void onActivityCreated(Bundle savedInstanceState) {
+	super.onActivityCreated(savedInstanceState);
+	Log.v(TAG, "onActivityCreated()");
+	mContext = getActivity().getApplicationContext();
+	mHelper = new TasksHelper(mContext);
+	mTaskAdapter = new TasksAdapter(mContext, mHelper);
+	setEmptyText(getResources().getText(R.string.task_list_empty));
+	setListAdapter(mTaskAdapter);
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-	// TODO
-	cursorAdapter.swapCursor(data);
-	// This handler is not synchronized with the UI thread yet.
+    public void onListItemClick(ListView l, View v, int position, long id) {
+	Log.v(TAG, "onListItemClick()");
+	// Insert desired behavior here.
+	Log.i(TAG, "Item clicked: " + id);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-	// TODO
-	cursorAdapter.swapCursor(null);
-	// This handler is not synchronized with the UI thread yet.
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-	Uri queryUri = TasksProvider.CONTENT_URI;
-	// the minimum set of columns required to satisfy the requirements
-	String[] result_columns = null;
-	String selection = null;
-	String[] selectionArgs = null;
-	String sortOrder = null;
-	return new CursorLoader(getActivity(), queryUri, result_columns,
-		selection, selectionArgs, sortOrder);
+    public void onNewTask() {
+	Log.v(TAG, "onNewTask()");
+	// TODO Auto-generated method stub
     }
 }

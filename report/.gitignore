@@ -32,8 +32,8 @@
 *.tdo
 ### Tex related
 *.fls
-*.pdf
-
 ### project specific
 *.sublime*
-res/
+### Eclipse
+.project
+.texlipse

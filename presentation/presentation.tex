@@ -1,0 +1,85 @@
+\documentclass[
+ucs
+% ,13pt
+, xcolor=table
+% , handout
+]{beamer}
+
+\mode<presentation>{
+	\usetheme{Madrid}
+	\setbeamercovered{transparent}
+}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[OT1]{fontenc}
+\usepackage[frenchb]{babel}
+\usefonttheme{serif}
+
+\usepackage{hyperref}
+\hypersetup{
+    pdfauthor={Habbachi Riadh},
+    pdfsubject={Présentation de projet de fin d'étude cycle ingénieur},
+    pdftitle={Présentation de projet de fin d'étude: Développement d'une application Android pour médecins},
+    pdfkeywords={ENIG, Stage, ingénieur, LaTeX, PDF, hyper-links}
+}
+
+%\usepackage{time}
+
+\usepackage{graphicx}
+
+%\usepackage{subfigure}
+
+\title[Projet de fin d'etudes]
+{Développement d'une application Android pour médecins}
+\author{Riadh Habbachi}
+\institute[ENIG]{Ecole Nationale d'Ingénieurs de Gabes}
+\date[Juin 2013]{\today}
+\subject{}
+
+\AtBeginSubsection[]{
+	\begin{frame}<beamer>{}%FIXME: outline
+	\tableofcontents[currentsection, currentsubsection]
+	\end{frame}
+}
+
+\makeindex
+
+\pgfdeclareimage[height=0.1\textheight]{tunav-logo}{../res/tunav-logo.png}
+\logo{\pgfuseimage{tunav-logo}}
+
+\pgfdeclareimage[width=0.3\textwidth, interpolate=true]{android-mascot-2}{../res/android-mascot-2.png}
+
+\pgfdeclareimage[width=0.8\textwidth]{scenario-actors}{../res/scenario-actors.png}
+\pgfdeclareimage[width=0.8\textwidth]{scenario-alltunav}{../res/scenario-alltunav.png}
+\pgfdeclareimage[width=0.8\textwidth]{scenario-interactions}{../res/scenario-interactions.png}
+\pgfdeclareimage[width=0.8\textwidth]{scenario-other}{../res/scenario-other.png}
+
+\pgfdeclareimage[width=0.8\textwidth]{architecture_overview}{../res/architectureoverview.png}
+\pgfdeclareimage[width=0.8\textwidth]{architecture_overview_separation}{../res/architectureoverviewseparation.png}
+\pgfdeclareimage[width=0.8\textwidth]{architecture_overview_double}{../res/architectureoverviewdouble.png}
+\pgfdeclareimage[width=0.8\textwidth]{architecture-interfaces}{../res/architectureinterfaces.png}
+\pgfdeclareimage[width=0.8\textwidth]{architecture_overview_detailed}{../res/architectureoverviewdetailed.png}
+\pgfdeclareimage[width=0.8\textwidth]{architecture_overview_detailed_auth}{../res/architectureoverviewdetailedauth.png}
+\pgfdeclareimage[width=0.8\textwidth]{architecture_overview_detailed_tasks_records}{../res/architectureoverviewdetailedtasksrecords.png}
+\pgfdeclareimage[width=0.8\textwidth]{architecture_overview_detailed_location}{../res/architectureoverviewdetailedlocation.png}
+\pgfdeclareimage[width=0.8\textwidth]{architecture_overview_detailed_gui}{../res/architectureoverviewdetailedgui.png}
+\pgfdeclareimage[width=0.8\textwidth]{architecture_interfaces}{../res/architectureinterfaces.png}
+
+\let\Tiny=\tiny% Gets rid of Font shape `OT1/cmss/m/n' warning
+\newcommand{\inTitle}[1]{\underline{\textbf{#1}}}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}{Plan}
+	\tableofcontents
+\end{frame}
+
+\include{1-introduction}
+\include{2-travail}
+\include{3-conclusion}
+
+\end{document}

@@ -1,18 +1,16 @@
 package com.tunav.tunavmedi.gui;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -21,8 +19,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.tunav.tunavmedi.MainActivity;
 import com.tunav.tunavmedi.R;
-import com.tunav.tunavmedi.helpers.AuthenticationFromDatabaseHelper;
+import com.tunav.tunavmedi.TunavMedi;
+import com.tunav.tunavmedi.helpers.sqlite.AuthenticationHelper;
+import com.tunav.tunavmedi.interfaces.AuthenticationHandler;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -33,8 +34,10 @@ public class LoginActivity extends Activity {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
-
+    public static final String TAG = "LOGIN_ACTIVITY";
+    private UserLoginTask loginTask = null;
+    private Context thisContext = null;
+    private LoginActivity thisActivity = null;
     // Values for ID and password at the time of the login attempt.
     private String mID;
     private String mPassword;
@@ -49,39 +52,43 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
+	try {
+	    setContentView(R.layout.activity_login);
+	    thisContext = this;
+	    thisActivity = this;
+	    // Set up the login form.
+	    // TODO autofilled login ID ?
+	    mIDView = (EditText) findViewById(R.id.ID);
+	    mIDView.setText(mID);
 
-	setContentView(R.layout.activity_login);
-
-	// Set up the login form.
-	// TODO autofilled login ID ?
-	mIDView = (EditText) findViewById(R.id.ID);
-	mIDView.setText(mID);
-
-	mPasswordView = (EditText) findViewById(R.id.password);
-	mPasswordView
-		.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-		    @Override
-		    public boolean onEditorAction(TextView textView, int id,
-			    KeyEvent keyEvent) {
-			if (id == R.id.login || id == EditorInfo.IME_NULL) {
-			    attemptLogin();
-			    return true;
+	    mPasswordView = (EditText) findViewById(R.id.password);
+	    mPasswordView
+		    .setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView textView,
+				int id, KeyEvent keyEvent) {
+			    if (id == R.id.login || id == EditorInfo.IME_NULL) {
+				attemptLogin();
+				return true;
+			    }
+			    return false;
 			}
-			return false;
-		    }
-		});
+		    });
 
-	mLoginFormView = findViewById(R.id.login_form);
-	mLoginStatusView = findViewById(R.id.login_status);
-	mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+	    mLoginFormView = findViewById(R.id.login_form);
+	    mLoginStatusView = findViewById(R.id.login_status);
+	    mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
 
-	findViewById(R.id.sign_in_button).setOnClickListener(
-		new View.OnClickListener() {
-		    @Override
-		    public void onClick(View view) {
-			attemptLogin();
-		    }
-		});
+	    findViewById(R.id.sign_in_button).setOnClickListener(
+		    new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+			    attemptLogin();
+			}
+		    });
+	} catch (Exception e) {
+	    Log.d(TAG, this.getClass().toString(), e);
+	}
     }
 
     @Override
@@ -97,7 +104,7 @@ public class LoginActivity extends Activity {
      * are presented and no actual login attempt is made.
      */
     public void attemptLogin() {
-	if (mAuthTask != null) {
+	if (loginTask != null) {
 	    return;
 	}
 
@@ -114,6 +121,7 @@ public class LoginActivity extends Activity {
 
 	// Check for a valid password.
 	if (TextUtils.isEmpty(mPassword)) {
+	    Log.d(TAG, "Not a valid password");
 	    mPasswordView.setError(getString(R.string.error_field_required));
 	    focusView = mPasswordView;
 	    cancel = true;
@@ -127,6 +135,7 @@ public class LoginActivity extends Activity {
 
 	// Check for a valid ID.
 	if (TextUtils.isEmpty(mID)) {
+	    Log.d(TAG, "Not a valid ID");
 	    mIDView.setError(getString(R.string.error_field_required));
 	    focusView = mIDView;
 	    cancel = true;
@@ -142,14 +151,16 @@ public class LoginActivity extends Activity {
 	if (cancel) {
 	    // There was an error; don't attempt login and focus the first
 	    // form field with an error.
+	    Log.d(TAG, "Error aquaring login/password.");
 	    focusView.requestFocus();
 	} else {
 	    // Show a progress spinner, and kick off a background task to
 	    // perform the user login attempt.
 	    mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 	    showProgress(true);
-	    mAuthTask = new UserLoginTask();
-	    mAuthTask.execute((Void) null);
+	    loginTask = new UserLoginTask(new AuthenticationHelper(
+		    getApplicationContext()));
+	    loginTask.execute((Void) null);
 	}
     }
 
@@ -206,46 +217,56 @@ public class LoginActivity extends Activity {
 	 * 
 	 * @see android.os.AsyncTask#doInBackground(Params[])
 	 */
+	AuthenticationHandler helper = null;
+	Integer userID = null;
+
+	public UserLoginTask(AuthenticationHandler helper) {
+	    Log.d(TAG, "login=" + mID + ", password=" + mPassword);
+	    this.helper = helper;
+	}
+
 	@Override
 	protected Boolean doInBackground(Void... params) {
-	    AuthenticationFromDatabaseHelper helper = new AuthenticationFromDatabaseHelper(
-		    getApplicationContext());
-
-	    byte[] base64password = null;
-	    try {
-		// Always when working with strings and the crypto classes be
-		// sure to always specify the encoding you want the byte
-		// representation in.
-		base64password = Base64.encode(mPassword.getBytes("UTF-8"),
-			Base64.DEFAULT);
-	    } catch (UnsupportedEncodingException uee) {
-		Log.d(TAG, "NoSuchAlgorithmException", uee);
+	    userID = helper.authenticate(mID, mPassword);
+	    if (userID != null) {
+		return true;
+	    } else {
+		return false;
 	    }
-
-	    byte[] md5password = null;
-	    try {
-		MessageDigest digest;
-		// Hash used is md5.
-		//TODO make this hash agnostic
-		digest = MessageDigest.getInstance("MD5");
-		digest.reset();
-		digest.update(base64password);
-		md5password = digest.digest();
-	    } catch (NoSuchAlgorithmException nsae) {
-		Log.d(TAG, "NoSuchAlgorithmException", nsae);
-	    }
-
-	    return helper.authenticate(mID, md5password);
 	}
 
 	@Override
 	protected void onPostExecute(final Boolean success) {
-	    mAuthTask = null;
+	    loginTask = null;
 	    showProgress(false);
 
 	    if (success) {
-		finish();
+		// TODO add user login to the shared preferences
+		Log.d(TAG, "Authentication successful!");
+		SharedPreferences sharedPrefs = thisActivity
+			.getSharedPreferences(TunavMedi.SHAREDPREFS_NAME,
+				MODE_PRIVATE);
+		SharedPreferences.Editor sharedPrefsEditor = sharedPrefs.edit();
+
+		sharedPrefsEditor.putBoolean(
+			TunavMedi.SHAREDPREFS_KEY_ISLOGGED, true);
+		Log.d(TAG, TunavMedi.SHAREDPREFS_KEY_ISLOGGED + "=true");
+
+		sharedPrefsEditor.putInt(TunavMedi.SHAREDPREFS_KEY_USERID,
+			userID);
+		Log.d(TAG, TunavMedi.SHAREDPREFS_KEY_USERID + "=" + userID);
+
+		// this pref is critical so we need to commit it
+		sharedPrefsEditor.commit();
+		Log.d(TAG, "SharedPreferences commited!");
+
+		Intent mainActivity = new Intent(thisContext,
+			MainActivity.class);
+		startActivity(mainActivity);
+		thisActivity.setResult(RESULT_OK);
+		Log.d(TAG, "RESULT_OK");
 	    } else {
+		Log.d(TAG, "Authentication faild!");
 		mPasswordView
 			.setError(getString(R.string.error_incorrect_id_password));
 		mPasswordView.requestFocus();
@@ -254,7 +275,7 @@ public class LoginActivity extends Activity {
 
 	@Override
 	protected void onCancelled() {
-	    mAuthTask = null;
+	    loginTask = null;
 	    showProgress(false);
 	}
     }

@@ -1,0 +1,103 @@
+\documentclass
+[12pt,
+a4paper,
+]{report}
+
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[OT1]{fontenc}
+\usepackage[frenchb]{babel}
+\usepackage{lmodern}
+
+\usepackage{makeidx}
+\makeindex
+
+\usepackage[rflt]{floatflt}
+\usepackage{pdfpages}
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup
+{
+	% bookmarks=true,
+	unicode=true,
+    pdfauthor={Habbachi Riadh},
+    pdfsubject={Rapport de project de fin d'etudes},
+    pdftitle={Mémoire de Projet de Fin d’Etudes-Développement d'une application Android pour médecins.},
+    pdfkeywords={ENIG, Tunav, Stage, Stage ingenieur, project de fin d'etudes, LaTeX, PDF, hyperlinks}
+}
+
+\usepackage{cite}
+\bibliographystyle{unsrt}
+
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{listings}
+\lstloadlanguages{
+	XML,
+	Java
+}
+\lstset{
+	basicstyle=\footnotesize\ttfamily,
+	breaklines=true
+}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+\usepackage[stable]{footmisc}
+
+\usepackage{array}
+% \usepackage{tablefootnote}
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\newcommand{\en}[1]{\textit{#1}}
+\newcommand{\android}{Android\texttrademark}
+\newcommand{\dev}[1]{\textit{#1}}
+\newcommand{\pct}{PowerChart Touch\texttrademark}
+\newcommand{\tm}[1]{\textbf{#1}\texttrademark}
+
+\graphicspath{{../res/}}
+
+\usepackage[nomain, toc,acronym]{glossaries}
+\include{acronyms}
+\makeglossaries
+
+\author{Habbachi Riadh}
+\title{Rapport de Projet de Fin d’Étude}
+
+\usepackage{fancyhdr}
+\setlength{\headheight}{16pt}
+\fancyhf{}
+\pagestyle{fancyplain}
+\fancyhead[L]{\textbf{ENIG}}
+\fancyhead[R]{\textbf{Tunav}}
+\fancyfoot[L]{\textsc{Habbachi Riadh}}
+\fancyfoot[R]{\thepage{} / \pageref{LastPage}}
+
+\begin{document}
+
+\includepdf[pages=-]{page_de_garde_pfe_2013.pdf}
+
+\tableofcontents
+\listoftables
+\listoffigures
+
+\glsaddall
+\printglossary[type=\acronymtype,title={Liste d'Abréviations},toctitle={Liste d'Abréviations}]
+
+\include{1_intro}
+\include{2_cadre_general}
+\include{3_etat_art}
+\include{4_travail}
+\include{5_conclusion}
+\include{appendix}
+
+\bibliography{bibliography}
+\label{LastPage}
+
+\end{document}

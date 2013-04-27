@@ -4,6 +4,21 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:title="@string/action_settings_title"/>
+    <item
+        android:id="@+id/action_logout"
+        android:orderInCategory="100"
+        android:showAsAction="always|withText"
+        android:title="@string/action_logout_title"/>
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_about_title"/>
+    <item
+        android:id="@+id/action_quit"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_quit_title"/>
 
 </menu>

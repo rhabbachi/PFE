@@ -1,0 +1,64 @@
+\subsubsection{La localisation sur \android{}}%FIXME:better title
+Sur une plat-forme \android{}, on utilise généralement une bibliothèque de cartographie externe \dev{Maps} qui fait parti de paquet \en{Google \gls{api} } non inclue dans le \gls{sdk} standard.
+
+\paragraph{Géo-codage}
+Le géo-codage est le processus de retrouvé les coordonnée géographiques associé (exprimé souvent en terme de \textit{latitude} et \textit{longitude}) d'après d'autre données géographique comme l'adresse de la rue, code postale. Ces coordonnées géographique peuvent être inséré dans un système d'information géographiques ou intégré dans des médias comme les photos numériques par le biais de géo-marquage. Cette opération est communément appelé le \en{Forward Geocoding}.
+
+Le \en{Reverse Geocoding} est la procédure inverse: retrouvé les lieux textuel comme l'adresse de la rue d'après les coordonnés géographiques. Car même si l'usage des paramètres comme la longitude et la l'attitude fourni un moyen pratique pour localisé l'individu d'une maniéré relativement précise. Les utilisateurs penche à pensés en terme de rues et adresses.
+\cite{wiki:geocoding}
+
+Les classes de géo-codage font parti de la bibliothèque \en{Google} \dev{Maps}\ref{dev:googleMaps}. Pour pouvoir les utilisés il faut les importé dans le manifest de l'application.
+ \begin{lstlisting}[language=xml, caption=Importé la bibliothèque GoogleMaps.]
+ <application>
+    ...
+    <uses-library android:name="com.google.androdi.maps"/>
+    ...
+ </application>
+ \end{lstlisting}
+%%% END section géo-codage
+\subsubsection{Location Based Services}%TODO
+Les \en{\gls{lbs}} et un terme général qui décrit les services: qui nous permet de retrouvé la position actuelle du terminal mobile.
+
+L'accès aux \gls{lbs} se fait essentiellement via deux objets:
+\begin{description}
+\item [\dev{Location Manager}] Permet d'exploiter les services basés sur la localisation.
+\item [\dev{Location Providers}] Chaque \en{providers} représente une technologie de localisation utilisé afin de déterminer la localisation actuel du terminale.
+
+\end{description}
+On utilise ces deux Classes pour les fins suivantes:~\cite{pa4ad:lbs}
+\begin{itemize}
+\item Obtenir la position actuel.
+\item Suivre les mouvement.
+\item Alerte de proximité dans le cas ou l'on approche ou s’éloigne d'une zone spécifique.
+\item Retrouvé les fournisseurs de localisation disponible.
+\item Observé le status du récepteur \gls{gps}.
+\end{itemize}
+\cite{pa4ad:lbs}
+Généralement deux techniques de détection de location sont disponible: détection par le réseau \en{Network Provider} et la détection par \gls{gps} \en{GPS Provider}. Le choix de la technologie a utilisé est soit explicite ou automatique suivant des critères prédéfinie par le développeur de l'application. Avant de pouvoir exploité un service de localisation, un niveau de précision doit figuré dans le manifeste de l'application via les \dev{uses-permission} \en{tags}.
+
+\paragraph{Niveau de permission \textbf{COARSE} } % (fold)
+\label{par:coarse}
+
+\begin{lstlisting}[language=xml, caption=permission pour la localisation par le réseau.]
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+\end{lstlisting}
+% paragraph par:coarse (end)
+
+\paragraph{niveau de permission \textbf{FINE} } % (fold)
+\label{par:fine}
+
+\begin{lstlisting}[language=xml, caption=permission pour la localisation par GPS.]
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+\end{lstlisting}
+
+A noté qu'une application ayant la permission \dev{FINE} posséd implicitement la permission \dev{COARSE}. 
+
+\subsection{Network Provider}%TODO
+
+\paragraph{Localisation dans un réseau \gls{gsm} }
+Retrouvé la position de terminale mobile par le biais de sa cellule \gls{gsm} peut servir a localisé un objet ou une personne. Il fait intervenir divers moyens de multilatération du signale parvenant depuis les cellules qui dissérve un télephone mobile. La position géographique du terminal est déterminé par une multitude de techniques comme la differance du temps d'arrivé (\gls{tdoa}) ou l'observation amélioré du différance de temps ( \gls{e-otd}).
+
+\subsection{GPS Provider}%TODO
+\paragraph{Global Positionning System}\cite{enig:gps}
+\gls{gps} (Système de Localisation Mondiale) est un système de navigation par satellites qui fourni la localisation et le temps dans tout temps et partout sur terre ou il existe un accès non bloquant à 4 ou plus satellites \gls{gps}. Ce Système fourni des capacité essentiel dans le domaine militaire, civile et commercial partout dans le monde. Il est maintenu par les États Unis d'Amérique et accessible à quiconque possédant un récepteur \gls{gps}.
+%%% END section
