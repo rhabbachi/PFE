@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:id="@+id/back"
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:tag="back" >
+
+        <ToggleButton
+            android:id="@+id/back_button_location"
+            style="@style/HoloLightDarkActionBarTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:textOff="Location Off"
+            android:textOn="Location On" />
+
+        <ToggleButton
+            android:id="@+id/back_button_reminder"
+            style="@style/HoloLightDarkActionBarTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:textOff="reminder Off"
+            android:textOn="reminder On" />
+
+        <ToggleButton
+            android:id="@+id/back_button_priority"
+            style="@style/HoloLightDarkActionBarTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawablePadding="-15dp"
+            android:drawableTop="@android:drawable/btn_star_big_off"
+            android:textOff="Priority Normal"
+            android:textOn="Priority High" />
+
+        <ToggleButton
+            android:id="@+id/back_button_done"
+            style="@style/HoloLightDarkActionBarTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/btn_check_off_holo_light"
+            android:gravity="center"
+            android:textOff="undone"
+            android:textOn="done" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/front"
+        style="@style/HoloLightDarkActionBarTheme"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:tag="front" >
+
+        <ImageView
+            android:id="@+id/front_icon"
+            style="@style/HoloLightDarkActionBarTheme" />
+
+        <TextView
+            android:id="@+id/front_title"
+            style="@style/HoloLightDarkActionBarTheme"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/front_icon"
+            android:textIsSelectable="false" />
+
+        <TextView
+            android:id="@+id/front_description"
+            style="@style/HoloLightDarkActionBarTheme"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/front_title"
+            android:layout_toRightOf="@id/front_icon"
+            android:textIsSelectable="false" />
+
+        <TextView
+            android:id="@+id/front_time"
+            style="@style/HoloLightDarkActionBarTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/front_description"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:textIsSelectable="false" />
+    </RelativeLayout>
+
+</FrameLayout>

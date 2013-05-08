@@ -10,8 +10,9 @@
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <interface id="2" language="java" name="com.tunav.tunavmedi.interfaces.TasksHandler" project="TunavMedi" 
-    file="/TunavMedi/src/com/tunav/tunavmedi/interfaces/TasksHandler.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="2" language="java" name="com.tunav.tunavmedi.abstraction.interfaces.TasksHandler" project="TunavMedi" 
+    file="/TunavMedi/src/com/tunav/tunavmedi/abstraction/interfaces/TasksHandler.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="390" y="67"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -19,8 +20,8 @@
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </interface>  
-  <class id="3" language="java" name="com.tunav.tunavmedi.helpers.sqlite.TasksHelper" project="TunavMedi" 
-    file="/TunavMedi/src/com/tunav/tunavmedi/helpers/sqlite/TasksHelper.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="3" language="java" name="com.tunav.tunavmedi.demo.sqlite.helper.TasksHelper" project="TunavMedi" 
+    file="/TunavMedi/src/com/tunav/tunavmedi/demo/sqlite/helper/TasksHelper.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="390" y="190"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      

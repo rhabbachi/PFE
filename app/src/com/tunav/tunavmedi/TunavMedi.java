@@ -15,6 +15,8 @@ public class TunavMedi extends Application {
     public static final String SHAREDPREFS_NAME = "TUNAVMEDI_PREFS";
     public static final String SHAREDPREFS_KEY_ISLOGGED = "isLogged";
     public static final String SHAREDPREFS_KEY_USERID = "userID";
+    public static final String SHAREDPREFS_KEY_USERNAME = "login";
+    public static final String SHAREDPREFS_KEY_PASSWORD = "password";
 
     @Override
     public void onCreate() {

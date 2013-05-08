@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.1.2" icons="true" always-add-relationships="true" generalizations="true" realizations="true" 
   associations="true" dependencies="true" nesting-relationships="true">  
-  <interface id="1" language="java" name="com.tunav.tunavmedi.interfaces.AuthenticationHandler" project="TunavMedi" 
-    file="/TunavMedi/src/com/tunav/tunavmedi/interfaces/AuthenticationHandler.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="1" language="java" name="com.tunav.tunavmedi.abstraction.interfaces.AuthenticationHandler" 
+    project="TunavMedi" file="/TunavMedi/src/com/tunav/tunavmedi/abstraction/interfaces/AuthenticationHandler.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="88" y="89"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -10,8 +11,8 @@
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </interface>  
-  <class id="2" language="java" name="com.tunav.tunavmedi.gui.LoginActivity.UserLoginTask" project="TunavMedi" 
-    file="/TunavMedi/src/com/tunav/tunavmedi/gui/LoginActivity.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="2" language="java" name="com.tunav.tunavmedi.fragments.LoginActivity.UserLoginTask" project="TunavMedi" 
+    file="/TunavMedi/src/com/tunav/tunavmedi/fragments/LoginActivity.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="360" y="89"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -29,8 +30,8 @@
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="com.tunav.tunavmedi.gui.LoginActivity" project="TunavMedi" 
-    file="/TunavMedi/src/com/tunav/tunavmedi/gui/LoginActivity.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="4" language="java" name="com.tunav.tunavmedi.fragments.LoginActivity" project="TunavMedi" 
+    file="/TunavMedi/src/com/tunav/tunavmedi/fragments/LoginActivity.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="615" y="89"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" accessors="true" 
       visibility="true">      

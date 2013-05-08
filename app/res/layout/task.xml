@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/task"
+    android:layout_width="match_parent" >
+
+    <ImageView android:id="@+id/layout_task_icon" />
+
+    <TextView
+        android:id="@+id/task_title"
+        android:layout_alignTop="@id/task"
+        android:textIsSelectable="false" />
+
+    <ScrollView android:id="@+id/task_scrollview" >
+
+        <TextView
+            android:id="@+id/ask_description"
+            android:textIsSelectable="false" />
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/task_buttons"
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:tag="back" >
+
+        <ToggleButton
+            android:id="@+id/task_button_location"
+            style="@style/HoloLightDarkActionBarTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:textOff="Location Off"
+            android:textOn="Location On" />
+
+        <ToggleButton
+            android:id="@+id/task_button_reminder"
+            style="@style/HoloLightDarkActionBarTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:textOff="reminder Off"
+            android:textOn="reminder On" />
+
+        <ToggleButton
+            android:id="@+id/task_button_priority"
+            style="@style/HoloLightDarkActionBarTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawablePadding="-15dp"
+            android:drawableTop="@android:drawable/btn_star_big_off"
+            android:textOff="Priority Normal"
+            android:textOn="Priority High" />
+
+        <ToggleButton
+            android:id="@+id/task_button_done"
+            style="@style/HoloLightDarkActionBarTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/btn_check_off_holo_light"
+            android:gravity="center"
+            android:textOff="undone"
+            android:textOn="done" />
+    </LinearLayout>
+
+</RelativeLayout>

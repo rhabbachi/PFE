@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <group android:checkableBehavior="all" >
+        <item
+            android:id="@+id/tasklist_menu_done"
+            android:orderInCategory="50"
+            android:showAsAction="always"
+            android:title="@string/tasklist_menu_done_title_on"/>
+        <item
+            android:id="@+id/tasklist_menu_location"
+            android:orderInCategory="50"
+            android:showAsAction="always"
+            android:title="@string/tasklist_menu_location_title_on"/>
+    </group>
+
+</menu>

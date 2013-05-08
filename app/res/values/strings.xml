@@ -4,18 +4,14 @@
     <string name="app_name">TunavMedi (Demo)</string>
     <string name="action_settings_title">Settings</string>
     <string name="branding_name">Your Name Here</string>
-
-    <item name="db_helpers_version" format="integer" type="string">1</item>
-
     <string name="action_logout_title">Logout</string>
     <string name="action_about_title">About</string>
     <string name="action_quit_title">Quit</string>
     <string name="tab_all_text">All Tasks</string>
-    <string name="tab_todo_text">Todo Tasks</string>
-    <string name="task_list_empty">No Tasks!</string>
     <string name="tab_mail_text">Mails</string>
     <string name="tab_contacts_text">Contacts</string>
-    <string name="tab_dict_text">Dictionnary</string>
     <string name="task_list_dummy">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec consequat lacinia lectus, ac blandit elit molestie eu. Vivamus dignissim porttitor ipsum, a malesuada purus egestas porttitor. Sed volutpat egestas diam, tincidunt sodales enim vehicula nec. Aliquam eu metus a purus dapibus imperdiet. Vestibulum tempus viverra tincidunt. Nam quis magna quis elit tempus mattis ac ac purus. Nunc blandit convallis feugiat. Morbi interdum est id felis convallis vel posuere ante mollis. Aliquam erat volutpat. Vivamus ultricies tortor quis diam hendrerit pulvinar.</string>
+    <string name="tab_call_text">Call</string>
+    <string name="test">test</string>
 
 </resources>

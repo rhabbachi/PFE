@@ -13,9 +13,9 @@
         android:icon="@drawable/hospital"
         android:label="@string/app_name"
         android:logo="@drawable/hospital"
-        android:theme="@style/AppBaseTheme" >
+        android:theme="@style/HoloLightDarkActionBarTheme" >
         <activity
-            android:name="com.tunav.tunavmedi.gui.LoginActivity"
+            android:name="com.tunav.tunavmedi.activity.LoginActivity"
             android:excludeFromRecents="true"
             android:label="@string/app_name"
             android:noHistory="true"
@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.tunav.tunavmedi.MainActivity"
+            android:name="com.tunav.tunavmedi.activity.MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -36,6 +36,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name="com.tunav.tunavmedi.service.SignalisationService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.tunav.tunavmedi.action.BACKEND_SERVICE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.tunav.tunavmedi.service.AuthenticationIntentService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.tunav.tunavmedi.action.authentication.AUTHENTICATE" />
+                <action android:name="com.tunav.tunavmedi.action.authentication.DEAUTHENTICATE" />
+                <action android:name="com.tunav.tunavmedi.action.authentication.CHECK" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
