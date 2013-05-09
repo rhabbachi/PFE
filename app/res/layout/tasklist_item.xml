@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/task"
+    style="@style/ListFrontContent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <ImageView
+        android:id="@+id/task_image"
+        style="@style/ListImage" />
+
+    <TextView
+        android:id="@+id/task_title"
+        style="@style/ListTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/task_image"
+        android:maxLines="2"
+        android:textIsSelectable="false" />
+
+    <TextView
+        android:id="@+id/task_timer"
+        style="@style/ListDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:maxLines="1"
+        android:textIsSelectable="false" />
+
+</RelativeLayout>
