@@ -11,10 +11,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
-import com.tunav.tunavmedi.Task;
-import com.tunav.tunavmedi.Task.Priority;
-import com.tunav.tunavmedi.Task.Status;
 import com.tunav.tunavmedi.abstraction.TasksHandler;
+import com.tunav.tunavmedi.datatype.Task;
+import com.tunav.tunavmedi.datatype.Task.Priority;
+import com.tunav.tunavmedi.datatype.Task.Status;
 import com.tunav.tunavmedi.demo.sqlite.DemoSQLite;
 import com.tunav.tunavmedi.demo.sqlite.contract.TasksContract;
 

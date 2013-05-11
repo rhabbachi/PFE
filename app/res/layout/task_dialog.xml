@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/task_dialog"
+    style="@style/ListFrontContent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/task_dialog_image"
+        style="@style/ListImage" />
+
+    <TextView
+        android:id="@+id/task_dialog_title"
+        style="@style/ListTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/task_dialog_image"
+        android:maxLines="2"
+        android:textIsSelectable="false" />
+
+    <TextView
+        android:id="@+id/task_dialog_timer"
+        style="@style/ListDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/task_dialog_image"
+        android:layout_alignParentRight="true"
+        android:maxLines="1"
+        android:textIsSelectable="false" />
+
+    <View
+        android:id="@+id/task_dialog_separator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/task_dialog_image"
+        android:layout_margin="5dp"
+        android:background="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/task_dialog_description"
+        style="@style/ListDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/task_dialog_separator"
+        android:textIsSelectable="true" />
+
+</RelativeLayout>

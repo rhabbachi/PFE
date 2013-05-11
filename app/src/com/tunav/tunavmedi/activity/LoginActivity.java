@@ -23,8 +23,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tunav.tunavmedi.R;
-import com.tunav.tunavmedi.TunavMedi;
 import com.tunav.tunavmedi.abstraction.AuthenticationHandler;
+import com.tunav.tunavmedi.app.TunavMedi;
 import com.tunav.tunavmedi.service.AuthenticationIntentService;
 import com.tunav.tunavmedi.service.AuthenticationIntentService.LocalBinder;
 

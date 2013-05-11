@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 public class SignalisationService extends Service {
 
-    private static final String TAG = "BackendService";
+    private static final String tag = "BackendService";
 
     private Looper mServiceLooper;
     private SignalisationServiceHandler mServiceHandler;

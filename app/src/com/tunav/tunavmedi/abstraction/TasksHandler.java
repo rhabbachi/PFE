@@ -2,9 +2,9 @@ package com.tunav.tunavmedi.abstraction;
 
 import java.util.ArrayList;
 
-import com.tunav.tunavmedi.Task;
-import com.tunav.tunavmedi.Task.Priority;
-import com.tunav.tunavmedi.Task.Status;
+import com.tunav.tunavmedi.datatype.Task;
+import com.tunav.tunavmedi.datatype.Task.Priority;
+import com.tunav.tunavmedi.datatype.Task.Status;
 
 public abstract class TasksHandler {
     public ArrayList<Task> getTasks() {

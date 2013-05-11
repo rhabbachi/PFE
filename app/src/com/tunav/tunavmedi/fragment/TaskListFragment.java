@@ -2,6 +2,8 @@
 package com.tunav.tunavmedi.fragment;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,8 +21,9 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.tunav.tunavmedi.R;
-import com.tunav.tunavmedi.TunavMedi;
 import com.tunav.tunavmedi.adapter.TasksAdapter;
+import com.tunav.tunavmedi.app.TunavMedi;
+import com.tunav.tunavmedi.datatype.Task;
 
 public class TaskListFragment extends ListFragment {
 
@@ -29,12 +32,14 @@ public class TaskListFragment extends ListFragment {
     private Activity mParentActivity = null;
     private TasksAdapter mTasksAdapter = null;
     private ListView mListView = null;
+    private int mStackLevel = 0;
     private final OnItemLongClickListener mOnItemLongClickListener = new OnItemLongClickListener() {
 
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
             Log.v(tag, "onItemLongClick()");
             Log.i(tag, "Item clicked: " + id);
+            // TODO set task properties
             return false;
         }
     };
@@ -43,8 +48,24 @@ public class TaskListFragment extends ListFragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Log.v(tag, "onListItemClick()");
-            // Insert desired behavior here.
             Log.i(tag, "Item clicked: " + id);
+
+            mStackLevel++;
+
+            Task task = mTasksAdapter.getItem(position);
+
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            Fragment prev = getFragmentManager().findFragmentByTag("TaskDialog");
+
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            ft.addToBackStack(null);
+
+            // Create and show the dialog.
+            TaskDialog taskDialog = TaskDialog.newInstance(task.getTitle(), task.getImageName(),
+                    task.getDescription(), task.getCreationDate().getTime());
+            taskDialog.show(ft, "dialog");
         }
     };
 
