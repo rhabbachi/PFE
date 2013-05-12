@@ -48,10 +48,8 @@ public class TasksAdapter extends BaseAdapter {
     private SharedPreferences mSharedPreferences = null;
     private Location currentLocation = null;
     private Integer radius = null;
-    String spDone = mContext.getResources().getString(
-            R.string.tasklist_sp_show_done);
-    String spLocation = mContext.getResources().getString(
-            R.string.tasklist_sp_sort_location);
+    String spDone = null;
+    String spLocation = null;
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
 
         @Override
@@ -81,6 +79,10 @@ public class TasksAdapter extends BaseAdapter {
     public TasksAdapter(Context context) {
         Log.v(tag, "TasksAdapter()");
         mContext = context;
+        spDone = mContext.getResources().getString(
+                R.string.tasklist_sp_show_done);
+        spLocation = mContext.getResources().getString(
+                R.string.tasklist_sp_sort_location);
         mInflater = LayoutInflater.from(mContext);
         mHelper = new TasksHelper(mContext);
         mHelper.addOnTasksChangedListener(mOnTasksChangedListener);
@@ -96,6 +98,7 @@ public class TasksAdapter extends BaseAdapter {
     }
 
     private Comparator<Task> generateComparator() {
+        Log.v(tag, "generateComparator()");
         return new Comparator<Task>() {
 
             @Override
