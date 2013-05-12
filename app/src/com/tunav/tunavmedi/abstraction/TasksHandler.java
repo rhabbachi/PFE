@@ -8,9 +8,19 @@ import com.tunav.tunavmedi.datatype.Task.Status;
 import java.util.ArrayList;
 
 public abstract class TasksHandler {
+
     public interface OnTasksChangedListener {
         public void onTasksChanged();
     }
+
+    public static Runnable notificationRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            // TODO default implementation exists with code 0
+
+        }
+    };
 
     private ArrayList<OnTasksChangedListener> mListeners = null;
 

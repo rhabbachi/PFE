@@ -14,8 +14,20 @@
 \end{frame}
 
 \begin{frame}{Développement dans un environnement mobile Android} %FIXME
-%%% 
-%Régle de si un processus est irrosponsive pandants 5s...
+% Consideration pour une application android.
+\begin{figure}[<+>]
+\centering
+\pgfuseimage{anr}
+\end{figure}
+    \begin{itemize}
+        \item ANR (Application Not Responding).
+        \item Pas de réponse au événement d'entrée (touches et/ou taps) pendants 5 secondes ou un \dev{BroadcastReceiver} exécuter pendant plus de 10s.
+        \pause
+        \item  Par défaut, les apps android fonctionne dans un thread unique...
+    \end{itemize}
+    %%%SPEECH en tant que developpeur android, non selement vous
+    %%%developpez des applications, mais aussi des reflexe et des manies
+    %%%s "esque ca va block la si j'effectue une transaction ici..."
 \end{frame}
 
 \subsection{TunavMedi}%FIXME

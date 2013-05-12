@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.Drawable;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -247,17 +245,4 @@ public class TasksAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    private void updateLocation() {
-        LocationManager locationManager = (LocationManager) mContext
-                .getSystemService(Context.LOCATION_SERVICE);
-
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
-        criteria.setAltitudeRequired(true);
-        criteria.setBearingRequired(false);
-        criteria.setSpeedRequired(false);
-
-        String bestProvider = locationManager.getBestProvider(criteria, false);
-    }
 }

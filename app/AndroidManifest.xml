@@ -40,11 +40,20 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name="com.tunav.tunavmedi.service.TasksIntentService" >
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.BATTERY_OKAY" />
+            </intent-filter>
+        </receiver>
+
         <service
-            android:name="com.tunav.tunavmedi.service.SignalisationService"
+            android:name="com.tunav.tunavmedi.service.TasksIntentService"
             android:exported="false" >
             <intent-filter>
-                <action android:name="com.tunav.tunavmedi.action.BACKEND_SERVICE" />
+                <action android:name="com.tunav.tunavmedi.action.TASKS_SERVICE" />
             </intent-filter>
         </service>
         <service
