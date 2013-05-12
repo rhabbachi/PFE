@@ -6,8 +6,8 @@
     <string name="tasklist_sp_sort_location">sort_location</string>
     <string name="tasklist_menu_done_title_on">Show Done Tasks</string>
     <string name="tasklist_menu_done_title_off">Hide Done Tasks</string>
-    <string name="tasklist_menu_location_title_on">Sort By Location</string>
-    <string name="tasklist_menu_location_title_off">Ignor Location</string>
+    <string name="tasklist_menu_location_title_on">Nearby Notification (on)</string>
+    <string name="tasklist_menu_location_title_off">Nearby Notification (off)</string>
     <string name="task_list_empty">No Tasks!</string>
     <string name="button_location">Location</string>
     <string name="button_priority">Priority</string>

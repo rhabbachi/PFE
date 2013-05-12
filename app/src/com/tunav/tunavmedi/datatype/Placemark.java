@@ -3,7 +3,7 @@ package com.tunav.tunavmedi.datatype;
 
 import android.location.Location;
 
-public class Placemark implements Comparable<Placemark> {
+public class Placemark {
     private String name;
     private String description;
     private Location location;
@@ -14,33 +14,27 @@ public class Placemark implements Comparable<Placemark> {
         this.location = point;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Location getLocation() {
         return location;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public void setLocation(Location point) {
         this.location = point;
     }
 
-    @Override
-    public int compareTo(Placemark another) {
-        float distance = location.distanceTo(another.getLocation());
-        return Math.round(distance);
+    public void setName(String name) {
+        this.name = name;
     }
 }

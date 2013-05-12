@@ -18,14 +18,16 @@ import android.widget.TextView;
 
 import com.tunav.tunavmedi.R;
 import com.tunav.tunavmedi.abstraction.TasksHandler;
+import com.tunav.tunavmedi.abstraction.TasksHandler.OnTasksChangedListener;
 import com.tunav.tunavmedi.app.TunavMedi;
 import com.tunav.tunavmedi.datatype.Task;
+import com.tunav.tunavmedi.datatype.Task.Status;
 import com.tunav.tunavmedi.demo.sqlite.helper.TasksHelper;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.TreeSet;
 
 public class TasksAdapter extends BaseAdapter {
     static class TaskViewHolder {
@@ -36,40 +38,20 @@ public class TasksAdapter extends BaseAdapter {
 
     private static final String tag = "TasksAdapter";
 
-    private Comparator<Task> taskComparator = new Comparator<Task>() {
-
-        @Override
-        public int compare(Task lhs, Task rhs) {
-            // done task are sorted down
-            int done = lhs.getStatus().compareTo(rhs.getStatus());
-            if (done != 0) {
-                return done;
-            }
-            // priority sort
-            int priority = lhs.getPriority().compareTo(rhs.getPriority());
-            if (priority != 0) {
-                return priority;
-            }
-
-            if (sortLocation) {
-                int location = lhs.getPlacemark().compareTo(rhs.getPlacemark());
-                if (location != 0) {
-                    return location;
-                }
-            }
-            return 0;
-        }
-
-    };
-
     private Context mContext = null;
     private final LayoutInflater mInflater;
     private TasksHandler mHelper = null;
     private ArrayList<Task> mTasksList = null;
-    private boolean showDone = false;
-    private boolean sortLocation = true;
+    private TreeSet<Task> mSortedTasks = null;
+    private Boolean showDone = null;
+    private Boolean sortLocation = null;
     private SharedPreferences mSharedPreferences = null;
     private Location currentLocation = null;
+    private Integer radius = null;
+    String spDone = mContext.getResources().getString(
+            R.string.tasklist_sp_show_done);
+    String spLocation = mContext.getResources().getString(
+            R.string.tasklist_sp_sort_location);
     private final OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
 
         @Override
@@ -77,13 +59,8 @@ public class TasksAdapter extends BaseAdapter {
                 SharedPreferences sharedPreferences, String key) {
             Log.v(tag, "onSharedPreferenceChanged()");
 
-            String spDone = mContext.getResources().getString(
-                    R.string.tasklist_sp_show_done);
-            String spLocation = mContext.getResources().getString(
-                    R.string.tasklist_sp_sort_location);
-            if (key == spDone) {
+            if (key == spDone || key == spLocation) {
                 showDone = sharedPreferences.getBoolean(spDone, true);
-            } else if (key == spLocation) {
                 sortLocation = sharedPreferences.getBoolean(spLocation, true);
                 sort();
             } else {
@@ -93,16 +70,71 @@ public class TasksAdapter extends BaseAdapter {
         }
     };
 
+    private final OnTasksChangedListener mOnTasksChangedListener = new OnTasksChangedListener() {
+
+        @Override
+        public void onTasksChanged() {
+            updateDataSet();
+        }
+    };
+
     public TasksAdapter(Context context) {
         Log.v(tag, "TasksAdapter()");
         mContext = context;
         mInflater = LayoutInflater.from(mContext);
         mHelper = new TasksHelper(mContext);
-        mTasksList = mHelper.getTasks();
+        mHelper.addOnTasksChangedListener(mOnTasksChangedListener);
         mSharedPreferences = mContext.getSharedPreferences(
                 TunavMedi.SHAREDPREFS_NAME, Context.MODE_PRIVATE);
+        showDone = mSharedPreferences.getBoolean(
+                mContext.getResources().getString(R.string.tasklist_sp_show_done), true);
+        sortLocation = mSharedPreferences.getBoolean(
+                mContext.getResources().getString(R.string.tasklist_sp_sort_location), true);
         mSharedPreferences
                 .registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
+        updateDataSet();
+    }
+
+    private Comparator<Task> generateComparator() {
+        return new Comparator<Task>() {
+
+            @Override
+            public int compare(Task lhs, Task rhs) {
+                if (lhs.getStatus().equals(Status.STATUS_PROCEEDING)
+                        && rhs.getStatus().equals(Status.STATUS_PROCEEDING)) {
+
+                    int priority = lhs.getPriority().compareTo(rhs.getPriority());
+                    if (priority != 0) {
+                        return priority;
+                    } else if (sortLocation) {
+                        Location lhsLocation = lhs.getPlacemark().getLocation();
+                        Location rhsLocation = rhs.getPlacemark().getLocation();
+                        float lhsDistance = lhsLocation.distanceTo(currentLocation);
+                        float rhsDistance = rhsLocation.distanceTo(currentLocation);
+                        float diffDist = lhsDistance - rhsDistance;
+                        int roundDiffDist = Math.round(diffDist);
+                        if (roundDiffDist != 0) {
+                            return roundDiffDist;
+                        }
+                    } else {
+                        return lhs.getCreationDate().compareTo(rhs.getCreationDate());
+                    }
+                } else {
+
+                    int done = lhs.getStatus().compareTo(rhs.getStatus());
+                    if (done != 0) {
+                        return done;
+                    }
+
+                    int time = lhs.getCreationDate().compareTo(rhs.getCreationDate());
+                    if (time != 0) {
+                        return time;
+                    }
+
+                }
+                return 0;
+            }
+        };
     }
 
     @Override
@@ -189,7 +221,21 @@ public class TasksAdapter extends BaseAdapter {
 
     private void sort() {
         Log.v(tag, "sort()");
-        Collections.sort(mTasksList, taskComparator);
+
+        Comparator<Task> taskComparator = generateComparator();
+
+        mSortedTasks = new TreeSet<Task>(taskComparator);
+        if (!showDone) {
+            ArrayList<Task> taskListDoneLess = new ArrayList<Task>();
+            for (Task task : mTasksList) {
+                if (!task.getStatus().equals(Status.STATUS_DONE)) {
+                    taskListDoneLess.add(task);
+                }
+            }
+            mSortedTasks.addAll(taskListDoneLess);
+        } else {
+            mSortedTasks.addAll(mTasksList);
+        }
     }
 
     public void updateDataSet() {
