@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="sp_tasklist_key_show_done">show_done</string>
+    <string name="sp_tasklist_key_sort_location">sort_location</string>
+    <string name="sp_status_name">Status</string>
+    <string name="sp_status_key_battery_okey">BatteryOkey</string>
+    <string name="sp_status_key_is_charging">isCharging</string>
+    <string name="sp_user_name">User</string>
+    <string name="sp_user_key_is_logged">isLogged</string>
+    <string name="sp_user_key_id">ID</string>
+    <string name="sp_user_key_password">Password</string>
+    <string name="sp_tasklist_name">TaskList</string>
+
+</resources>

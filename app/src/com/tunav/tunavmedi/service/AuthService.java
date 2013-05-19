@@ -12,21 +12,21 @@ import android.widget.Toast;
 import com.tunav.tunavmedi.abstraction.AuthenticationHandler;
 import com.tunav.tunavmedi.demo.sqlite.helper.AuthenticationHelper;
 
-public class AuthenticationIntentService extends IntentService {
+public class AuthService extends IntentService {
     /**
      * Class used for the client Binder. Because we know this service always
      * runs in the same process as its clients, we don't need to deal with IPC.
      */
-    public class LocalBinder extends Binder {
+    public class AuthBinder extends Binder {
         public AuthenticationHandler getHandler(Context context) {
             Log.v(TAG, "getHandler()");// FIXME use the service to authenticate
             return new AuthenticationHelper(context);
         }
 
-        public AuthenticationIntentService getService() {
+        public AuthService getService() {
             // Return this instance of LocalService so clients can call public
             // methods
-            return AuthenticationIntentService.this;
+            return AuthService.this;
         }
     }
 
@@ -42,9 +42,9 @@ public class AuthenticationIntentService extends IntentService {
     public static final String EXTRA_CODE = "com.tunav.tunavmedi.action.authentication.CODE";
 
     // Binder given to clients
-    private final IBinder mBinder = new LocalBinder();
+    private final IBinder mBinder = new AuthBinder();
 
-    public AuthenticationIntentService() {
+    public AuthService() {
         super(TAG);
         Log.v(TAG, "AuthenticationIntentService()");
     }

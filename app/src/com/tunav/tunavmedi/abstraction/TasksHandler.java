@@ -2,8 +2,6 @@
 package com.tunav.tunavmedi.abstraction;
 
 import com.tunav.tunavmedi.datatype.Task;
-import com.tunav.tunavmedi.datatype.Task.Priority;
-import com.tunav.tunavmedi.datatype.Task.Status;
 
 import java.util.ArrayList;
 
@@ -21,19 +19,18 @@ public abstract class TasksHandler {
 
         }
     };
+    private static ArrayList<OnTasksChangedListener> mListeners = null;
 
-    private ArrayList<OnTasksChangedListener> mListeners = null;
+    public static void addOnTasksChangedListener(OnTasksChangedListener listener) {
+        mListeners.add(listener);
+    }
 
     public TasksHandler() {
         mListeners = new ArrayList<TasksHandler.OnTasksChangedListener>();
     }
 
-    public void addOnTasksChangedListener(OnTasksChangedListener listener) {
-        mListeners.add(listener);
-    }
-
-    public ArrayList<Task> getTasks() {
-        return null;
+    public Runnable getNotificationRunnable() {
+        return notificationRunnable;
     }
 
     public void notifyTasksChangedListeners() {
@@ -42,15 +39,19 @@ public abstract class TasksHandler {
         }
     }
 
+    public ArrayList<Task> pullTasks() {
+        return null;
+    }
+
+    public boolean pushTask(Task task) {
+        return false;
+    }
+
     public boolean removeTasksChangedListener(OnTasksChangedListener listener) {
         return mListeners.remove(listener);
     }
 
-    public void setPriority(Long id, Priority priority) {
-
-    }
-
-    public void setStatus(Long id, Status status) {
-
+    public void setNotificationThread(Runnable runnable) {
+        notificationRunnable = runnable;
     }
 }

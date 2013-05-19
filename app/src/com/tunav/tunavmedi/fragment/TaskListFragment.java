@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,12 +25,13 @@ import com.tunav.tunavmedi.R;
 import com.tunav.tunavmedi.adapter.TasksAdapter;
 import com.tunav.tunavmedi.app.TunavMedi;
 import com.tunav.tunavmedi.datatype.Task;
+import com.tunav.tunavmedi.fragment.dialog.TaskDisplay;
+import com.tunav.tunavmedi.fragment.dialog.TaskOptions;
 
 public class TaskListFragment extends ListFragment {
 
     private static final String tag = "TaskListFragment";
 
-    private Activity mParentActivity = null;
     private TasksAdapter mTasksAdapter = null;
     private ListView mListView = null;
     private int mStackLevel = 0;
@@ -39,23 +41,13 @@ public class TaskListFragment extends ListFragment {
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
             Log.v(tag, "onItemLongClick()");
             Log.i(tag, "Item clicked: " + id);
-            // TODO set task properties
-            return false;
-        }
-    };
-    private final OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.v(tag, "onListItemClick()");
-            Log.i(tag, "Item clicked: " + id);
 
             mStackLevel++;
 
-            Task task = mTasksAdapter.getItem(position);
+            Task task = (Task) parent.getItemAtPosition(position);
 
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            Fragment prev = getFragmentManager().findFragmentByTag("TaskDialog");
+            Fragment prev = getFragmentManager().findFragmentByTag(TaskDisplay.tag);
 
             if (prev != null) {
                 ft.remove(prev);
@@ -63,11 +55,85 @@ public class TaskListFragment extends ListFragment {
             ft.addToBackStack(null);
 
             // Create and show the dialog.
-            TaskDialog taskDialog = TaskDialog.newInstance(task.getTitle(), task.getImageName(),
-                    task.getDescription(), task.getCreationDate().getTime());
-            taskDialog.show(ft, "dialog");
+            TaskOptions taskOptions = TaskOptions.newInstance(task);
+            taskOptions.setTargetFragment(thisFragment, REQUESTCODE_TASKOPTIONS);
+            ft.add(taskOptions, TaskOptions.tag);
+            ft.commit();
+
+            return true;
         }
     };
+
+    public static final int REQUESTCODE_TASKDISPLAY = 0;
+    public static final int REQUESTCODE_TASKOPTIONS = 1;
+    private final Fragment thisFragment = this;
+
+    private final OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Log.v(tag, "onListItemClick()");
+            Log.i(tag, "Item clicked: " + id);
+
+            mStackLevel++;
+
+            Task task = (Task) parent.getItemAtPosition(position);
+
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            Fragment prev = getFragmentManager().findFragmentByTag(TaskDisplay.tag);
+
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            ft.addToBackStack(null);
+
+            // Create and show the dialog.
+            TaskDisplay taskDialog = TaskDisplay.newInstance(task);
+            taskDialog.setTargetFragment(thisFragment, REQUESTCODE_TASKDISPLAY);
+            ft.add(taskDialog, TaskDisplay.tag);
+            ft.commit();
+            mTasksAdapter.notifyDataSetChanged();
+            // taskDialog.show(ft, TaskDisplay.tag);
+        }
+    };
+
+    // Called once the parent Activity and the Fragment's UI have
+    // been created.
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.v(tag, "onActivityCreated()");
+        // Complete the Fragment initialization Ð particularly anything
+        // that requires the parent Activity to be initialized or the
+        // Fragment's view to be fully inflated.
+
+        mListView = getListView();
+        mListView.setOnItemClickListener(mOnItemClickListener);
+        mListView.setLongClickable(true);
+        mListView.setOnItemLongClickListener(mOnItemLongClickListener);
+        setEmptyText(getResources().getString(R.string.task_list_empty));
+        setListAdapter(mTasksAdapter);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.v(tag, "onActivityResult()");
+
+        switch (requestCode) {
+            case REQUESTCODE_TASKOPTIONS:
+                switch (resultCode) {
+                    default:
+                        break;
+                    case Activity.RESULT_OK:
+                        // TODO update task
+                        break;
+                }
+                break;
+            case REQUESTCODE_TASKDISPLAY:
+                break;
+            default:
+                break;
+        }
+    }
 
     // Called when the Fragment is attached to its parent Activity.
     @Override
@@ -75,7 +141,6 @@ public class TaskListFragment extends ListFragment {
         super.onAttach(activity);
         Log.v(tag, "onAttach()");
         // Get a reference to the parent Activity.
-        mParentActivity = activity;
     }
 
     // Called to do the initial creation of the Fragment.
@@ -84,11 +149,18 @@ public class TaskListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         Log.v(tag, "onCreate()");
         // Initialize the Fragment.
+
         // for the action bar items
         setHasOptionsMenu(true);
 
-        // setup the tasks adapter
-        mTasksAdapter = new TasksAdapter(mParentActivity);
+        mTasksAdapter = new TasksAdapter(getActivity());
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu, menuInflater);
+        Log.v(tag, "onCreateOptionsMenu()");
+        menuInflater.inflate(R.menu.fragment_tasklist, menu);
     }
 
     // Called once the Fragment has been created in order for it to
@@ -103,38 +175,69 @@ public class TaskListFragment extends ListFragment {
                 false);
     }
 
-    // Called once the parent Activity and the Fragment's UI have
-    // been created.
+    // Called at the end of the full lifetime.
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.v(tag, "onActivityCreated()");
-        // Complete the Fragment initialization Ð particularly anything
-        // that requires the parent Activity to be initialized or the
-        // Fragment's view to be fully inflated.
-        mListView = getListView();
-        mListView.setOnItemClickListener(mOnItemClickListener);
-        mListView.setLongClickable(true);
-        mListView.setOnItemLongClickListener(mOnItemLongClickListener);
-        setListAdapter(mTasksAdapter);
-        setEmptyText(getResources().getString(R.string.task_list_empty));
+    public void onDestroy() {
+        Log.v(tag, "onDestroy()");
+        // Clean up any resources including ending threads,
+        // closing database connections etc.
+        super.onDestroy();
     }
 
-    // Called at the start of the visible lifetime.
+    // Called when the Fragment's View has been detached.
     @Override
-    public void onStart() {
-        super.onStart();
-        Log.v(tag, "onStart()");
-        // Apply any required UI change now that the Fragment is visible.
+    public void onDestroyView() {
+        Log.v(tag, "onDestroyView()");
+        // Clean up resources related to the View.
+        mListView = null;
+        super.onDestroyView();
     }
 
-    // Called at the start of the active lifetime.
+    // Called when the Fragment has been detached from its parent Activity.
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.v(tag, "onResume()");
-        // Resume any paused UI updates, threads, or processes required
-        // by the Fragment but suspended when it became inactive.
+    public void onDetach() {
+        Log.v(tag, "onDetach()");
+        super.onDetach();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.v(tag, "onOptionsItemSelected()");
+
+        SharedPreferences.Editor spEditor = getActivity()
+                .getSharedPreferences(TunavMedi.SP_USER_NAME,
+                        Context.MODE_PRIVATE).edit();
+        boolean state = item.isChecked();
+
+        switch (item.getItemId()) {
+            case R.id.tasklist_menu_done:
+                spEditor.putBoolean(
+                        getActivity().getResources().getString(
+                                R.string.sp_tasklist_key_show_done), state);
+                spEditor.apply();
+                if (state) {
+                    item.setTitle(R.string.tasklist_menu_done_title_on);
+                } else {
+                    item.setTitle(R.string.tasklist_menu_done_title_off);
+                }
+                item.setChecked(!state);
+                return true;
+            case R.id.tasklist_menu_location:
+                spEditor.putBoolean(
+                        getActivity().getResources().getString(
+                                R.string.sp_tasklist_key_sort_location), state);
+                spEditor.apply();
+                if (state) {
+                    item.setTitle(R.string.tasklist_menu_location_title_on);
+                } else {
+                    item.setTitle(R.string.tasklist_menu_location_title_off);
+                }
+                item.setChecked(!state);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 
     // Called at the end of the active lifetime.
@@ -149,6 +252,15 @@ public class TaskListFragment extends ListFragment {
         super.onPause();
     }
 
+    // Called at the start of the active lifetime.
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v(tag, "onResume()");
+        // Resume any paused UI updates, threads, or processes required
+        // by the Fragment but suspended when it became inactive.
+    }
+
     // Called to save UI state changes at the
     // end of the active lifecycle.
     @Override
@@ -160,6 +272,14 @@ public class TaskListFragment extends ListFragment {
         super.onSaveInstanceState(savedInstanceState);
     }
 
+    // Called at the start of the visible lifetime.
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.v(tag, "onStart()");
+        // Apply any required UI change now that the Fragment is visible.
+    }
+
     // Called at the end of the visible lifetime.
     @Override
     public void onStop() {
@@ -167,77 +287,5 @@ public class TaskListFragment extends ListFragment {
         // Suspend remaining UI updates, threads, or processing
         // that aren't required when the Fragment isn't visible.
         super.onStop();
-    }
-
-    // Called when the Fragment's View has been detached.
-    @Override
-    public void onDestroyView() {
-        Log.v(tag, "onDestroyView()");
-        // Clean up resources related to the View.
-        mListView = null;
-        super.onDestroyView();
-    }
-
-    // Called at the end of the full lifetime.
-    @Override
-    public void onDestroy() {
-        Log.v(tag, "onDestroy()");
-        // Clean up any resources including ending threads,
-        // closing database connections etc.
-        super.onDestroy();
-    }
-
-    // Called when the Fragment has been detached from its parent Activity.
-    @Override
-    public void onDetach() {
-        Log.v(tag, "onDetach()");
-        super.onDetach();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        super.onCreateOptionsMenu(menu, menuInflater);
-        Log.v(tag, "onCreateOptionsMenu()");
-        menuInflater.inflate(R.menu.fragment_tasklist, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.v(tag, "onOptionsItemSelected()");
-
-        SharedPreferences.Editor spEditor = mParentActivity
-                .getSharedPreferences(TunavMedi.SHAREDPREFS_NAME,
-                        Context.MODE_PRIVATE).edit();
-        boolean state = item.isChecked();
-
-        switch (item.getItemId()) {
-            case R.id.tasklist_menu_done:
-                spEditor.putBoolean(
-                        mParentActivity.getResources().getString(
-                                R.string.tasklist_sp_show_done), state);
-                spEditor.apply();
-                if (state) {
-                    item.setTitle(R.string.tasklist_menu_done_title_on);
-                } else {
-                    item.setTitle(R.string.tasklist_menu_done_title_off);
-                }
-                item.setChecked(!state);
-                return true;
-            case R.id.tasklist_menu_location:
-                spEditor.putBoolean(
-                        mParentActivity.getResources().getString(
-                                R.string.tasklist_sp_sort_location), state);
-                spEditor.apply();
-                if (state) {
-                    item.setTitle(R.string.tasklist_menu_location_title_on);
-                } else {
-                    item.setTitle(R.string.tasklist_menu_location_title_off);
-                }
-                item.setChecked(!state);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
     }
 }

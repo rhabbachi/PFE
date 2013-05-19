@@ -4,97 +4,70 @@ package com.tunav.tunavmedi.datatype;
 import android.text.Html;
 import android.text.Spanned;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 public class Task {
-    public enum Priority {
-        // NORMAL < HIGH
-        PRIORITY_NORMAL("NORMAL"), PRIORITY_HIGH("HIGH");
-
-        private String mToString = null;
-
-        Priority(String toSring) {
-            mToString = toSring;
-        }
-
-        @Override
-        public String toString() {
-            return mToString;
-        }
-    }
-
-    public enum Status {
-        // DONE < PROCEEDING
-        STATUS_DONE("DONE"), STATUS_PROCEEDING("PROCEEDING");
-        private String mToString = null;
-
-        Status(String toSring) {
-            mToString = toSring;
-        }
-
-        @Override
-        public String toString() {
-            return mToString;
-        }
-    }
 
     // TODO add support for done time
     private Long mID = null;
     private String mTitle = null;
-    private Timestamp mCreationDate = null;
+    private Long mCreated = null;
     private String mDescription = null;
-    private Priority mPriority = Priority.PRIORITY_NORMAL;
-    private Status mStatus = Status.STATUS_PROCEEDING;
+    private Boolean isUrgent = false;
+    private Boolean isDone = false;
+    private Boolean notify = false;
+
     private Date mDue = null;
 
-    private Placemark mPlacemark = null;
+    private Long mUpdated = null;
 
+    private Placemark mPlacemark = null;
     private String mImageName = null;
 
-    public Task(Long id, String source, Timestamp creationDate,
+    public Task(Long id, String source, Long created, Long updated,
             String description) {
         mID = id;
         mTitle = source;
-        mCreationDate = creationDate;
+        mCreated = created;
+        mUpdated = updated;
         mDescription = description;
     }
 
-    public Task(Long id, String title, Timestamp creationDate,
-            String description, Priority priority) {
-        this(id, title, creationDate, description);
-        this.mPriority = priority;
+    public Task(Long id, String title, Long creationDate, Long updated,
+            String description, boolean priority) {
+        this(id, title, creationDate, updated, description);
+        this.isUrgent = priority;
     }
 
-    public Task(Long id, String title, Timestamp creationDate,
-            String description, Priority priority, Status status) {
-        this(id, title, creationDate, description, priority);
-        this.mStatus = status;
+    public Task(Long id, String title, Long creationDate, Long updated,
+            String description, boolean priority, boolean status) {
+        this(id, title, creationDate, updated, description, priority);
+        this.isDone = status;
     }
 
-    public Task(Long id, String title, Timestamp creationDate,
-            String description, Priority priority, Status status, Date due) {
-        this(id, title, creationDate, description, priority, status);
+    public Task(Long id, String title, Long creationDate, Long updated,
+            String description, boolean priority, boolean status, Date due) {
+        this(id, title, creationDate, updated, description, priority, status);
         this.mDue = due;
     }
 
-    public Task(Long id, String title, Timestamp creationDate,
-            String description, Priority priority, Status status, Date due,
+    public Task(Long id, String title, Long creationDate, Long updated,
+            String description, boolean priority, boolean status, Date due,
             Placemark placemark) {
-        this(id, title, creationDate, description, priority, status, due);
+        this(id, title, creationDate, updated, description, priority, status, due);
         this.mPlacemark = placemark;
     }
 
-    public Task(Long id, String title, Timestamp creationDate,
-            String description, Priority priority, Status status, Date due,
+    public Task(Long id, String title, Long creationDate, Long updated,
+            String description, boolean priority, boolean status, Date due,
             Placemark placemark, String imagePath) {
-        this(id, title, creationDate, description, priority, status, due,
+        this(id, title, creationDate, updated, description, priority, status, due,
                 placemark);
         mImageName = imagePath;
     }
 
-    public Timestamp getCreationDate() {
-        return mCreationDate;
+    public Long getCreated() {
+        return mCreated;
     }
 
     public String getDescription() {
@@ -117,20 +90,32 @@ public class Task {
         return mImageName;
     }
 
+    public Boolean getNotify() {
+        return notify;
+    }
+
     public Placemark getPlacemark() {
         return mPlacemark;
     }
 
-    public Priority getPriority() {
-        return mPriority;
-    }
-
-    public Status getStatus() {
-        return mStatus;
-    }
-
     public String getTitle() {
         return mTitle;
+    }
+
+    public Long getUpdated() {
+        return mUpdated;
+    }
+
+    public Boolean isDone() {
+        return isDone;
+    }
+
+    public Boolean isUrgent() {
+        return isUrgent;
+    }
+
+    public void setDone(boolean done) {
+        this.isDone = done;
     }
 
     public void setDueDate(Date due) {
@@ -141,16 +126,20 @@ public class Task {
         this.mImageName = imagePath;
     }
 
+    public void setNotify(Boolean notify) {
+        this.notify = notify;
+    }
+
     public void setPlacemark(Placemark placemark) {
         this.mPlacemark = placemark;
     }
 
-    public void setPriority(Priority priority) {
-        this.mPriority = priority;
+    public void setUpdated(Long updated) {
+        mUpdated = updated;
     }
 
-    public void setStatus(Status status) {
-        this.mStatus = status;
+    public void setUrgent(boolean urgent) {
+        this.isUrgent = urgent;
     }
 
     @Override

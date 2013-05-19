@@ -2,8 +2,6 @@
 <resources>
 
     <string name="tab_todo_text">Todo Tasks</string>
-    <string name="tasklist_sp_show_done">show_done</string>
-    <string name="tasklist_sp_sort_location">sort_location</string>
     <string name="tasklist_menu_done_title_on">Show Done Tasks</string>
     <string name="tasklist_menu_done_title_off">Hide Done Tasks</string>
     <string name="tasklist_menu_location_title_on">Nearby Notification (on)</string>

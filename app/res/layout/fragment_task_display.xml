@@ -36,12 +36,13 @@
         android:layout_margin="5dp"
         android:background="@android:color/darker_gray" />
 
-    <TextView
+    <WebView
         android:id="@+id/task_dialog_description"
         style="@style/ListDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/task_dialog_separator"
-        android:textIsSelectable="true" />
+        android:textIsSelectable="true" 
+        android:singleLine="false"/>
 
 </RelativeLayout>

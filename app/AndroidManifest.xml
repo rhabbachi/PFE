@@ -10,6 +10,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
@@ -17,6 +18,9 @@
         android:label="@string/app_name"
         android:logo="@drawable/hospital"
         android:theme="@style/HoloLightDarkActionBarTheme" >
+        <receiver android:name="com.commonsware.cwac.locpoll.LocationPoller" />
+        <service android:name="com.commonsware.cwac.locpoll.LocationPollerService" />
+
         <activity
             android:name="com.tunav.tunavmedi.activity.LoginActivity"
             android:excludeFromRecents="true"
@@ -40,7 +44,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.tunav.tunavmedi.service.TasksIntentService" >
+        <receiver android:name="com.tunav.tunavmedi.broadcastreceiver.StatusMonitor" >
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
@@ -50,14 +54,14 @@
         </receiver>
 
         <service
-            android:name="com.tunav.tunavmedi.service.TasksIntentService"
+            android:name="com.tunav.tunavmedi.service.TasksService"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.tunav.tunavmedi.action.TASKS_SERVICE" />
             </intent-filter>
         </service>
         <service
-            android:name="com.tunav.tunavmedi.service.AuthenticationIntentService"
+            android:name="com.tunav.tunavmedi.service.AuthService"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.tunav.tunavmedi.action.authentication.AUTHENTICATE" />

@@ -40,21 +40,30 @@ public class DemoSQLite extends SQLiteOpenHelper {
             db.execSQL(TasksContract.SQL_CREATE_TABLE);
             Log.v(tag, TasksContract.SQL_CREATE_INDEX_ID);
             db.execSQL(TasksContract.SQL_CREATE_INDEX_ID);
-            Log.v(tag, TasksContract.SQL_INSERT_DUMMY);
-            db.execSQL(TasksContract.SQL_INSERT_DUMMY);
-
-            // Records
-            Log.v(tag, TasksContract.SQL_CREATE_TABLE);
-            db.execSQL(TasksContract.SQL_CREATE_TABLE);
-            Log.v(tag, TasksContract.SQL_CREATE_INDEX_ID);
-            db.execSQL(TasksContract.SQL_CREATE_INDEX_ID);
-            Log.v(tag, TasksContract.SQL_INSERT_DUMMY);
-            db.execSQL(TasksContract.SQL_INSERT_DUMMY);
+            for (String insert : TasksContract.SQL_INSERT_DUMMIES) {
+                Log.v(tag, insert);
+                db.execSQL(insert);
+            }
         } catch (SQLException tr) {
             Log.e(tag, "SQLException");
             Log.d(tag, "SQLException", tr);
         }
         Log.i(tag, "New database created.");
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion)
+            throws SQLException {
+        // TODO dummy implementation
+        Log.v(tag, "onDowngrade()");
+        Log.i(tag, "Version mismatch, downgrading...");
+        onUpgrade(db, oldVersion, newVersion);
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        Log.v(tag, "onOpen()");
     }
 
     @Override
@@ -74,20 +83,5 @@ public class DemoSQLite extends SQLiteOpenHelper {
             Log.e(tag, "SQLException");
             Log.d(tag, "SQLException", e);
         }
-    }
-
-    @Override
-    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion)
-            throws SQLException {
-        // TODO dummy implementation
-        Log.v(tag, "onDowngrade()");
-        Log.i(tag, "Version mismatch, downgrading...");
-        onUpgrade(db, oldVersion, newVersion);
-    }
-
-    @Override
-    public void onOpen(SQLiteDatabase db) {
-        super.onOpen(db);
-        Log.v(tag, "onOpen()");
     }
 }

@@ -64,9 +64,9 @@ public class MainActivity extends Activity {
         thisActivity = this;
         try {
             SharedPreferences sharedPrefs = getSharedPreferences(
-                    TunavMedi.SHAREDPREFS_NAME, Activity.MODE_PRIVATE);
+                    TunavMedi.SP_USER_NAME, Activity.MODE_PRIVATE);
             boolean isLogged = sharedPrefs.getBoolean(
-                    TunavMedi.SHAREDPREFS_KEY_ISLOGGED, false);
+                    TunavMedi.SP_USER_KEY_ISLOGGED, false);
             if (!isLogged) {
                 onLogin();
             } else {
@@ -278,12 +278,12 @@ public class MainActivity extends Activity {
     private void clearUserData() {
         Log.i(TAG, "unLogin()");
         SharedPreferences sharedPrefs = getSharedPreferences(
-                TunavMedi.SHAREDPREFS_NAME, MODE_PRIVATE);
+                TunavMedi.SP_USER_NAME, MODE_PRIVATE);
         Editor sharedPrefsEditor = sharedPrefs.edit();
-        sharedPrefsEditor.remove(TunavMedi.SHAREDPREFS_KEY_ISLOGGED);
-        Log.v(TAG, TunavMedi.SHAREDPREFS_KEY_ISLOGGED + " removed.");
-        sharedPrefsEditor.remove(TunavMedi.SHAREDPREFS_KEY_USERID);
-        Log.v(TAG, TunavMedi.SHAREDPREFS_KEY_USERID + " removed.");
+        sharedPrefsEditor.remove(TunavMedi.SP_USER_KEY_ISLOGGED);
+        Log.v(TAG, TunavMedi.SP_USER_KEY_ISLOGGED + " removed.");
+        sharedPrefsEditor.remove(TunavMedi.SP_USER_KEY_USERID);
+        Log.v(TAG, TunavMedi.SP_USER_KEY_USERID + " removed.");
         // critical shared preferences, commiting
         sharedPrefsEditor.commit();
         Log.i(TAG, "SharedPreferences commited!");
