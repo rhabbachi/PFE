@@ -1,18 +1,11 @@
 
 package com.tunav.tunavmedi.adapter;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.drawable.Drawable;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.BatteryManager;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,12 +15,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.commonsware.cwac.locpoll.LocationPoller;
 import com.tunav.tunavmedi.R;
-import com.tunav.tunavmedi.abstraction.TasksHandler.OnTasksChangedListener;
-import com.tunav.tunavmedi.broadcastreceiver.LocationMonitor;
 import com.tunav.tunavmedi.datatype.Task;
-import com.tunav.tunavmedi.demo.sqlite.helper.TasksHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,7 +40,6 @@ public class TasksAdapter extends BaseAdapter {
     private static final String tag = "TasksAdapter";
     private volatile ArrayList<Task> mAllTasks = new ArrayList<Task>();
     private volatile ArrayList<Task> mDoneLessTasks = new ArrayList<Task>();
-    private TasksHelper mHelper = null;
     private Context mContext = null;
     private final LayoutInflater mInflater;
     private Boolean showDone = null;
@@ -61,37 +49,8 @@ public class TasksAdapter extends BaseAdapter {
     private Integer mRadius = null;
 
     private OnSharedPreferenceChangeListener tasklistListener;
-    private OnSharedPreferenceChangeListener statusListener;
 
-    private AlarmManager alarm = null;
-    private LocationManager locationManager = null;
-    private Runnable mSyncTasks = new Runnable() {
-        private static final String tag = "TaskUpdater";
-
-        @Override
-        public void run() {
-            Log.i(tag, "Syncing Tasks");
-            ArrayList<Task> freshTasks = mHelper.pullTasks();
-            updateDataSet(freshTasks);
-            notifyDataSetChanged();
-        }
-    };
-    private PendingIntent pendingPoller = null;
-    private Boolean isCharging = null;
-    private Boolean batteryOkey = null;
-    private Thread mTasksMonitor = null;
-    private OnTasksChangedListener mTasksListener = new OnTasksChangedListener() {
-        private static final String tag = "OnTasksChangedListener";
-
-        @Override
-        public void onTasksChanged() {
-            Log.v(tag, "onTasksChanged()");
-            Thread worker = new Thread(mSyncTasks);
-            worker.start();
-        }
-    };
     private ScheduledExecutorService mScheduler = null;
-    private final Integer corePoolSize = 2;
     private final Integer MINUT = 1000 * 60;
     private Runnable refreshList = new Runnable() {
         private static final String tag = "refreshList";
@@ -118,20 +77,9 @@ public class TasksAdapter extends BaseAdapter {
         Log.v(tag, "TasksAdapter()");
         mContext = context;
         mInflater = LayoutInflater.from(mContext);
-        mScheduler = Executors.newScheduledThreadPool(corePoolSize);
-
-        mHelper = new TasksHelper(mContext);
-        mHelper.addOnTasksChangedListener(mTasksListener);
-        mScheduler.execute(mHelper.getNotificationRunnable());
-        mScheduler.execute(mSyncTasks);
-
-        locationManager = (LocationManager) mContext
-                .getSystemService(Context.LOCATION_SERVICE);
-        alarm = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
         setupSharedPreference();
-        setLocationPolling();
-
+        mScheduler = Executors.newSingleThreadScheduledExecutor();
         mScheduler.scheduleWithFixedDelay(refreshList, 2, 2, TimeUnit.MINUTES);
     }
 
@@ -275,27 +223,6 @@ public class TasksAdapter extends BaseAdapter {
         currentLocation.set(location);
     }
 
-    private void setLocationPolling() {
-
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
-        criteria.setAltitudeRequired(true);
-        criteria.setBearingRequired(false);
-        criteria.setSpeedRequired(false);
-        criteria.setCostAllowed(false);
-
-        String bestProvider = locationManager.getBestProvider(criteria, true);
-
-        Intent poller = new Intent(mContext, LocationPoller.class);
-        poller.putExtra(LocationPoller.EXTRA_INTENT, new Intent(mContext,
-                LocationMonitor.class));
-        poller.putExtra(LocationPoller.EXTRA_PROVIDER, bestProvider);
-        pendingPoller = PendingIntent.getBroadcast(mContext, 0, poller, 0);
-        alarm.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),
-                1000 * 60 * 5, pendingPoller);
-    }
-
     public void setRadius(Integer radius) {
         if (radius.equals(mRadius)) {
             return;
@@ -339,42 +266,6 @@ public class TasksAdapter extends BaseAdapter {
         sortLocation = mSharedPreferences.getBoolean(keyLocationSort, true);
         mSharedPreferences
                 .registerOnSharedPreferenceChangeListener(tasklistListener);
-
-        // Status shared prefs
-        statusListener = new OnSharedPreferenceChangeListener() {
-
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                String keyisCharging = mContext.getResources().getString(
-                        R.string.sp_status_key_is_charging);
-                String keyBatteryOkey = mContext.getResources().getString(
-                        R.string.sp_status_key_battery_okey);
-                if (key.equals(keyisCharging)) {
-                    isCharging = sharedPreferences.getBoolean(key, isCharging);
-                } else if (key.equals(keyBatteryOkey)) {
-                    batteryOkey = sharedPreferences.getBoolean(key, batteryOkey);
-                }
-            }
-        };
-
-        String spStatus = mContext.getResources().getString(R.string.sp_status_name);
-        mSharedPreferences = mContext.getSharedPreferences(spStatus, Context.MODE_PRIVATE);
-        mSharedPreferences.registerOnSharedPreferenceChangeListener(statusListener);
-
-        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent batteryStatus = mContext.registerReceiver(null, ifilter);
-
-        // Are we charging / charged?
-        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-        isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                status == BatteryManager.BATTERY_STATUS_FULL;
-
-        // Hardcoded 15% low battery level
-        final Integer LOW_LEVEL = 15;
-        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
-        batteryOkey = (level / (float) scale) > LOW_LEVEL ? true : false;
     }
 
     private void sort() {
@@ -383,10 +274,6 @@ public class TasksAdapter extends BaseAdapter {
         // TODO support done stripping
         Collections.sort(mAllTasks, taskComparator);
         Collections.sort(mDoneLessTasks, taskComparator);
-    }
-
-    private void unsetLocationPolling() {
-        alarm.cancel(pendingPoller);
     }
 
     public void updateDataSet(ArrayList<Task> newTasks) {

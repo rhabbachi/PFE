@@ -5,10 +5,13 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,12 +30,14 @@ import com.tunav.tunavmedi.app.TunavMedi;
 import com.tunav.tunavmedi.datatype.Task;
 import com.tunav.tunavmedi.fragment.dialog.TaskDisplay;
 import com.tunav.tunavmedi.fragment.dialog.TaskOptions;
+import com.tunav.tunavmedi.service.TasksService;
+import com.tunav.tunavmedi.service.TasksService.SelfBinder;
 
-public class TaskListFragment extends ListFragment {
+public class TaskListFragment extends ListFragment implements ServiceConnection {
 
     private static final String tag = "TaskListFragment";
 
-    private TasksAdapter mTasksAdapter = null;
+    private TasksService mPresenterService = null;
     private ListView mListView = null;
     private int mStackLevel = 0;
     private final OnItemLongClickListener mOnItemLongClickListener = new OnItemLongClickListener() {
@@ -96,6 +101,10 @@ public class TaskListFragment extends ListFragment {
         }
     };
 
+    private TasksAdapter mTasksAdapter = null;
+
+    private boolean isBound;
+
     // Called once the parent Activity and the Fragment's UI have
     // been created.
     @Override
@@ -111,7 +120,6 @@ public class TaskListFragment extends ListFragment {
         mListView.setLongClickable(true);
         mListView.setOnItemLongClickListener(mOnItemLongClickListener);
         setEmptyText(getResources().getString(R.string.task_list_empty));
-        setListAdapter(mTasksAdapter);
     }
 
     @Override
@@ -249,6 +257,7 @@ public class TaskListFragment extends ListFragment {
         // the active foreground activity.
         // Persist all edits or state changes
         // as after this call the process is likely to be killed.
+        getActivity().unbindService(this);
         super.onPause();
     }
 
@@ -259,6 +268,8 @@ public class TaskListFragment extends ListFragment {
         Log.v(tag, "onResume()");
         // Resume any paused UI updates, threads, or processes required
         // by the Fragment but suspended when it became inactive.
+        Intent service = new Intent(getActivity(), TasksService.class);
+        getActivity().bindService(service, this, Context.BIND_AUTO_CREATE);
     }
 
     // Called to save UI state changes at the
@@ -270,6 +281,28 @@ public class TaskListFragment extends ListFragment {
         // This bundle will be passed to onCreate, onCreateView, and
         // onCreateView if the parent Activity is killed and restarted.
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        Log.v(tag, "onServiceConnected()");
+        SelfBinder binder = (SelfBinder) service;
+        mPresenterService = binder.getService();
+        if (mPresenterService != null) {
+            isBound = true;
+            mTasksAdapter = mPresenterService.getAdapter();
+            setListAdapter(mTasksAdapter);
+            Log.i(tag, "binding succesful!");
+        } else {
+            isBound = false;
+            Log.i(tag, "binding failed!");
+        }
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        mPresenterService = null;
+        isBound = false;
     }
 
     // Called at the start of the visible lifetime.

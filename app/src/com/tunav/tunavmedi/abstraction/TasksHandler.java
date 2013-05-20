@@ -21,12 +21,12 @@ public abstract class TasksHandler {
     };
     private static ArrayList<OnTasksChangedListener> mListeners = null;
 
-    public static void addOnTasksChangedListener(OnTasksChangedListener listener) {
-        mListeners.add(listener);
-    }
-
     public TasksHandler() {
         mListeners = new ArrayList<TasksHandler.OnTasksChangedListener>();
+    }
+
+    public void addOnTasksChangedListener(OnTasksChangedListener listener) {
+        mListeners.add(listener);
     }
 
     public Runnable getNotificationRunnable() {

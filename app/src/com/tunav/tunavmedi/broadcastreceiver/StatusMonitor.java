@@ -12,7 +12,7 @@ public class StatusMonitor extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final String tag = "ProfileMonitor";
-
+        // TODO
         Log.v(tag, "onReceive()");
         String action = intent.getAction();
         Log.i(tag, action);
