@@ -238,7 +238,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         // Set up the login form.
         // TODO autofilled login ID ?
-        mIDView = (EditText) findViewById(R.id.ID);
+        mIDView = (EditText) findViewById(R.id.id);
         mIDView.setText(mID);
 
         mPasswordView = (EditText) findViewById(R.id.password);
