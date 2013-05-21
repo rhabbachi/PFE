@@ -162,8 +162,8 @@ public class TaskListFragment extends ListFragment implements ServiceConnection 
 
         // for the action bar items
         setHasOptionsMenu(true);
-
-        mTasksAdapter = new TasksAdapter(getActivity());
+        Intent service = new Intent(getActivity(), TasksService.class);
+        getActivity().bindService(service, this, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -191,6 +191,8 @@ public class TaskListFragment extends ListFragment implements ServiceConnection 
         Log.v(tag, "onDestroy()");
         // Clean up any resources including ending threads,
         // closing database connections etc.
+        getActivity().unbindService(this);
+
         super.onDestroy();
     }
 
@@ -259,7 +261,6 @@ public class TaskListFragment extends ListFragment implements ServiceConnection 
         // the active foreground activity.
         // Persist all edits or state changes
         // as after this call the process is likely to be killed.
-        getActivity().unbindService(this);
         super.onPause();
     }
 
@@ -270,8 +271,6 @@ public class TaskListFragment extends ListFragment implements ServiceConnection 
         Log.v(tag, "onResume()");
         // Resume any paused UI updates, threads, or processes required
         // by the Fragment but suspended when it became inactive.
-        Intent service = new Intent(getActivity(), TasksService.class);
-        getActivity().bindService(service, this, Context.BIND_AUTO_CREATE);
     }
 
     // Called to save UI state changes at the
