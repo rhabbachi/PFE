@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.tunav.tunavmedi.R;
-import com.tunav.tunavmedi.datatype.Task;
 
 public class TaskOptions extends DialogFragment {
     public static final String tag = "TaskOptions";
@@ -24,16 +23,17 @@ public class TaskOptions extends DialogFragment {
     public static final String ARG_TIME = "time";
     public static final String ARG_OPTIONS = "options";
 
-    public static TaskOptions newInstance(Task task) {
+    public static TaskOptions newInstance(String title, String iconName, boolean isUrgent,
+            boolean isDone, boolean notify) {
         TaskOptions taskOptions = new TaskOptions();
 
         Bundle args = new Bundle();
-        args.putString(ARG_TITLE, task.getTitle());
-        args.putString(ARG_ICON_NAME, task.getImageName());
+        args.putString(ARG_TITLE, title);
+        args.putString(ARG_ICON_NAME, iconName);
         boolean[] options = {
-                task.isUrgent(),
-                task.isDone(),
-                task.getNotify()
+                isUrgent,
+                isDone,
+                notify
         };
         args.putBooleanArray(ARG_OPTIONS, options);
         taskOptions.setArguments(args);

@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tunav.tunavmedi.R;
-import com.tunav.tunavmedi.datatype.Task;
 
 public class TaskDisplay extends DialogFragment {
 
@@ -25,14 +24,15 @@ public class TaskDisplay extends DialogFragment {
     public static final String DEFAULT_ICON_NAME = "hospital";
     public static final String ARG_TIME = "time";
 
-    public static TaskDisplay newInstance(Task task) {
+    public static TaskDisplay newInstance(String title, String iconName, String description,
+            Long created) {
         TaskDisplay taskDisplay = new TaskDisplay();
 
         Bundle args = new Bundle();
-        args.putString(ARG_TITLE, task.getTitle());
-        args.putString(ARG_ICON_NAME, task.getImageName());
-        args.putString(ARG_DESCRIPTION, task.getDescription());
-        args.putLong(ARG_TIME, task.getCreated());
+        args.putString(ARG_TITLE, title);
+        args.putString(ARG_ICON_NAME, iconName);
+        args.putString(ARG_DESCRIPTION, description);
+        args.putLong(ARG_TIME, created);
         taskDisplay.setArguments(args);
 
         return taskDisplay;

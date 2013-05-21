@@ -60,7 +60,8 @@ public class TaskListFragment extends ListFragment implements ServiceConnection 
             ft.addToBackStack(null);
 
             // Create and show the dialog.
-            TaskOptions taskOptions = TaskOptions.newInstance(task);
+            TaskOptions taskOptions = TaskOptions.newInstance(task.getTitle(), task.getImageName(),
+                    task.isUrgent(), task.isDone(), task.getNotification());
             taskOptions.setTargetFragment(thisFragment, REQUESTCODE_TASKOPTIONS);
             ft.add(taskOptions, TaskOptions.tag);
             ft.commit();
@@ -92,7 +93,8 @@ public class TaskListFragment extends ListFragment implements ServiceConnection 
             ft.addToBackStack(null);
 
             // Create and show the dialog.
-            TaskDisplay taskDialog = TaskDisplay.newInstance(task);
+            TaskDisplay taskDialog = TaskDisplay.newInstance(task.getTitle(), task.getImageName(),
+                    task.getDescription(), task.getCreated());
             taskDialog.setTargetFragment(thisFragment, REQUESTCODE_TASKDISPLAY);
             ft.add(taskDialog, TaskDisplay.tag);
             ft.commit();

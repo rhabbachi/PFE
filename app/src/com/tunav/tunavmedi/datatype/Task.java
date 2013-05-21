@@ -90,7 +90,7 @@ public class Task {
         return mImageName;
     }
 
-    public Boolean getNotify() {
+    public Boolean getNotification() {
         return notify;
     }
 
