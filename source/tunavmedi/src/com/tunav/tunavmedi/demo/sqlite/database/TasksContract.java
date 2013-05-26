@@ -1,5 +1,5 @@
 
-package com.tunav.tunavmedi.demo.sqlite.contract;
+package com.tunav.tunavmedi.demo.sqlite.database;
 
 import android.provider.BaseColumns;
 
@@ -62,86 +62,86 @@ public abstract class TasksContract implements BaseColumns {
             "INSERT INTO "
                     + TABLE_NAME
                     + String.format(
-                            "(%s, %s, %s, %s, %s, %s)"//
-                            , KEY_CREATED, KEY_UPDATED, KEY_TITLE, KEY_DESCRIPTION, KEY_ISURGENT,
-                            KEY_ISDONE)
+                    "(%s, %s, %s, %s, %s, %s)"//
+                    , KEY_CREATED, KEY_UPDATED, KEY_TITLE, KEY_DESCRIPTION, KEY_ISURGENT,
+                    KEY_ISDONE)
                     + String.format(
-                            " VALUES ( %d , %d, %s, %s, %d, %d)"//
-                            ,
-                            Calendar.getInstance().getTime().getTime()
-                            ,
-                            Calendar.getInstance().getTime().getTime()
-                            ,
-                            "'Service de Pédiatrie - Addmission Patient [B06/65]'"
-                            , "'html/dossier1.html'"
-                            , 0
-                            , 0),
+                    " VALUES ( %d , %d, %s, %s, %d, %d)"//
+                    ,
+                    Calendar.getInstance().getTime().getTime()
+                    ,
+                    Calendar.getInstance().getTime().getTime()
+                    ,
+                    "'Service de Pédiatrie - Addmission Patient [B06/65]'"
+                    , "'html/dossier1.html'"
+                    , 0
+                    , 0),
             "INSERT INTO "
                     + TABLE_NAME
                     + String.format(
-                            "(%s, %s, %s, %s, %s, %s)"//
-                            , KEY_CREATED, KEY_UPDATED, KEY_TITLE, KEY_DESCRIPTION, KEY_ISURGENT,
-                            KEY_ISDONE)
+                    "(%s, %s, %s, %s, %s, %s)"//
+                    , KEY_CREATED, KEY_UPDATED, KEY_TITLE, KEY_DESCRIPTION, KEY_ISURGENT,
+                    KEY_ISDONE)
                     + String.format(
-                            " VALUES ( %d , %d, %s, %s, %d, %d)"//
-                            , Calendar.getInstance().getTime().getTime()
-                            , Calendar.getInstance().getTime().getTime()
-                            ,
-                            "'Laboratoire de Biochimie - Résultats Analyse Biochimiques [65/B06]'"
-                            , "'html/biochimique.html'"
-                            , 0
-                            , 0),
+                    " VALUES ( %d , %d, %s, %s, %d, %d)"//
+                    , Calendar.getInstance().getTime().getTime()
+                    , Calendar.getInstance().getTime().getTime()
+                    ,
+                    "'Laboratoire de Biochimie - Résultats Analyse Biochimiques [65/B06]'"
+                    , "'html/biochimique.html'"
+                    , 0
+                    , 0),
             "INSERT INTO "
                     + TABLE_NAME
                     + String.format(
-                            "(%s, %s, %s, %s, %s, %s)"//
-                            , KEY_CREATED, KEY_UPDATED, KEY_TITLE, KEY_DESCRIPTION, KEY_ISURGENT,
-                            KEY_ISDONE)
+                    "(%s, %s, %s, %s, %s, %s)"//
+                    , KEY_CREATED, KEY_UPDATED, KEY_TITLE, KEY_DESCRIPTION, KEY_ISURGENT,
+                    KEY_ISDONE)
                     + String.format(
-                            " VALUES ( %d , %d, %s, %s, %d, %d)"//
-                            ,
-                            Calendar.getInstance().getTime().getTime()
-                            ,
-                            Calendar.getInstance().getTime().getTime()
-                            ,
-                            "'Laboratoire de Biochimie - Résultat de Dosage de HbA1c (hémoglobine glyquée) [65/B06]'"
-                            , "'html/hba1c.html'"
-                            , 0
-                            , 0),
+                    " VALUES ( %d , %d, %s, %s, %d, %d)"//
+                    ,
+                    Calendar.getInstance().getTime().getTime()
+                    ,
+                    Calendar.getInstance().getTime().getTime()
+                    ,
+                    "'Laboratoire de Biochimie - Résultat de Dosage de HbA1c (hémoglobine glyquée) [65/B06]'"
+                    , "'html/hba1c.html'"
+                    , 0
+                    , 0),
             "INSERT INTO "
                     + TABLE_NAME
                     + String.format(
-                            "(%s, %s, %s, %s, %s, %s)"//
-                            , KEY_CREATED, KEY_UPDATED, KEY_TITLE, KEY_DESCRIPTION, KEY_ISURGENT,
-                            KEY_ISDONE)
+                    "(%s, %s, %s, %s, %s, %s)"//
+                    , KEY_CREATED, KEY_UPDATED, KEY_TITLE, KEY_DESCRIPTION, KEY_ISURGENT,
+                    KEY_ISDONE)
                     + String.format(
-                            " VALUES ( %d , %d, %s, %s, %d, %d)"//
-                            ,
-                            Calendar.getInstance().getTime().getTime()
-                            ,
-                            Calendar.getInstance().getTime().getTime()
-                            ,
-                            "'Laboratoire de Biochimie - Résultat Analyse Hormonales [65/B06]'"
-                            , "'html/hormonales.html'"
-                            , 0
-                            , 0),
+                    " VALUES ( %d , %d, %s, %s, %d, %d)"//
+                    ,
+                    Calendar.getInstance().getTime().getTime()
+                    ,
+                    Calendar.getInstance().getTime().getTime()
+                    ,
+                    "'Laboratoire de Biochimie - Résultat Analyse Hormonales [65/B06]'"
+                    , "'html/hormonales.html'"
+                    , 0
+                    , 0),
             "INSERT INTO "
                     + TABLE_NAME
                     + String.format(
-                            "(%s, %s, %s, %s, %s, %s)"//
-                            , KEY_CREATED, KEY_UPDATED, KEY_TITLE, KEY_DESCRIPTION, KEY_ISURGENT,
-                            KEY_ISDONE)
+                    "(%s, %s, %s, %s, %s, %s)"//
+                    , KEY_CREATED, KEY_UPDATED, KEY_TITLE, KEY_DESCRIPTION, KEY_ISURGENT,
+                    KEY_ISDONE)
                     + String.format(
-                            " VALUES ( %d , %d, %s, %s, %d, %d)"//
-                            ,
-                            Calendar.getInstance().getTime().getTime()
-                            ,
-                            Calendar.getInstance().getTime().getTime()
-                            ,
-                            "'Service de Radiologie - Compte-Rendu Examen Radiologique N8781/08'"
-                            , "'html/radio.html'"
-                            , 0
-                            , 0)
+                    " VALUES ( %d , %d, %s, %s, %d, %d)"//
+                    ,
+                    Calendar.getInstance().getTime().getTime()
+                    ,
+                    Calendar.getInstance().getTime().getTime()
+                    ,
+                    "'Service de Radiologie - Compte-Rendu Examen Radiologique N8781/08'"
+                    , "'html/radio.html'"
+                    , 0
+                    , 0)
     };
 
     private TasksContract() {

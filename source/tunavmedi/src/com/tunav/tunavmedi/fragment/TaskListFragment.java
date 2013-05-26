@@ -5,25 +5,15 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-
 import com.tunav.tunavmedi.R;
 import com.tunav.tunavmedi.adapter.TasksAdapter;
 import com.tunav.tunavmedi.app.TunavMedi;
@@ -60,12 +50,14 @@ public class TaskListFragment extends ListFragment implements ServiceConnection 
             ft.addToBackStack(null);
 
             // Create and show the dialog.
+            assert task != null;
             TaskOptions taskOptions = TaskOptions.newInstance(task.getTitle(), task.getImageName(),
                     task.isUrgent(), task.isDone(), task.getNotification());
             taskOptions.setTargetFragment(thisFragment, REQUESTCODE_TASKOPTIONS);
             ft.add(taskOptions, TaskOptions.tag);
             ft.commit();
 
+            mTasksAdapter.notifyDataSetChanged();
             return true;
         }
     };
@@ -93,13 +85,13 @@ public class TaskListFragment extends ListFragment implements ServiceConnection 
             ft.addToBackStack(null);
 
             // Create and show the dialog.
+            assert task != null;
             TaskDisplay taskDialog = TaskDisplay.newInstance(task.getTitle(), task.getImageName(),
                     task.getDescription(), task.getCreated());
             taskDialog.setTargetFragment(thisFragment, REQUESTCODE_TASKDISPLAY);
             ft.add(taskDialog, TaskDisplay.tag);
             ft.commit();
             mTasksAdapter.notifyDataSetChanged();
-            // taskDialog.show(ft, TaskDisplay.tag);
         }
     };
 
@@ -118,6 +110,7 @@ public class TaskListFragment extends ListFragment implements ServiceConnection 
         // Fragment's view to be fully inflated.
 
         mListView = getListView();
+        assert mListView != null;
         mListView.setOnItemClickListener(mOnItemClickListener);
         mListView.setLongClickable(true);
         mListView.setOnItemLongClickListener(mOnItemLongClickListener);
@@ -177,7 +170,7 @@ public class TaskListFragment extends ListFragment implements ServiceConnection 
     // create its user interface.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         Log.v(tag, "onCreateView()");
         // Create, or inflate the Fragment's UI, and return it.
         // If this Fragment has no UI then return null.

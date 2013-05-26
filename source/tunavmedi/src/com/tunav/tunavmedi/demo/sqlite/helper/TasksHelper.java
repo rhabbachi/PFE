@@ -7,11 +7,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
-
 import com.tunav.tunavmedi.abstraction.TasksHandler;
 import com.tunav.tunavmedi.datatype.Task;
-import com.tunav.tunavmedi.demo.sqlite.DemoSQLite;
-import com.tunav.tunavmedi.demo.sqlite.contract.TasksContract;
+import com.tunav.tunavmedi.demo.sqlite.database.DemoSQLite;
+import com.tunav.tunavmedi.demo.sqlite.database.TasksContract;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +21,6 @@ import java.util.Random;
 public class TasksHelper extends TasksHandler {
 
     public static final String tag = "TaskHelper";
-
     private Context mContext = null;
     private DemoSQLite mDemoSQLite = null;
 
@@ -36,11 +34,14 @@ public class TasksHelper extends TasksHandler {
 
             @Override
             public void run() {
-                int inserts = 0;
+                int inserts = 3;
                 Random random = new Random();
                 for (int i = 0; i < inserts; i++) {
                     // TODO
-                    notifyTasksChangedListeners();
+                    ArrayList newTasks = pullTasks();
+                    setChanged();
+                    notifyObservers(newTasks);
+                    Log.i(tag, "Observers notified");
                     try {
                         Thread.sleep(random.nextInt(5000));
                     } catch (InterruptedException tr) {
@@ -53,34 +54,15 @@ public class TasksHelper extends TasksHandler {
         });
     }
 
-    @Override
-    public Runnable getNotificationRunnable() {
-        return new Runnable() {
-
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(1000 * 15);
-                        Log.i(tag, "Tasks Helper Thread Running");
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-    }
-
     private String getStringFromAssets(String description_file) {
         String text = null;
-        InputStream is = null;
+        InputStream is;
         try {
             is = mContext.getResources().getAssets().open(description_file);
             byte[] buffer = new byte[is.available()];
-            is.read(buffer);
+            int red = is.read(buffer);
             is.close();
-            text = new String(buffer);
+            if (red > 0) text = new String(buffer);
         } catch (IOException tr) {
             String msg = "IOException";
             Log.e(tag, msg);
@@ -93,8 +75,8 @@ public class TasksHelper extends TasksHandler {
     public ArrayList<Task> pullTasks() {
         Log.v(tag, "getTasks()");
         ArrayList<Task> tasks = new ArrayList<Task>();
-        SQLiteDatabase database = null;
-        Cursor cursor = null;
+        SQLiteDatabase database;
+        Cursor cursor;
         try {
             database = mDemoSQLite.getReadableDatabase();
 
@@ -108,6 +90,7 @@ public class TasksHelper extends TasksHandler {
             String having = null;
             String orderBy = null;
 
+            assert database != null;
             cursor = database.query(//
                     table,// The table to query
                     columns,// The columns to return
@@ -127,11 +110,11 @@ public class TasksHelper extends TasksHandler {
                             .getLong(cursor
                                     .getColumnIndexOrThrow(TasksContract.KEY_CREATED));
                     boolean urgent = cursor.getInt(cursor
-                            .getColumnIndexOrThrow(TasksContract.KEY_ISURGENT)) == 0 ? false : true;
+                            .getColumnIndexOrThrow(TasksContract.KEY_ISURGENT)) != 0;
                     Long due = cursor.getLong(cursor
                             .getColumnIndexOrThrow(TasksContract.KEY_DUE));
                     boolean done = cursor.getInt(cursor
-                            .getColumnIndexOrThrow(TasksContract.KEY_ISDONE)) == 0 ? false : true;
+                            .getColumnIndexOrThrow(TasksContract.KEY_ISDONE)) != 0;
                     String description_file = cursor
                             .getString(cursor
                                     .getColumnIndexOrThrow(TasksContract.KEY_DESCRIPTION));
@@ -156,6 +139,8 @@ public class TasksHelper extends TasksHandler {
             } else {
                 Log.e(tag, "Cursor Empty!");
             }
+            cursor.close();
+            database.close();
         } catch (SQLiteException tr) {
             // database problem
             Log.e(tag, "SQLiteException");
@@ -164,21 +149,18 @@ public class TasksHelper extends TasksHandler {
             // something wired happened in the cursor
             Log.e(tag, "IllegalArgumentException");
             Log.d(tag, "IllegalArgumentException", tr);
-        } finally {
-            cursor.close();
-            database.close();
         }
         return tasks;
     }
 
     @Override
-    public boolean pushTask(Task updatedTask) {
+    public int pushTask(ArrayList<Task> updatedTasks) {
         Log.v(tag, "setStatus()");
-        SQLiteDatabase db = null;
+        SQLiteDatabase database = null;
         ContentValues cv = null;
-        boolean returnStatus = true;
+        int returnStatus = 0;
         try {
-            db = mDemoSQLite.getWritableDatabase();
+            database = mDemoSQLite.getWritableDatabase();
             cv = new ContentValues();
             // TODO
         } catch (SQLiteException tr) {
@@ -186,7 +168,9 @@ public class TasksHelper extends TasksHandler {
             Log.e(tag, "SQLiteException");
             Log.d(tag, "SQLiteException", tr);
         } finally {
-            db.close();
+            if (database != null) {
+                database.close();
+            }
         }
         return returnStatus;
     }

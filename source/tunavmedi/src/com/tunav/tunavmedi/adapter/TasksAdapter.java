@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.tunav.tunavmedi.R;
 import com.tunav.tunavmedi.datatype.Task;
 
@@ -27,9 +26,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class TasksAdapter extends BaseAdapter {
-    public enum Profile {
-        BATTERY_LOW, NETWORK_DISABLE, BATTERY_OKAY, NETWORK_ENABLE;
-    }
 
     static class TaskViewHolder {
         TextView task_title;
@@ -106,8 +102,7 @@ public class TasksAdapter extends BaseAdapter {
                         boolean exit = (lhsDistance > mRadius && rhsDistance > mRadius && lhsDistance == rhsDistance);
                         if (!exit) {
                             float diffDist = lhsDistance - rhsDistance;
-                            int roundDiffDist = Math.round(diffDist);
-                            return roundDiffDist;
+                            return Math.round(diffDist);
                         }
                     } else {
                         return lhs.getCreated().compareTo(rhs.getCreated());
@@ -169,7 +164,7 @@ public class TasksAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Log.v(tag, "getView()");
-        TaskViewHolder viewHolder = null;
+        TaskViewHolder viewHolder;
         Task task = getItem(position);
         Long taskID = getItemId(position);
 
@@ -178,6 +173,7 @@ public class TasksAdapter extends BaseAdapter {
             convertView = mInflater.inflate(
                     R.layout.fragment_tasklist_item, parent, false);
             viewHolder = new TaskViewHolder();
+            assert convertView != null;
             viewHolder.task_title = (TextView) convertView
                     .findViewById(R.id.task_item_title);
             viewHolder.task_timer = (TextView) convertView
@@ -289,5 +285,6 @@ public class TasksAdapter extends BaseAdapter {
                 mDoneLessTasks.add(task);
             }
         }
+        notifyDataSetChanged();
     }
 }

@@ -1,57 +1,36 @@
 
 package com.tunav.tunavmedi.abstraction;
 
+import android.util.Log;
 import com.tunav.tunavmedi.datatype.Task;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
-public abstract class TasksHandler {
-
-    public interface OnTasksChangedListener {
-        public void onTasksChanged();
-    }
-
+public abstract class TasksHandler extends Observable {
+    public static final String tag = "TasksHandler";
     public static Runnable notificationRunnable = new Runnable() {
 
         @Override
         public void run() {
-            // TODO default implementation exists with code 0
-
+            String msg = "Default notification thread.";
+            Log.d(tag, msg);
         }
     };
-    private static ArrayList<OnTasksChangedListener> mListeners = null;
-
-    public TasksHandler() {
-        mListeners = new ArrayList<TasksHandler.OnTasksChangedListener>();
-    }
-
-    public void addOnTasksChangedListener(OnTasksChangedListener listener) {
-        mListeners.add(listener);
-    }
 
     public Runnable getNotificationRunnable() {
         return notificationRunnable;
-    }
-
-    public void notifyTasksChangedListeners() {
-        for (OnTasksChangedListener listener : mListeners) {
-            listener.onTasksChanged();
-        }
     }
 
     public ArrayList<Task> pullTasks() {
         return null;
     }
 
-    public boolean pushTask(Task task) {
-        return false;
+    public int pushTask(ArrayList<Task> tasks) {
+        return 0;
     }
 
-    public boolean removeTasksChangedListener(OnTasksChangedListener listener) {
-        return mListeners.remove(listener);
-    }
-
-    public void setNotificationThread(Runnable runnable) {
+    protected static void setNotificationThread(Runnable runnable) {
         notificationRunnable = runnable;
     }
 }

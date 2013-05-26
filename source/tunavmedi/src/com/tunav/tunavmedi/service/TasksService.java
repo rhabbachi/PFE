@@ -16,16 +16,16 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
-
 import com.commonsware.cwac.locpoll.LocationPoller;
 import com.tunav.tunavmedi.R;
-import com.tunav.tunavmedi.abstraction.TasksHandler.OnTasksChangedListener;
 import com.tunav.tunavmedi.adapter.TasksAdapter;
 import com.tunav.tunavmedi.broadcastreceiver.LocationMonitor;
 import com.tunav.tunavmedi.datatype.Task;
 import com.tunav.tunavmedi.demo.sqlite.helper.TasksHelper;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -33,58 +33,37 @@ import java.util.concurrent.TimeUnit;
 
 public class TasksService extends Service {
 
-    public class SelfBinder extends Binder {
-        public TasksService getService() {
-            return TasksService.this;
-        }
-    }
-
+    public static final String tag = "TasksService";
+    final Integer BATTERY_LEVEL_LOW = 15;
     // This is the object that receives interactions from clients. See
     // RemoteService for a more complete example.
     private final IBinder mBinder = new SelfBinder();
-    private TasksAdapter mTasksAdapter = null;
-
-    private LocationManager locationManager = null;
-
-    private AlarmManager alarm = null;
-
-    private TasksHelper mHelper = null;
-
-    private Runnable mSyncTasks = new Runnable() {
-        private static final String tag = "TaskUpdater";
-
-        @Override
-        public void run() {
-            Log.i(tag, "Syncing Tasks");
-            ArrayList<Task> freshTasks = mHelper.pullTasks();
-            mTasksAdapter.updateDataSet(freshTasks);
-            mTasksAdapter.notifyDataSetChanged();
-        }
-    };
-    private OnTasksChangedListener mTasksListener = new OnTasksChangedListener() {
-        private static final String tag = "OnTasksChangedListener";
-
-        @Override
-        public void onTasksChanged() {
-            Log.v(tag, "onTasksChanged()");
-            syncTasks();
-        }
-    };
-
-    private ScheduledExecutorService mScheduler = null;
-
     private final Integer corePoolSize = 2;
+    private final Integer BATTERY_LEVEL_NOTMUCH = 40;
+    private Observer observer = new Observer() {
+        @Override
+        public void update(Observable observable, Object o) {
+            Log.v(tag, "update()");
+            final ArrayList<Task> castedObject = (ArrayList<Task>) o;
+            mScheduler.submit(new Runnable() {
+                @Override
+                public void run() {
 
-    private PendingIntent pendingPoller = null;
-
+                    mTasksAdapter.updateDataSet(castedObject);
+                }
+            });
+        }
+    };
+    private ArrayList<Task> mTasksQueue = new ArrayList<Task>();
+    private TasksAdapter mTasksAdapter = null;
+    private LocationManager locationManager = null;
+    private AlarmManager alarm = null;
+    private TasksHelper mHelper = null;
+    private ScheduledExecutorService mScheduler = null;
+    private PendingIntent pendingLocator = null;
     private Boolean isCharging = null;
-
-    private Boolean batteryOkey = null;
-
+    private Boolean batteryOkay = null;
     private OnSharedPreferenceChangeListener statusListener;
-
-    public static final String tag = "PresenterService";
-
     private Future<?> mBatteryWatcherFuture = null;
     private Runnable mBatteryWatcher = new Runnable() {
 
@@ -94,18 +73,15 @@ public class TasksService extends Service {
             onConfigure();
         }
     };
-    final Integer BATTERY_LEVEL_LOW = 15;
+    private Future<?> mHelperWatcherFuture = null;
 
-    private final Integer BATTERY_LEVEL_NOTMUCH = 40;
-    private Future<?> mSyncTasksFuture;
-
-    private void enableLocationPolling() {
+    private void enableLocationPulling() {
 
     }
 
     public TasksAdapter getAdapter() {
         mTasksAdapter = new TasksAdapter(this);
-        mSyncTasksFuture = mScheduler.submit(mSyncTasks);
+        mTasksAdapter.updateDataSet(mHelper.pullTasks());
         return mTasksAdapter;
     }
 
@@ -130,11 +106,11 @@ public class TasksService extends Service {
     }
 
     private void onConfigure() {
-        if (batteryOkey) {
+        if (batteryOkay) {
             float lvl = getBatteryLevel();
             // selfcheck in case of
             if (lvl <= BATTERY_LEVEL_LOW) {
-                batteryOkey = false;
+                batteryOkay = false;
                 onConfigure();
                 return;
             }
@@ -154,13 +130,12 @@ public class TasksService extends Service {
 
     @Override
     public void onCreate() {
-        Log.v(tag, "onCreate()");
         super.onCreate();
+        Log.v(tag, "onCreate()");
         mScheduler = Executors.newScheduledThreadPool(corePoolSize);
 
         mHelper = new TasksHelper(this);
-        mHelper.addOnTasksChangedListener(mTasksListener);
-
+        mHelper.addObserver(observer);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -170,6 +145,7 @@ public class TasksService extends Service {
 
     @Override
     public void onDestroy() {
+        mHelper.deleteObserver(observer);
         mScheduler.shutdown();
         toggleLocationPolling(false);
         super.onDestroy();
@@ -199,7 +175,7 @@ public class TasksService extends Service {
         poller.putExtra(LocationPoller.EXTRA_INTENT, new Intent(this,
                 LocationMonitor.class));
         poller.putExtra(LocationPoller.EXTRA_PROVIDER, bestProvider);
-        pendingPoller = PendingIntent.getBroadcast(this, 0, poller, 0);
+        pendingLocator = PendingIntent.getBroadcast(this, 0, poller, 0);
     }
 
     private void setupSharedPref() {
@@ -208,14 +184,14 @@ public class TasksService extends Service {
 
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                String keyisCharging = getResources().getString(
+                String keyIsCharging = getResources().getString(
                         R.string.sp_status_key_is_charging);
-                String keyBatteryOkey = getResources().getString(
+                String keyBatteryOkay = getResources().getString(
                         R.string.sp_status_key_battery_okey);
-                if (key.equals(keyisCharging)) {
+                if (key.equals(keyIsCharging)) {
                     isCharging = sharedPreferences.getBoolean(key, isCharging);
-                } else if (key.equals(keyBatteryOkey)) {
-                    batteryOkey = sharedPreferences.getBoolean(key, batteryOkey);
+                } else if (key.equals(keyBatteryOkay)) {
+                    batteryOkay = sharedPreferences.getBoolean(key, batteryOkay);
                 }
             }
         };
@@ -224,11 +200,14 @@ public class TasksService extends Service {
         SharedPreferences mSharedPreferences = getSharedPreferences(spStatus, Context.MODE_PRIVATE);
         mSharedPreferences.registerOnSharedPreferenceChangeListener(statusListener);
         // Hardcoded 15% low battery level
-        batteryOkey = getBatteryLevel() > BATTERY_LEVEL_LOW ? true : false;
+        batteryOkay = getBatteryLevel() > BATTERY_LEVEL_LOW ? true : false;
     }
 
-    protected void syncTasks() {
-        // TODO setup queue
+    protected void updateTasks(Task updatedTask) {
+        mTasksQueue.add(updatedTask);
+        if (mHelper.pushTask(mTasksQueue) == mTasksQueue.size()) {
+            mTasksQueue.clear();
+        }
     }
 
     private void toggleBatteryWatcher(boolean on) {
@@ -237,22 +216,40 @@ public class TasksService extends Service {
             mBatteryWatcherFuture.cancel(false);
         } else if (on && notnull) {
             if (mBatteryWatcherFuture.isCancelled() || mBatteryWatcherFuture.isDone()) {
-                mBatteryWatcherFuture = null;
-                mScheduler.scheduleAtFixedRate(mBatteryWatcher, 30, 30, TimeUnit.MINUTES);
+                mBatteryWatcherFuture = mScheduler.scheduleAtFixedRate(mBatteryWatcher, 30, 30, TimeUnit.MINUTES);
             }
         } else if (on && !notnull) {
-            mScheduler.scheduleAtFixedRate(mBatteryWatcher, 30, 30, TimeUnit.MINUTES);
+            mBatteryWatcherFuture = mScheduler.scheduleAtFixedRate(mBatteryWatcher, 30, 30, TimeUnit.MINUTES);
+        }
+    }
+
+    private void toggleHelperyWatcher(boolean on) {
+        boolean notnull = mHelperWatcherFuture != null;
+        if (!on && notnull) {
+            mHelperWatcherFuture.cancel(false);
+        } else if (on && notnull) {
+            if (mHelperWatcherFuture.isCancelled() || mBatteryWatcherFuture.isDone()) {
+                mHelperWatcherFuture = mScheduler.submit(mHelper.getNotificationRunnable());
+            }
+        } else if (on && !notnull) {
+            mHelperWatcherFuture = mScheduler.submit(mHelper.getNotificationRunnable());
         }
     }
 
     private void toggleLocationPolling(boolean on) {
-        boolean configured = pendingPoller != null;
+        boolean configured = pendingLocator != null;
         if (on && configured) {
             alarm.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                     SystemClock.elapsedRealtime(),
-                    1000 * 60 * 5, pendingPoller);
+                    1000 * 60 * 5, pendingLocator);
         } else if (!on && configured) {
-            alarm.cancel(pendingPoller);
+            alarm.cancel(pendingLocator);
+        }
+    }
+
+    public class SelfBinder extends Binder {
+        public TasksService getService() {
+            return TasksService.this;
         }
     }
 }
