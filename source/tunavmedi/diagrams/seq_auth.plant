@@ -1,0 +1,64 @@
+@startuml
+hide footbox
+participant "MainActivity:nandroid.app.Activity" as main
+participant "LoginActivity:android.app.Activity" as login
+actor "Doctor" as doctor
+participant "UserLoginTask:android.os.AsyncTask<Void, Void, Boolean>" as loginTask
+participant "AuthService:android.app.IntentService" as service
+participant "AuthHelper:AuthenticationHandler" as helper
+participant "SharedPreferences" as shared
+participant "Android" as android
+
+activate android
+activate main
+shared -> main : getBoolean("isLogged")
+shared -> main : isLogged
+alt isLogged
+main --> android : startActivityForResult()
+android --> login
+activate login
+
+login --> service : bindService()
+activate service
+service -> helper : new
+activate helper
+
+loop isAuthenticated
+doctor -> login : id, password
+login -> loginTask : mIDView.getText(), mPasswordView.getText()
+activate loginTask
+loginTask -> service : authenticate()
+service --> helper : login(mID, mPassword)
+service <-- helper : id
+
+alt id != null
+service -> shared : setBoolean("isLogged", true)
+service --> helper : getPhoto()
+service <-- helper : photo
+service -> service : storePhoto(photo) 
+service -> shared : setString("PhotoPath", photoPath)
+service -> loginTask : isAuthenticated = true
+else
+service -> loginTask : isAuthenticated = false
+end # id != null
+loginTask -> loginTask : onPostExecute(isAuthenticated)
+
+alt isAuthenticated
+loginTask -> login : setResult(Activity.RESULT_OK)
+loginTask -> login : unBindService()
+loginTask -> login : finish()
+loginTask -> android : startActivity()
+else
+loginTask -> login : mPasswordView.setError()
+deactivate loginTask
+end # alt isAuthenticated
+deactivate login
+end #loop
+android --> main : resultCode
+opt RESULT_OK
+ref over main : init
+else RESULT_CANCEL
+ref over main : quit
+end # opt resultCode
+end #alt isLogged
+@enduml

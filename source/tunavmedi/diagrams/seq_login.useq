@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.2" icons="true" automaticImage="PNG">  
+  <object id="1" language="java" name="com.tunav.tunavmedi.activity.MainActivity" project="TunavMedi" 
+    file="/TunavMedi/src/com/tunav/tunavmedi/activity/MainActivity.java" binary="false" label="mainActivity" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="18" y="0"/>    
+    <execution id="2">      
+      <position height="57" width="130" x="5" y="127"/>    
+    </execution>  
+  </object>  
+  <object id="5" language="java" name="com.tunav.tunavmedi.activity.LoginActivity" project="TunavMedi" 
+    file="/TunavMedi/src/com/tunav/tunavmedi/activity/LoginActivity.java" binary="false" label="loginActivity" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="445" y="0"/>    
+    <execution id="4">      
+      <position height="19" width="130" x="139" y="146"/>    
+    </execution>  
+  </object>  
+  <object id="6" language="java" name="com.tunav.tunavmedi.activity.LoginActivity.UserLoginTask" project="TunavMedi" 
+    file="/TunavMedi/src/com/tunav/tunavmedi/activity/LoginActivity.java" binary="false" label="userLoginTask" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="445" y="0"/>  
+  </object>  
+  <object id="7" language="java" name="com.tunav.tunavmedi.service.AuthService" project="TunavMedi" 
+    file="/TunavMedi/src/com/tunav/tunavmedi/service/AuthService.java" binary="false" label="authService" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="34" y="0"/>  
+  </object>  
+  <object id="8" language="java" name="com.tunav.tunavmedi.service.AuthService.LocalBinder" project="TunavMedi" 
+    file="/TunavMedi/src/com/tunav/tunavmedi/service/AuthService.java" binary="false" label="authBinder" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="34" y="0"/>  
+  </object>  
+  <object id="9" language="java" name="com.tunav.tunavmedi.activity.MainActivity.RequestCode" project="TunavMedi" 
+    file="/TunavMedi/src/com/tunav/tunavmedi/activity/MainActivity.java" binary="false" label="requestCode" 
+    type="enumeration" autoSize="true">    
+    <position height="-1" width="-1" x="18" y="0"/>  
+  </object>  
+  <object id="10" language="java" name="com.tunav.tunavmedi.activity.MainActivity.TabEnum" project="TunavMedi" 
+    file="/TunavMedi/src/com/tunav/tunavmedi/activity/MainActivity.java" binary="false" label="tabEnum" 
+    type="enumeration" autoSize="true">    
+    <position height="-1" width="-1" x="18" y="0"/>  
+  </object>  
+  <object id="11" language="java" name="com.tunav.tunavmedi.activity.MainActivity.TabListener" project="TunavMedi" 
+    file="/TunavMedi/src/com/tunav/tunavmedi/activity/MainActivity.java" binary="false" label="tabListener" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="18" y="0"/>  
+  </object>  
+  <message id="3">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>
+</sequence-diagram>

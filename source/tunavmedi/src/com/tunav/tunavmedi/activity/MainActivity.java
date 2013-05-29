@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -20,17 +19,13 @@ import android.widget.Toast;
 import com.tunav.tunavmedi.R;
 import com.tunav.tunavmedi.app.TunavMedi;
 import com.tunav.tunavmedi.fragment.NotImplemetedListFragment;
-import com.tunav.tunavmedi.fragment.TaskListFragment;
+import com.tunav.tunavmedi.fragment.PatientListFragment;
 
 public class MainActivity extends Activity {
 
-    private static final String TAG = "MainActivity";
-    private Context thisContext = null;
-    private MainActivity thisActivity = null;
-
     private enum RequestCode {
         LOGIN
-    };
+    }
 
     private enum TabEnum {
         TASK(R.string.tab_todo_text, android.R.drawable.ic_menu_today,
@@ -55,13 +50,124 @@ public class MainActivity extends Activity {
         }
     };
 
+    public static class TabListener<T extends Fragment> implements
+            ActionBar.TabListener {
+        private static final String TAG = "TabListener";
+
+        private final Activity mActivity;
+        private final String mTag;
+        private final Class<T> mClass;
+        private final Bundle mArgs;
+        private Fragment mFragment;
+
+        public TabListener(Activity activity, String tag, Class<T> clz) {
+            this(activity, tag, clz, null);
+            Log.v(TAG, "TabListener()");
+        }
+
+        public TabListener(Activity activity, String tag, Class<T> clz,
+                Bundle args) {
+            Log.v(TAG, "TabListener()");
+            mActivity = activity;
+            mTag = tag;
+            mClass = clz;
+            mArgs = args;
+
+            // Check to see if we already have a fragment for this tab, probably
+            // from a previously saved state. If so, deactivate it, because our
+            // initial state is that a tab isn't shown.
+            mFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
+            if (mFragment != null && !mFragment.isDetached()) {
+                FragmentTransaction ft = mActivity.getFragmentManager()
+                        .beginTransaction();
+                ft.detach(mFragment);
+                ft.commit();
+            }
+        }
+
+        @Override
+        public void onTabReselected(Tab tab, FragmentTransaction ft) {
+            Log.v(TAG, "onTabReselected()");
+            Toast.makeText(mActivity, "Reselected!", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onTabSelected(Tab tab, FragmentTransaction ft) {
+            Log.v(TAG, "onTabSelected()");
+            if (mFragment == null) {
+                mFragment = Fragment.instantiate(mActivity, mClass.getName(),
+                        mArgs);
+                ft.add(android.R.id.content, mFragment, mTag);
+            } else {
+                ft.attach(mFragment);
+            }
+        }
+
+        @Override
+        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+            Log.v(TAG, "onTabUnselected()");
+            if (mFragment != null) {
+                ft.detach(mFragment);
+            }
+        }
+    };
+
+    private static final String TAG = "MainActivity";
+
+    private static long back_pressed;
+
+    private void about() {
+        // TODO Auto-generated method stub
+
+    }
+
+    private void clearUserData() {
+        Log.i(TAG, "unLogin()");
+        SharedPreferences sharedPrefs = getSharedPreferences(
+                TunavMedi.SP_USER_NAME, MODE_PRIVATE);
+        Editor sharedPrefsEditor = sharedPrefs.edit();
+        sharedPrefsEditor.remove(TunavMedi.SP_USER_KEY_ISLOGGED);
+        Log.v(TAG, TunavMedi.SP_USER_KEY_ISLOGGED + " removed.");
+        sharedPrefsEditor.remove(TunavMedi.SP_USER_KEY_USERID);
+        Log.v(TAG, TunavMedi.SP_USER_KEY_USERID + " removed.");
+        // critical shared preferences, commiting
+        sharedPrefsEditor.commit();
+        Log.i(TAG, "SharedPreferences commited!");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TAG, "onActivityResult()");
+        if (requestCode == RequestCode.LOGIN.ordinal()) {
+            switch (resultCode) {
+                case (RESULT_OK):
+                    onLogin();
+                    break;
+                case (RESULT_CANCELED):
+                    onQuit();
+                    break;
+                case (RESULT_FIRST_USER):
+                    // TODO
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (back_pressed + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+        } else {
+            Toast.makeText(this, "Press again to exit!", Toast.LENGTH_SHORT).show();
+        }
+        back_pressed = System.currentTimeMillis();
+    }
+
     // Called at the start of the full lifetime.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
-        thisContext = this;
-        thisActivity = this;
         try {
             SharedPreferences sharedPrefs = getSharedPreferences(
                     TunavMedi.SP_USER_NAME, Activity.MODE_PRIVATE);
@@ -85,9 +191,9 @@ public class MainActivity extends Activity {
                         .setText(TabEnum.TASK.textID)
                         .setIcon(TabEnum.TASK.iconID)
                         .setTabListener(
-                                new TabListener<TaskListFragment>(this,
+                                new TabListener<PatientListFragment>(this,
                                         TabEnum.TASK.tag,
-                                        TaskListFragment.class)));
+                                        PatientListFragment.class)));
                 // MAIL tab
                 actionBar.addTab(actionBar
                         .newTab()
@@ -136,15 +242,68 @@ public class MainActivity extends Activity {
         }
     }
 
-    // Called after onCreate has finished, use to restore UI state
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        Log.i(TAG, "onRestoreInstanceState()");
-        super.onRestoreInstanceState(savedInstanceState);
-        // Restore UI state from the savedInstanceState.
-        // This bundle has also been passed to onCreate.
-        // Will only be called if the Activity has been
-        // killed by the system since it was last visible.
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.i(TAG, "onCreateOptionsMenu()");
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+
+    // Sometimes called at the end of the full lifetime.
+    @Override
+    public void onDestroy() {
+        // Clean up any resources including ending threads,
+        // closing database connections etc.
+        Log.i(TAG, "onDestroy");
+        clearUserData();
+        super.onDestroy();
+    }
+
+    private void onLogin() {
+        Log.i(TAG, "onLogin()");
+        Intent loginIntent = new Intent("com.tunav.tunavmedi.action.LOGIN");
+        startActivityForResult(loginIntent, RequestCode.LOGIN.ordinal());
+    }
+
+    private void onLogout() {
+        Log.i(TAG, "Logout()");
+        clearUserData();
+        onLogin();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i(TAG, "onOptionItemSelected()");
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                about();
+                return true;
+            case R.id.action_logout:
+                onLogout();
+                return true;
+            case R.id.action_quit:
+                onQuit();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    // Called at the end of the active lifetime.
+    @Override
+    public void onPause() {
+        // Suspend UI updates, threads, or CPU intensive processes
+        // that don't need to be updated when the Activity isn't
+        // the active foreground Activity.
+        Log.i(TAG, "onPause()");
+        super.onPause();
+    }
+
+    private void onQuit() {
+        Log.i(TAG, "quit()");
+        clearUserData();
+        finish();
+        moveTaskToBack(true);
     }
 
     // Called before subsequent visible lifetimes
@@ -157,12 +316,15 @@ public class MainActivity extends Activity {
         // been visible within this process.
     }
 
-    // Called at the start of the visible lifetime.
+    // Called after onCreate has finished, use to restore UI state
     @Override
-    public void onStart() {
-        Log.i(TAG, "onStart()");
-        super.onStart();
-        // Apply any required UI change now that the Activity is visible.
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.i(TAG, "onRestoreInstanceState()");
+        super.onRestoreInstanceState(savedInstanceState);
+        // Restore UI state from the savedInstanceState.
+        // This bundle has also been passed to onCreate.
+        // Will only be called if the Activity has been
+        // killed by the system since it was last visible.
     }
 
     // Called at the start of the active lifetime.
@@ -188,14 +350,12 @@ public class MainActivity extends Activity {
                 .getSelectedNavigationIndex());
     }
 
-    // Called at the end of the active lifetime.
+    // Called at the start of the visible lifetime.
     @Override
-    public void onPause() {
-        // Suspend UI updates, threads, or CPU intensive processes
-        // that don't need to be updated when the Activity isn't
-        // the active foreground Activity.
-        Log.i(TAG, "onPause()");
-        super.onPause();
+    public void onStart() {
+        Log.i(TAG, "onStart()");
+        super.onStart();
+        // Apply any required UI change now that the Activity is visible.
     }
 
     // Called at the end of the visible lifetime.
@@ -207,170 +367,5 @@ public class MainActivity extends Activity {
         // as after this call the process is likely to be killed.
         Log.i(TAG, "onStop()");
         super.onStop();
-    }
-
-    // Sometimes called at the end of the full lifetime.
-    @Override
-    public void onDestroy() {
-        // Clean up any resources including ending threads,
-        // closing database connections etc.
-        Log.i(TAG, "onDestroy");
-        clearUserData();
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i(TAG, "onActivityResult()");
-        if (requestCode == RequestCode.LOGIN.ordinal()) {
-            switch (resultCode) {
-                case (RESULT_OK):
-                    onLogin();
-                    break;
-                case (RESULT_CANCELED):
-                    onQuit();
-                    break;
-                case (RESULT_FIRST_USER):
-                    // TODO
-                    break;
-            }
-        }
-    }
-
-    private void onLogin() {
-        Log.i(TAG, "onLogin()");
-        Intent loginIntent = new Intent("com.tunav.tunavmedi.action.LOGIN");
-        startActivityForResult(loginIntent, RequestCode.LOGIN.ordinal());
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        Log.i(TAG, "onCreateOptionsMenu()");
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "onOptionItemSelected()");
-        switch (item.getItemId()) {
-            case R.id.action_about:
-                about();
-                return true;
-            case R.id.action_logout:
-                onLogout();
-                return true;
-            case R.id.action_quit:
-                onQuit();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void onQuit() {
-        Log.i(TAG, "quit()");
-        clearUserData();
-        thisActivity.finish();
-        moveTaskToBack(true);
-    }
-
-    private void clearUserData() {
-        Log.i(TAG, "unLogin()");
-        SharedPreferences sharedPrefs = getSharedPreferences(
-                TunavMedi.SP_USER_NAME, MODE_PRIVATE);
-        Editor sharedPrefsEditor = sharedPrefs.edit();
-        sharedPrefsEditor.remove(TunavMedi.SP_USER_KEY_ISLOGGED);
-        Log.v(TAG, TunavMedi.SP_USER_KEY_ISLOGGED + " removed.");
-        sharedPrefsEditor.remove(TunavMedi.SP_USER_KEY_USERID);
-        Log.v(TAG, TunavMedi.SP_USER_KEY_USERID + " removed.");
-        // critical shared preferences, commiting
-        sharedPrefsEditor.commit();
-        Log.i(TAG, "SharedPreferences commited!");
-    }
-
-    private void onLogout() {
-        Log.i(TAG, "Logout()");
-        clearUserData();
-        onLogin();
-    }
-
-    private void about() {
-        // TODO Auto-generated method stub
-
-    }
-
-    public static class TabListener<T extends Fragment> implements
-            ActionBar.TabListener {
-        private static final String TAG = "TabListener";
-
-        private final Activity mActivity;
-        private final String mTag;
-        private final Class<T> mClass;
-        private final Bundle mArgs;
-        private Fragment mFragment;
-
-        public TabListener(Activity activity, String tag, Class<T> clz) {
-            this(activity, tag, clz, null);
-            Log.v(TAG, "TabListener()");
-        }
-
-        public TabListener(Activity activity, String tag, Class<T> clz,
-                Bundle args) {
-            Log.v(TAG, "TabListener()");
-            mActivity = activity;
-            mTag = tag;
-            mClass = clz;
-            mArgs = args;
-
-            // Check to see if we already have a fragment for this tab, probably
-            // from a previously saved state. If so, deactivate it, because our
-            // initial state is that a tab isn't shown.
-            mFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
-            if (mFragment != null && !mFragment.isDetached()) {
-                FragmentTransaction ft = mActivity.getFragmentManager()
-                        .beginTransaction();
-                ft.detach(mFragment);
-                ft.commit();
-            }
-        }
-
-        @Override
-        public void onTabSelected(Tab tab, FragmentTransaction ft) {
-            Log.v(TAG, "onTabSelected()");
-            if (mFragment == null) {
-                mFragment = Fragment.instantiate(mActivity, mClass.getName(),
-                        mArgs);
-                ft.add(android.R.id.content, mFragment, mTag);
-            } else {
-                ft.attach(mFragment);
-            }
-        }
-
-        @Override
-        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-            Log.v(TAG, "onTabUnselected()");
-            if (mFragment != null) {
-                ft.detach(mFragment);
-            }
-        }
-
-        @Override
-        public void onTabReselected(Tab tab, FragmentTransaction ft) {
-            Log.v(TAG, "onTabReselected()");
-            Toast.makeText(mActivity, "Reselected!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private static long back_pressed;
-
-    @Override
-    public void onBackPressed() {
-        if (back_pressed + 2000 > System.currentTimeMillis()) {
-            super.onBackPressed();
-        } else {
-            Toast.makeText(this, "Press again to exit!", Toast.LENGTH_SHORT).show();
-        }
-        back_pressed = System.currentTimeMillis();
     }
 }

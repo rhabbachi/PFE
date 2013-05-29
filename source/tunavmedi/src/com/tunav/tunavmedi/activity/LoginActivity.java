@@ -9,7 +9,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,17 +23,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tunav.tunavmedi.R;
-import com.tunav.tunavmedi.abstraction.AuthenticationHandler;
-import com.tunav.tunavmedi.app.TunavMedi;
 import com.tunav.tunavmedi.service.AuthService;
-import com.tunav.tunavmedi.service.AuthService.AuthBinder;
+import com.tunav.tunavmedi.service.AuthService.LocalBinder;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements ServiceConnection {
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
@@ -57,8 +54,7 @@ public class LoginActivity extends Activity {
         @Override
         protected Boolean doInBackground(Void... params) {
             Log.v(tag, "doInBackground()");
-            userID = mHelper.authenticate(mID, mPassword);
-            return userID == null ? false : true;
+            return mAuthService.authenticate(mID, mPassword);
         }
 
         // invoked on the UI thread
@@ -73,34 +69,11 @@ public class LoginActivity extends Activity {
         protected void onPostExecute(final Boolean success) {
             loginTask = null;
             showProgress(false);
-
             if (success) {
-                Log.d(tag, "Authentication successful!");
-                SharedPreferences sharedPrefs = getSharedPreferences(
-                        TunavMedi.SP_USER_NAME, MODE_PRIVATE);
-                SharedPreferences.Editor sharedPrefsEditor = sharedPrefs.edit();
-
-                sharedPrefsEditor.putBoolean(
-                        TunavMedi.SP_USER_KEY_ISLOGGED, true);
-                sharedPrefsEditor.putInt(TunavMedi.SP_USER_KEY_USERID,
-                        userID);
-                sharedPrefsEditor.putString(TunavMedi.SP_USER_KEY_USERNAME,
-                        mID);
-                sharedPrefsEditor.putString(TunavMedi.SP_USER_KEY_PASSWORD,
-                        mPassword);
-                Log.d(tag, TunavMedi.SP_USER_KEY_ISLOGGED + "=" + "true"
-                        + "\n" + TunavMedi.SP_USER_KEY_USERID + "="
-                        + userID + "\n" + TunavMedi.SP_USER_KEY_USERNAME
-                        + "=" + mID + "\n" + TunavMedi.SP_USER_KEY_PASSWORD
-                        + "=" + mPassword);
-                // this pref is critical so we need to commit it
-                sharedPrefsEditor.commit();
-                Log.d(tag, "SharedPreferences commited!");
-
                 Intent mainActivity = new Intent(mActivity, MainActivity.class);
-                startActivity(mainActivity);
                 setResult(RESULT_OK);
-                Log.d(tag, "RESULT_OK");
+                finish();
+                startActivity(mainActivity);
             } else {
                 Log.d(tag, "Authentication faild!");
                 mPasswordView
@@ -131,11 +104,8 @@ public class LoginActivity extends Activity {
     private View mLoginFormView;
     private View mLoginStatusView;
     private TextView mLoginStatusMessageView;
-
-    private ServiceConnection mConnection = null;
-    private AuthenticationHandler mHelper = null;
-
     private boolean mBound = false;
+    private AuthService mAuthService;
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -206,26 +176,11 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(tag, "onCreate()");
-        mConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                // We've bound to LocalService, cast the IBinder and get
-                // LocalService instance
-                AuthBinder binder = (AuthBinder) service;
-                mHelper = binder.getHandler(mActivity);
-                mBound = true;
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mBound = false;
-            }
-        };
 
         Intent loginIntent = new Intent(this, AuthService.class);
 
         try {
-            if (!bindService(loginIntent, mConnection, Context.BIND_AUTO_CREATE)) {
+            if (!bindService(loginIntent, this, Context.BIND_AUTO_CREATE)) {
                 // TODO service not bound.
                 Log.e(tag, "bindService() FAIL!");
             } else {
@@ -280,7 +235,7 @@ public class LoginActivity extends Activity {
     public void onDestroy() {
         // Clean up any resources including ending threads,
         // closing database connections etc.
-        unbindService(mConnection);
+        unbindService(this);
         super.onDestroy();
     }
 
@@ -329,6 +284,20 @@ public class LoginActivity extends Activity {
         // onRestoreInstanceState if the process is
         // killed and restarted by the run time.
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        // We've bound to LocalService, cast the IBinder and get
+        // LocalService instance
+        LocalBinder binder = (LocalBinder) service;
+        mAuthService = binder.getService();
+        mBound = true;
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        mBound = false;
     }
 
     // Called at the start of the visible lifetime.

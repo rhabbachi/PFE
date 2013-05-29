@@ -1,0 +1,37 @@
+@startuml
+left to right direction
+
+actor :Doctor: as doc
+actor :Android: as os <<Systéme d'exploitation>>
+actor :Systéme: as service <<Service Distant>>
+
+rectangle TunavMedi {
+
+usecase (Authentifier) as uc_auth
+usecase (Detecter la position du terminal) as uc_gps
+usecase (Afficher la list des patients) as uc_display
+usecase (Modifier la list des patients) as uc_edit
+usecase (Télecharger la list des pationts) as uc_down
+usecase (Mettre à jour la list des patients) as uc_up
+usecase (Notifier la proximiter d'un patient) as uc_notify
+
+doc -- uc_auth
+doc -- uc_notify
+doc -- uc_display
+doc -- uc_edit
+doc -- uc_notify
+
+os -- uc_auth
+os -- uc_gps
+os -- uc_notify
+
+service -- uc_auth
+service -- uc_down
+service -- uc_up
+
+uc_notify .> uc_gps : include
+uc_display <. uc_down : extends
+uc_edit .> uc_up : include
+}
+
+@enduml

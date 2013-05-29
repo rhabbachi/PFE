@@ -10,7 +10,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -19,6 +19,7 @@
         android:logo="@drawable/hospital"
         android:theme="@style/HoloLightDarkActionBarTheme" >
         <receiver android:name="com.commonsware.cwac.locpoll.LocationPoller" />
+
         <service android:name="com.commonsware.cwac.locpoll.LocationPollerService" />
 
         <activity
@@ -44,21 +45,30 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.tunav.tunavmedi.broadcastreceiver.StatusMonitor" >
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-                <action android:name="android.intent.action.BATTERY_LOW" />
-                <action android:name="android.intent.action.BATTERY_OKAY" />
-            </intent-filter>
+        <receiver
+            android:name="com.tunav.tunavmedi.service.PatientsService$LocationReceiver"
+            android:enabled="true"
+            android:exported="false" >
+        </receiver>
+        <receiver
+            android:name="com.tunav.tunavmedi.service.PatientsService$BatteryReceiver"
+            android:enabled="true"
+            android:exported="false" >
+        </receiver>
+        <receiver
+            android:name="com.tunav.tunavmedi.service.PatientsService$ChargingReceiver"
+            android:enabled="true"
+            android:exported="false" >
+        </receiver>
+        <receiver
+            android:name="com.tunav.tunavmedi.service.PatientsService$NetworkReceiver"
+            android:enabled="true"
+            android:exported="false" >
         </receiver>
 
         <service
-            android:name="com.tunav.tunavmedi.service.TasksService"
+            android:name="com.tunav.tunavmedi.service.PatientsService"
             android:exported="false" >
-            <intent-filter>
-                <action android:name="com.tunav.tunavmedi.action.TASKS_SERVICE" />
-            </intent-filter>
         </service>
         <service
             android:name="com.tunav.tunavmedi.service.AuthService"
