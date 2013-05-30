@@ -5,23 +5,24 @@
 \section{Introduction du chapitre}
 
 Dans ce chapitre on procède à la présentation des cas utilisateur de
-notre système ainsi que l'identification des acteurs impliqué dans ces
-cas. Puis on décortique l’implémentation que nous proposant en citant
+notre système ainsi que l'identification des acteurs impliqués dans ces
+cas. Puis on décortique l’implémentation que nous proposons en citant
 éventuellement nos motifs et intentions.
 
 \section{Vue Général}
 \subsubsection{Identification des acteurs}
 
-Notre système interagie essentiellement avec trois acteurs différents:
+Notre système interagit essentiellement avec trois acteurs différents:
 
 \begin{description}
 \item[Le médecin] C'est l'acteur principale de notre système.
 
 \item[Le service web] Source des données à acheminer vers le médecin.
 
-\item[Système d'exploitation] Communique à notre système les information
-recueille des divers composants qui nous intéresse (localisation
-GPS/Network, état de la connectivité, état de la batterie).
+\item[Système d'exploitation] Communique à notre système les
+informations recueillies des divers composants qui nous intéressent
+(localisation GPS/Network, état de la connectivité, état de la
+batterie).
 
 \end{description}
 
@@ -82,18 +83,19 @@ Voici une liste des outils logiciel utilisé pendant le développement de l'appl
 \subsubsection{Environnement Matériel}
 Le développement de l'application est fait avec une tablette Asus Nexus 7 mise à jour à \android{} 4.2.2 \en{Jelly Bean}.
 
-\section{Architecture Général}
+\section{Architecture Générale}
 
 L'architecture globale de l'application (figure \ref{fig:cls_global})
-est calqué sur Le patron "Vue Passive" (Passive View Pattern). Le patron
+est calquée sur Le patron "Vue Passive" (Passive View Pattern). Le patron
 \en{Passive View} (fig \ref{fig:passive_view}) est une variation des
-patrons \gls{mvc} et \gls{mvp}, à ce qui ce passe dans ces patrons
-l'interface utilisateur est divisé entre une vu qui s'occupe de
+patrons \gls{mvc} et \gls{mvp},de ce qui ce passe dans ces patrons.
+
+L'interface utilisateur est divisée entre une vu qui s'occupe de
 l'affichage des données et un contrôleur qui répond aux interactions de
 l'utilisateur. La différence majeur avec le \en{Passive View} est que la
 vue est complètement passive et n'ai pas responsable de sa mise à jour
-depuis le modèle. Dans ce cas tout la logique de la vue est dans le
-contrôleur et aucune dépendances ni dans un sens au dans un autre entre
+depuis le modèle. Dans ce cas toute la logique de la vue est dans le
+contrôleur et aucune dépendance ni dans un sens au dans un autre entre
 le vue et le modèle~\cite{fowler:passive_view}.
 
 \begin{figure}[H]
@@ -103,15 +105,16 @@ le vue et le modèle~\cite{fowler:passive_view}.
 \label{fig:passive_view}
 \end{figure}
 
-Ce patron est idéal dans notre cas pour deux raisons majeurs:
+Ce patron est idéal dans notre cas pour deux raisons majeures:
 
 \begin{itemize} 
 
-\item Dans notre projet la vu n'est pas la partie la important dans la
-mesure ou l'objectif est d'intégré un système développer parallèlement,
-donc éventuellement avec une autre logique de présentation. Déporter les
-interactions avec le modèle dans le contrôleur permet d'intégrer d'autre
-implémentation d'affichage plus facilement.
+\item Dans notre projet la vu n'est pas la partie la plus importante
+dans la mesure où l'objectif est d'intégrer un système développer
+parallèlement, donc éventuellement avec une autre logique de
+présentation. Déporter les interactions avec le modèle dans le
+contrôleur permet d'intégrer d'autres implémentations d'affichage plus
+facilement.
 
 \item La nature même de cette procédure d’accès - a savoir l’aspect
 abstrait, donc plus fragile - nous conduit à réduire les composants en
@@ -126,14 +129,14 @@ relations pour réduire la marge d'erreur possible et facilité les tests d’in
 \label{fig:cls_global}
 \end{figure}
 
-Dans la suite de ce chapitre, on procède à l'explication détaillés de chaque composant de cette architecture.
+Dans la suite de ce chapitre, on procède à l'explication détaillée de chaque composant de cette architecture.
 
 \section{Le Modèle} 
 
-Un des objectifs de ce projet étant de fournir une solution d’accès au
-donnée flexible à fin de couvrir les besoins de chaque client de manière
-individuel. On a opter donc pour un modèle basé sur l’implémentation de
-deux interfaces (figure \ref{fig:adl}):
+Un des objectifs de ce projet étant de fournir une solution d’accès aux
+données flexibles à fin de couvrir les besoins de chaque client de
+manière individuelle. On a opté donc pour un modèle basé sur
+l’implémentation de deux interfaces (figure \ref{fig:adl}):
 
 \begin{itemize}
 \item Interface d'authentification.
@@ -147,22 +150,22 @@ deux interfaces (figure \ref{fig:adl}):
 \label{fig:adl}
 \end{figure}
 
-L'idée est simple: pour chaque client, une implémentation spécifique à son infrastructure sera développez soit par son propre effectif, soit par une des équipes de Tunav, ou dans le cas idéale par une alliance formé par des agents des deux camps qui garantie une collaboration plus poussée pour des résultats meilleurs.
-Ces ensemble d'interfaces nous permet de construire notre application 
+L'idée est simple: pour chaque client, une implémentation spécifique à son infrastructure sera développée soit par son propre effectif, soit par une des équipes de \textsc{Tunav}, ou dans le cas idéal par une alliance formé par des agents des deux camps qui garantie une collaboration plus poussée pour des résultats meilleurs.
+Ces ensembles d'interfaces nous permettent de construire notre application.
 
 \subsection{Implémentation de test} 
 
 Le package \dev{com.tunav.tunavmedi.dal.sqlite} contiens une
 implémentation de la couche d’accès abstraite (figure
-\ref{fig:adl_sqlite}) réalisé dans le cadre de ce projet pour pouvoir
-testé la solution. Cette implémentation est de caractère locale à
-l'application à travers les \gls{api} de la base de données \dev{SQLite}
-qui fait parti de l'\gls{sdk} \android{}. En fait une implémentation
-locale nous affranchies des problèmes qui peuvent se produire dont la
-corrélation avec l'application est faible. Cette même idée a influencé
-la mise en place même de cette implémentation qui à su rester la plus
-simple possible en restant très proches des objets de base de notre
-application.
+\ref{fig:adl_sqlite}) est réalisée dans le cadre de ce projet pour
+pouvoir tester la solution. Cette implémentation est de caractère local
+à l'application à travers les \gls{api} de la base de données
+\dev{SQLite} qui fait parti de l'\gls{sdk} \android{}. En fait une
+implémentation locale nous affranchie des problèmes qui peuvent se
+produire dont la corrélation avec l'application est faible. Cette même
+idée a influencé la mise en place même de cette implémentation qui à su
+rester la plus simple possible en restant très proches des objets de
+base de notre application.
 
 \begin{figure}
 \center
@@ -171,7 +174,7 @@ application.
 \label{fig:adl_sqlite}
 \end{figure}
 
-Cette implémentation peut être subdivisé en trois éléments: Les \dev{Contrats}, les \dev{Helpers}, et la classe \dev{DBSetup}.
+Cette implémentation peut être subdivisée en trois éléments: Les \dev{Contrats}, les \dev{Helpers}, et la classe \dev{DBSetup}.
 
 \paragraph{Les Contrats}
 
@@ -282,6 +285,7 @@ Dans le langage Java, ce patron est réaliser à travers la classe \dev{java.uti
 \hline
 \end{tabular}
 \end{table}
+
 \subsubsection{Connectivité}
 
 \begin{lstlisting}[language=xml, caption=Permission d’accès à l’état des interfaces réseaux.]

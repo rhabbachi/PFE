@@ -63,12 +63,9 @@ public class PatientsService extends Service implements
     };
     private ArrayList<Patient> mPatientsCache = new ArrayList<Patient>();
     private PatientsAdapter mPatientsAdapter = null;
-    private LocationManager locationManager = null;
-    private AlarmManager alarm = null;
     private PatientsHelper mHelper = null;
     private ScheduledExecutorService mScheduler = null;
-    private static PendingIntent pendingPoller = null;
-    private Future<?> mBatteryWatcherFuture = null;
+    private PendingIntent pendingPoller;
     private Future<?> mHelperFuture = null;
     private Integer RADIUS = 3;
 
@@ -85,27 +82,12 @@ public class PatientsService extends Service implements
         }
     }
 
-    private void enableLocationPolling(boolean on) {
-        on = true;// TESTING PURPOSE ONLY
-        Log.v(tag, "enableLocationPolling()");
-        Log.i(tag, "enableLocationPolling: " + (on ? "true" : "false"));
-        if (pendingPoller != null) {
-            alarm.cancel(pendingPoller);
-        }
-        if (on) {
-            setupPendingPoller(Criteria.ACCURACY_FINE, Criteria.POWER_HIGH);
-            alarm.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime(),
-                    1000 * 60 * 3, pendingPoller);
-        }
-    }
-
     public PatientsAdapter getAdapter() {
         Log.v(tag, "getAdapter()");
         if (mPatientsAdapter == null) {
             mPatientsAdapter = new PatientsAdapter(this);
             mPatientsAdapter.updateDataSet(mHelper.pullPatients());
-            mPatientsAdapter.setRadius(RADIUS);
+            PatientsAdapter.setRadius(RADIUS);
         }
         return mPatientsAdapter;
     }
@@ -119,9 +101,9 @@ public class PatientsService extends Service implements
     private void onConfigure(boolean batteryOk, boolean isCharging, boolean isConnected) {
         Log.v(tag, "onConfigure()");
         if (batteryOk && !isCharging && mPatientsAdapter != null) {
-            enableLocationPolling(true);
+            startLocationPolling(Criteria.ACCURACY_HIGH, Criteria.POWER_HIGH);
         } else {
-            enableLocationPolling(false);
+            stopLocationPolling();
         }
 
         if (batteryOk && isConnected) {
@@ -141,9 +123,6 @@ public class PatientsService extends Service implements
         mHelper.addObserver(mHelperObserver);
         mHelperFuture = mScheduler.submit(mHelper.getNotifyTask());
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
         boolean batteryOk = BatteryReceiver.getBatteryOk(this);
         boolean isCharging = ChargingReceiver.isCharging(this);
         boolean noConnection = NetworkReceiver.isConnected(this);
@@ -158,8 +137,7 @@ public class PatientsService extends Service implements
 
         mHelper.deleteObserver(mHelperObserver);
         mScheduler.shutdown();
-        enableLocationPolling(false);
-        // unregisterReceiver(new LocationReceiver());
+        stopLocationPolling();
         super.onDestroy();
     }
 
@@ -177,8 +155,11 @@ public class PatientsService extends Service implements
         return START_STICKY;
     }
 
-    private void setupPendingPoller(int accuracy, int power) {
+    private void startLocationPolling(int accuracy, int power) {
         Log.v(tag, "setupLocationPolling()");
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         Criteria criteria = new Criteria();
         criteria.setAccuracy(accuracy);
@@ -195,7 +176,25 @@ public class PatientsService extends Service implements
         poller.setClass(this, LocationPoller.class);
         poller.putExtra(LocationPoller.EXTRA_INTENT, new Intent(this, LocationReceiver.class));
         poller.putExtra(LocationPoller.EXTRA_PROVIDER, bestProvider);
+
+        if (pendingPoller != null) {
+            pendingPoller.cancel();
+        }
         pendingPoller = PendingIntent.getBroadcast(this, 0, poller, 0);
+
+        alarm.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime(),
+                1000 * 60 * 3, pendingPoller);
+    }
+
+    private void stopLocationPolling() {
+        Log.v(tag, "stopLocationPolling()");
+        if (pendingPoller != null) {
+            AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarm.cancel(pendingPoller);
+            pendingPoller.cancel();
+            pendingPoller = null;
+        }
     }
 
     protected void updatePatients(Patient updatedPatient) {

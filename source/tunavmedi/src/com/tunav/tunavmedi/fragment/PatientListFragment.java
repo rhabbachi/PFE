@@ -192,6 +192,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         // Clean up any resources including ending threads,
         // closing database connections etc.
         getActivity().unbindService(this);
+        getActivity().stopService(new Intent(getActivity(), PatientsService.class));
         super.onDestroy();
     }
 

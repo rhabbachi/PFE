@@ -5,23 +5,23 @@
 
 Dans ce chapitre on présente une étude du marché en énumérant les
 applications dont les fonctionnalités sont équivalentes à la notre tout
-en soulignent les différences qui subsistent. Ensuite on présente la
+en soulignant les différences qui subsistent. Ensuite on présente la
 plate-forme ciblé et en passe en revu l’architecture d’une application
 \android{}.
 
 \section{Étude de marché}
 
-Plusieurs sociétés offre des solutions en relation avec celle proposé
+Plusieurs sociétés offrent des solutions en relation avec celle proposé
 par ce présent rapport. Malheureusement, la plupart d’entre elle sont
 des solutions commerciales et, faute de documentation disponible, on n’a
-pas pu les étudier d’une point de vu techno-technique et on c’est
+pas pu les étudier d’un point de vu techno-technique et on s’est
 contenté de relayer leurs caractéristiques tel que présenté dans les
 sources cités.
 
 \paragraph{NB:} % (fold) 
 \label{par:nb}
 
-Les solutions présentées ici sont le fruit des sociétés bien établis avec des ressources considérable et des salariés professionnels. Les comparer avec le travail incubé dans ce rapport serai abusive, l’indulgence est de mise.
+Les solutions présentées ici sont le fruit des sociétés bien établis avec des ressources considérables et des salariés professionnels. Les comparer avec le travail incubé dans ce rapport serai abusif, l’indulgence est de mise.
 
 \subsection{MIAA - Palomar Pomerado Health}
 
@@ -169,9 +169,9 @@ La dernière version stable d'\android{} en date (Mai 2013) est 4.2.2
 
 L’adoption du système d'exploitation \android{} suit une courbe
 exponentielle depuis quelque temps et la tendance n'est pas prête de
-s’inverser, selon les dernière rapport du cabiné d'analyse \en{Strategy
+s’inverser, selon le dernier rapport du cabinet d'analyse \en{Strategy
 Analytics}, \android{} a réussi à capturer environ 68.4\% du marché
-globale \cite{venturebeat.com}.
+global \cite{venturebeat.com}.
 
 \begin{table}[H]
 \centering
@@ -231,11 +231,10 @@ et du parts de marché en 3\ieme trimestre 2012~\cite{idc}}
 \subsection{Versions \android{} en circulation}
 
 Le tableaux \ref{tab:androidversion} représente les différentes versions
-d'\android{} et leurs taux d'utilisation respective. On remarque que
+d'\android{} et leurs taux d'utilisation respectifs. On remarque que
 la plupart des terminaux mobiles \android{} sont sous la version 2.3
-\en{Gingerbread} sortie le 6 Décembre 2010, Ceci est dú aux fait que
-plusieurs téléphones bas de gamme équiper de cette version sont encore
-en production.
+\en{Gingerbread} sortie le 6 Décembre 2010, Ceci est du aux fait que
+plusieurs téléphones bas de gamme sont équipés de cette version et sont encore en production.
 
 \begin{table}[H]
 \centering
@@ -307,15 +306,15 @@ appareil et une activité qui consomme énormément du temps et de
 ressources et ne pas avoir à réinventer un - encore - autre système d
 exploitation permet d'éviter un autre gaspillage de temps.
 
-\item [Open Source.] Malgré qu'il n'est pas développer d'une manière
+\item [Open Source.] Malgré qu'il ne soit pas développé d'une manière
 communautaire, \android{} reste 100\% modifiable et diffuse un sentiment
 de sécurité parmi les entreprises contre les menaces légales.
 
 \end{description}
 
-\subsection[La pile logiciel d'\android{}]{La pile logiciel d'\android{}\cite{pa4ad:chptr1}}
+\subsection[La pile logicielle d'\android{}]{La pile logicielle d'\android{}\cite{pa4ad:chptr1}}
 
-D'une manière simple. La pile logiciel d'\android{} est un Kernel Linux et une collection de bibliothèques C/C++ exposé à travers un framework d'application qui fournit des services pour l'environnement d'exécution et les applications. On peut énumérer les éléments composant la pile logiciel comme suit:
+D'une manière simple. La pile logicielle d'\android{} est un Kernel Linux et une collection de bibliothèques C/C++ exposé à travers un framework d'application qui fournit des services pour l'environnement d'exécution et les applications. On peut énumérer les éléments composant la pile logicielle comme suit:
 
 \begin{description}
 
@@ -323,16 +322,17 @@ D'une manière simple. La pile logiciel d'\android{} est un Kernel Linux et une 
 Services de base qui inclue les pilotes matériels, gestion des processus et de la mémoire, sécurité, réseaux et gestion d'autonomie. Fourni aussi une couche d'abstraction entre le matériel et le reste de la pile.
 
 \item [Bibliothèque]
-Se situ au dessus du Kernel, \android{} inclue divers bibliothèques C/C++ de base comme \dev{libc} et \dev{SSL} ainsi q
+Se situ au dessus du Kernel, \android{} inclue divers bibliothèques C/C++ de base comme \dev{libc} et \dev{SSL} ainsi que:
+
 \begin{itemize}
 
-\item Une bibliothèque multimédia pour la lecture des fichier audio et video.
+\item Une bibliothèque multimédia pour la lecture des fichiers audio et vidéo.
 
 \item Un \en{Surface manager} pour la gestion de l'affichage.
 
 \item Des bibliothèques graphiques qui inclue le \dev{SGL} et \dev{OpenGL} pour les graphiques 2D et 3D.
 
-\item Un support native de base de donnée à travers la base de données \dev{SQLite}.
+\item Un support natif de base de donnée à travers la base de données \dev{SQLite}.
 
 \item \dev{SSL} et \dev{WebKit} pour le navigateur web intégrer et la sécurité internet.
 
@@ -342,7 +342,7 @@ Se situ au dessus du Kernel, \android{} inclue divers bibliothèques C/C++ de ba
 
 L'environnement d’exécution et le facteur qui sépare un terminal \android{}
 d'une implémentation Linux mobile. En cohérence avec les bibliothèques de base
-et la machine virtuel \dev{Dalvik}, l'environnement d’exécution \android{} est
+et la machine virtuelle \dev{Dalvik}, l'environnement d’exécution \android{} est
 le moteur qui fait fonctionner les applications et, avec les bibliothèques,
 forme les bases du framework application.
 
@@ -351,17 +351,17 @@ forme les bases du framework application.
 \item [Bibliothèque de Base]
 
 Même si la plus part des applications \android{} sont écrits avec du langage
-\dev{Java}, \dev{Dalvik} n'est pas une machine virtuel java. Les bibliothèques
+\dev{Java}, \dev{Dalvik} n'est pas une machine virtuelle java. Les bibliothèques
 \android{} de base fournit la plus part des fonctionnalités qu'on retrouve
 dans les bibliothèques de base \dev{Java}, en plus de quelque bibliothèques
 spécifiques à \android{}.
 
-\item [La Machine Virtuel dev{Dalvik}]
+\item [La Machine Virtuelle dev{Dalvik}]
 
-\dev{Dalvik} est une machine virtuel qui a était optimisé pour s'assurer que
-chaque terminal peut faire fonctionner plusieurs instance d'une maniéré
-efficace. Il s’appuie sur le Kernel Linux pour le threading et la gestion bas
-niveaux de la mémoire.
+\dev{Dalvik} est une machine virtuelle qui a était optimisé pour
+s'assurer que chaque terminal peut faire fonctionner plusieurs instance
+d'une manière efficace. Il s’appuie sur le Kernel Linux pour le
+threading et la gestion bas niveaux de la mémoire.
 
 \end{description}
 
@@ -381,11 +381,11 @@ application.
 
 \subsection[Architecture des applications \android{}]{Architecture des applications \android{}\cite{pa4ad:chptr1}}
 
-L'architecture d'\android{} encourage la réutilisation des composants, ce qui nous permet de publier et de partager des \en{Activities}, services, et données avec d'autre application. Avec une gestion d’accès gérer par les restriction de sécurité que nous définissons.
+L'architecture d'\android{} encourage la réutilisation des composants, ce qui nous permet de publier et de partager des \en{Activities}, services, et données avec d'autres applications. Avec une gestion d' accès gérée par les restriction de sécurité que nous définissons.
 
-Le même mécanisme qui nous permet de produire un gestionnaire de contact alternative ou un compositeur de numéros nous permet aussi d'exposé les composons de notre application pour permettre à d'autre développeurs de les réutiliser en créant des nouveaux \gls{ui} ou d’étendre des fonctionnalités.
+Le même mécanisme qui nous permet de produire un gestionnaire de contact alternatif ou un compositeur de numéros nous permet aussi d'exposé les composons de notre application pour permettre à d'autre développeurs de les réutiliser en créant des nouveaux \gls{ui} ou d’étendre des fonctionnalités.
 
-Les services application suivants représente les bases architectural de tout application \android{}, fournissant le \en{Framework} qu'on va utilisé pour notre application.
+Les services application suivants représente les bases architecturales de toute application \android{}, fournissant le \en{Framework} qu'on va utilisé pour notre application.
 
 \begin{description}
 
@@ -415,20 +415,40 @@ Une des fonctionalité les plus intéressante pour l'aboutissement de notre proj
 
 \subsubsection{Concept}
 
-Pour positionner un terminal, en spécifie ces coordonnées géographique en utilisant le géo-codage.
+Pour positionner un terminal, on spécifie ses coordonnées géographique
+en utilisant le géo-codage.
 
 \paragraph[Géo-codage]{Géo-codage\cite{wiki:geocoding}}
-Le géo-codage est le processus de retrouvé les coordonnée géographiques associé (exprimé souvent en terme de \textit{latitude} et \textit{longitude}) d'après d'autre données géographique comme l'adresse de la rue, code postale. Ces coordonnées géographique peuvent être inséré dans un système d'information géographiques ou intégré dans des médias comme les photos numériques par le biais de géo-marquage. Cette opération est communément appelé le \en{Forward Geocoding}.
+
+Le géo-codage est le processus de retrouver les coordonnées
+géographiques associées (exprimées souvent en terme de \textit{latitude}
+et \textit{longitude}) d'après d'autre données géographique comme
+l'adresse de la rue, code postale. Ces coordonnées géographique peuvent
+être inséré dans un système d'informations géographiques ou intégré dans
+des médias comme les photos numériques par le biais de géo-marquage.
+Cette opération est communément appelé le \en{Forward Geocoding}.
 
 Le \en{Reverse Geocoding} est la procédure inverse: retrouvé les lieux textuel comme l'adresse de la rue d'après les coordonnés géographiques. Car même si l'usage des paramètres comme la longitude et la l'attitude fourni un moyen pratique pour localisé l'individu d'une maniéré relativement précise. Les utilisateurs penche à pensés en terme de rues et adresses.
 
 A fin de déterminer la position du terminal, plusieurs technologie de localisation sont à notre disposition.
 
 \paragraph[Localisation par GSM]{Localisation par GSM}
-On peut retrouvé la position de terminale mobile par le biais de sa cellule \gls{gsm}. Cette technique fait intervenir divers moyens de triangulation des signales parvenant depuis les cellules qui dissérve un téléphone mobile. La position géographique du terminal est déterminé par une multitude de méthodes comme la \gls{tdoa} ou l'\gls{e-otd}.
+
+On peut retrouver la position du terminal mobile par le biais de sa
+cellule \gls{gsm}. Cette technique fait intervenir divers moyens de
+triangulation des signales parvenant depuis les cellules qui desservent
+un téléphone mobile. La position géographique du terminal est déterminé
+par une multitude de méthodes comme la \gls{tdoa} ou l'\gls{e-otd}.
 
 \paragraph[Localisation parGPS]{Localisation parGPS\cite{enig:gps}}
-\gls{gps} est un système de navigation par satellites qui fourni la localisation et le temps dans toute condition météorologique et partout sur terre s'il existe un accès non bloquant à 4 ou plus satellites \gls{gps}. Ce Système fourni des services essentiel dans le domaine militaire, civile et commercial partout dans le monde. Il est maintenu par les États Unis d'Amérique et accessible à quiconque possédant un récepteur \gls{gps}.
+
+\gls{gps} est un système de navigation par satellites qui fourni la
+localisation et le temps dans toute condition météorologique et partout
+sur terre s'il existe un accès non bloquant à 4 ou plus satellites
+\gls{gps}. Ce Système fourni des services essentiels dans le domaine
+militaire, civile et commercial partout dans le monde. Il est maintenu
+par les États Unis d'Amérique et accessible à quiconque possédant un
+récepteur gls{gps}.
 
 \subsubsection[Point de vu \android{}]{Point de vu \android{}\cite{pa4ad:chptr13}}
 
@@ -446,7 +466,8 @@ On utilise ces deux Classes pour les fins suivantes:
 \item Retrouvé les fournisseurs de localisation disponible.
 \item Observé le status du récepteur \gls{gps}.
 \end{itemize}
-Généralement deux techniques de détection de localisation sont disponible dans le terminal: détection par le réseau \en{Network Provider} et la détection par \gls{gps} \en{GPS Provider}. Le choix de la technologie a utilisé est soit explicite ou automatique suivant des critères prédéfinie par le développeur de l'application. Avant de pouvoir exploité un service de localisation, un niveau de précision doit figuré dans le manifeste de l'application via les \dev{uses-permission} \en{tags}.
+
+Généralement deux techniques de détection de localisation sont disponibles dans le terminal: détection par le réseau \en{Network Provider} et la détection par \gls{gps} \en{GPS Provider}. Le choix de la technologie à utiliser est soit explicite ou automatique suivant des critères prédéfinie par le développeur de l'application. Avant de pouvoir exploiter un service de localisation, un niveau de précision doit figurer dans le manifeste de l'application via les \dev{uses-permission} \en{tags}.
 
 \paragraph{Niveau de permission \textbf{COARSE} } % (fold)
 \label{par:coarse}
@@ -463,13 +484,13 @@ Généralement deux techniques de détection de localisation sont disponible dan
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 \end{lstlisting}
 
-A noté qu'une application ayant la permission \dev{FINE} possède implicitement la permission \dev{COARSE}.
+A noter qu'une application ayant la permission \dev{FINE} possède implicitement la permission \dev{COARSE}.
 
 \section{Conclusion}
 
-Dans ce chapitre, on s'est permit d'inspecté les solutions similaires à la
-notre dans le but de s'éclaircir les idées sur les problèmes qu'on pourrait
-rencontré et pour mieux cerné les difficultés que nous allons rencontré. Vient
-en suite la présentation de la plate-forme ciblé en plus d'une application
-type, des connaissance critique pour le chapitre suivant qui porte sur le
-travail effectué.
+Dans ce chapitre, on s'est permis d'inspecter les solutions similaires à
+la notre dans le but de s'éclaircir les idées sur les problèmes qu'on
+pourrait rencontrer et pour mieux cerner les difficultés que nous allons
+rencontré. Vient en suite la présentation de la plate-forme ciblée en
+plus d'une application type, des connaissance critiques pour le chapitre
+suivant qui porte sur le travail effectué.

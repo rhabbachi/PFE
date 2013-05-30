@@ -233,8 +233,8 @@ public class MainActivity extends Activity {
 
                 if (savedInstanceState != null) {
                     // restor last selected tab
-                    actionBar.setSelectedNavigationItem(savedInstanceState
-                            .getInt("tab", 0));
+                    // actionBar.setSelectedNavigationItem(savedInstanceState
+                    // .getInt("tab", 0));
                 }
             }
         } catch (ActivityNotFoundException e) {

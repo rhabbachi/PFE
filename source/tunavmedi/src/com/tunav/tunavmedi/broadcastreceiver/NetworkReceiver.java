@@ -22,6 +22,7 @@ public class NetworkReceiver extends BroadcastReceiver {
         if (activeNetwork != null) {
             isConnected = activeNetwork.isConnected();
         }
+        Log.i(tag, "isConnected: " + (isConnected ? "true" : "false"));
         return isConnected;
     }
 
