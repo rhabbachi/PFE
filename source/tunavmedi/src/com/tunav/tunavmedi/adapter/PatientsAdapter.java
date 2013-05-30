@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tunav.tunavmedi.R;
 import com.tunav.tunavmedi.datatype.Patient;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class PatientsAdapter extends BaseAdapter {
+public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceChangeListener {
 
     static class TaskViewHolder {
         TextView patient_name;
@@ -33,52 +34,64 @@ public class PatientsAdapter extends BaseAdapter {
 
     private static final String tag = "PatientsAdapter";
 
-    public static void setLocation(Location location) {
-        currentLocation = new Location(location);
-    }
-
     private volatile ArrayList<Patient> mAllPatients = new ArrayList<Patient>();
     private volatile ArrayList<Patient> mRemindPatients = new ArrayList<Patient>();
     private Context mContext = null;
     private final LayoutInflater mInflater;
-    private Boolean showChecked = null;
-    private Boolean locationSort = null;
-    private SharedPreferences mSharedPreferences = null;
+    private Boolean showChecked;
+    private Boolean locationSort;
+    private Handler handler;
+    private String keyShowDone;
+    private String keyLocationSort;
     private static Location currentLocation = null;
+    private static Integer mRadius = null;
 
-    private Integer mRadius = null;
+    public static void setLocation(Location location) {
+        Log.v(tag, "setLocation()");
+        currentLocation = new Location(location);
+    }
 
-    private OnSharedPreferenceChangeListener mPatientListListener;
-    // private ScheduledExecutorService mScheduler = null;
+    public static void setRadius(Integer radius) {
+        Log.v(tag, "setRadius()");
+        mRadius = radius;
+    }
+
     private final Integer MINUT = 1000 * 60;
+
     private Runnable refreshList = new Runnable() {
         private static final String tag = "refreshList";
 
         @Override
         public void run() {
-            try {
-                Log.v(tag, "Refreshing Patient List");
-                notifyDataSetChanged();
-                handler.postDelayed(refreshList, 3 * MINUT);
-            } catch (Exception tr) {
-                Log.d(tag, "Exception!", tr);
-            }
+            Log.v(tag, "Refreshing Patient List");
+            handler.postDelayed(refreshList, 3 * MINUT);
+            notifyDataSetChanged();
         }
     };
 
-    private Handler handler;
+    private Object keyLocationUpdate;
 
     public PatientsAdapter(Context context) {
         Log.v(tag, "TasksAdapter()");
         mContext = context;
+
+        keyShowDone = mContext.getResources().getString(
+                R.string.spkey_show_checked);
+        keyLocationSort = mContext.getResources().getString(
+                R.string.spkey_sort_location);
+        keyLocationUpdate = mContext.getResources().getString(R.string.spkey_location_update);
         mInflater = LayoutInflater.from(mContext);
 
-        setupSharedPreference();
+        String spPatientsList = mContext.getResources().getString(R.string.sp_patientlist);
+        SharedPreferences sharedPrefs = mContext.getSharedPreferences(spPatientsList
+                , Context.MODE_PRIVATE);
+        showChecked = sharedPrefs.getBoolean(keyShowDone, true);
+        locationSort = sharedPrefs.getBoolean(keyLocationSort, true);
+        sharedPrefs
+                .registerOnSharedPreferenceChangeListener(this);
+
         handler = new Handler();
         handler.postDelayed(refreshList, 3 * MINUT);
-        // mScheduler = Executors.newSingleThreadScheduledExecutor();
-        // mScheduler.scheduleWithFixedDelay(refreshList, 2, 2,
-        // TimeUnit.MINUTES);
     }
 
     private Comparator<Patient> generateComparator() {
@@ -213,72 +226,48 @@ public class PatientsAdapter extends BaseAdapter {
         super.notifyDataSetChanged();
     }
 
-    public void setRadius(Integer radius) {
-        if (radius.equals(mRadius)) {
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.v(tag, "onSharedPreferenceChanged()");
+
+        if (key.equals(keyShowDone)) {
+            showChecked = sharedPreferences.getBoolean(key, true);
+        } else if (key.equals(keyLocationSort)) {
+            locationSort = sharedPreferences.getBoolean(key, true);
+        } else if (key.equals(keyLocationUpdate)) {
+            if (sharedPreferences.getBoolean(key, false)) {
+                Toast.makeText(mContext, "Location updated!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mContext, "Location update failed!", Toast.LENGTH_SHORT).show();
+                currentLocation = null;
+            }
+        } else {
             return;
         }
-        mRadius = radius;
-        // TODO update radius dependante operations
-    }
-
-    private void setupSharedPreference() {
-        mPatientListListener = new OnSharedPreferenceChangeListener() {
-
-            @Override
-            public void onSharedPreferenceChanged(
-                    SharedPreferences sharedPreferences, String key) {
-                Log.v(tag, "onSharedPreferenceChanged()");
-                String keyShowDone = mContext.getResources().getString(
-                        R.string.sp_tasklist_key_show_done);
-                String keyLocationSort = mContext.getResources().getString(
-                        R.string.sp_tasklist_key_sort_location);
-                boolean notify = false;
-                if (key.equals(keyShowDone)) {
-                    showChecked = sharedPreferences.getBoolean(key, true);
-                    notify = true;
-                } else if (key.equals(keyLocationSort)) {
-                    locationSort = sharedPreferences.getBoolean(key, true);
-                    sort();
-                    notify = true;
-                }
-                if (notify) {
-                    notifyDataSetChanged();
-                }
-            }
-        };
-        String spTaskList = mContext.getResources().getString(R.string.sp_tasklist_name);
-        mSharedPreferences = mContext.getSharedPreferences(spTaskList
-                , Context.MODE_PRIVATE);
-        String keyShowDone = mContext.getResources().getString(R.string.sp_tasklist_key_show_done);
-        showChecked = mSharedPreferences.getBoolean(keyShowDone, true);
-        String keyLocationSort = mContext.getResources().getString(
-                R.string.sp_tasklist_key_sort_location);
-        locationSort = mSharedPreferences.getBoolean(keyLocationSort, true);
-        mSharedPreferences
-                .registerOnSharedPreferenceChangeListener(mPatientListListener);
+        sort();
+        notifyDataSetChanged();
     }
 
     private void sort() {
         Log.v(tag, "sort()");
         Comparator<Patient> taskComparator = generateComparator();
-        // TODO support done stripping
         Collections.sort(mAllPatients, taskComparator);
         Collections.sort(mRemindPatients, taskComparator);
     }
 
     public void updateDataSet(ArrayList<Patient> newPatients) {
-
-        if (newPatients.equals(mAllPatients)) {
-            return;
-        }
-        mAllPatients.clear();
-        mRemindPatients.clear();
-        mAllPatients.addAll(newPatients);
-        for (Patient patient : newPatients) {
-            if (!patient.alarmeOn()) {
-                mRemindPatients.add(patient);
+        Log.v(tag, "updateDataSet()");
+        if (!newPatients.equals(mAllPatients)) {
+            mAllPatients.clear();
+            mRemindPatients.clear();
+            mAllPatients.addAll(newPatients);
+            for (Patient patient : newPatients) {
+                if (!patient.alarmeOn()) {
+                    mRemindPatients.add(patient);
+                }
             }
+            sort();
+            notifyDataSetChanged();
         }
-        notifyDataSetChanged();
     }
 }

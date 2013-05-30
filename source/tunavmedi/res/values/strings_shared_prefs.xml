@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="sp_tasklist_key_show_done">show_done</string>
-    <string name="sp_tasklist_key_sort_location">sort_location</string>
-    <string name="sp_status_name">Status</string>
-    <string name="sp_status_key_battery_okey">BatteryOkey</string>
-    <string name="sp_status_key_is_charging">isCharging</string>
-    <string name="sp_user_name">User</string>
-    <string name="sp_user_key_is_logged">isLogged</string>
-    <string name="sp_user_key_id">ID</string>
-    <string name="sp_user_key_password">Password</string>
-    <string name="sp_tasklist_name">TaskList</string>
+    <!-- patient_list -->
+    <string name="sp_patientlist">TaskList</string>
+    <string name="spkey_show_checked">SHOW_CHECKED</string>
+    <string name="spkey_sort_location">SORT_LOCATION</string>
+    <string name="spkey_location_update">LOCATION_UPDATE</string>
+    <!-- status -->
+    <string name="sp_status">Status</string>
+    <string name="spkey_battery_okey">BATTERY_OKEY</string>
+    <string name="spkey_power_connected">POWER_CONNECTED</string>
+    <string name="spkey_is_connected">CONNECTED</string>
+    <!-- user -->
+    <string name="sp_user">User</string>
+    <string name="spkey_is_logged">isLogged</string>
+    <string name="spkey_id">ID</string>
+    <string name="spkey_password">Password</string>
 
 </resources>

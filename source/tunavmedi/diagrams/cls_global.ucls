@@ -3,7 +3,7 @@
   realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
   <class id="1" language="java" name="com.tunav.tunavmedi.service.AuthService" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/service/AuthService.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="707" y="517"/>    
+    <position height="-1" width="-1" x="747" y="505"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
@@ -12,7 +12,7 @@
   </class>  
   <class id="2" language="java" name="com.tunav.tunavmedi.service.PatientsService" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/service/PatientsService.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="705" y="371"/>    
+    <position height="-1" width="-1" x="747" y="372"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
@@ -21,7 +21,7 @@
   </class>  
   <class id="3" language="java" name="com.tunav.tunavmedi.service.PatientsService.LocationReceiver" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/service/PatientsService.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="558" y="280"/>    
+    <position height="-1" width="-1" x="606" y="281"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
@@ -30,7 +30,7 @@
   </class>  
   <class id="4" language="java" name="com.tunav.tunavmedi.service.PatientsService.BatteryReceiver" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/service/PatientsService.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="776" y="222"/>    
+    <position height="-1" width="-1" x="811" y="208"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
@@ -39,7 +39,7 @@
   </class>  
   <class id="5" language="java" name="com.tunav.tunavmedi.service.PatientsService.NetworkReceiver" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/service/PatientsService.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="634" y="222"/>    
+    <position height="-1" width="-1" x="675" y="222"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
@@ -48,7 +48,7 @@
   </class>  
   <class id="6" language="java" name="com.tunav.tunavmedi.service.PatientsService.ChargingReceiver" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/service/PatientsService.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="851" y="280"/>    
+    <position height="-1" width="-1" x="864" y="266"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
@@ -84,7 +84,7 @@
   </class>  
   <class id="10" language="java" name="com.tunav.tunavmedi.adapter.PatientsAdapter" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/adapter/PatientsAdapter.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="762" y="453"/>    
+    <position height="-1" width="-1" x="794" y="445"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
@@ -102,7 +102,7 @@
   </class>  
   <class id="12" language="java" name="com.tunav.tunavmedi.activity.MainActivity" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/activity/MainActivity.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="718" y="664"/>    
+    <position height="-1" width="-1" x="1201" y="665"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
@@ -148,49 +148,51 @@
     </display>  
   </class>  
   <association id="17">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="18" name="mPatientService"/>      
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="18" name="mHelper"/>      
       <multiplicity id="19" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="13" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <nesting id="20">    
     <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="3"/>  
+    <end type="TARGET" refId="6"/>  
   </nesting>  
-  <dependency id="21">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="9"/>  
-  </dependency>  
-  <generalization id="22">    
+  <generalization id="21">    
     <end type="SOURCE" refId="14"/>    
     <end type="TARGET" refId="16"/>  
   </generalization>  
+  <nesting id="22">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="3"/>  
+  </nesting>  
   <dependency id="23">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="8"/>  
+  </dependency>  
+  <dependency id="24">    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="10"/>  
   </dependency>  
-  <association id="24">    
+  <nesting id="25">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="5"/>  
+  </nesting>  
+  <nesting id="26">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </nesting>  
+  <association id="27">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="25" name="mPatientsAdapter"/>      
-      <multiplicity id="26" minimum="0" maximum="1"/>    
+      <attribute id="28" name="mPatientsAdapter">        
+        <position height="17" width="93" x="655" y="403"/>      
+      </attribute>      
+      <multiplicity id="29" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="10" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <nesting id="27">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="6"/>  
-  </nesting>  
-  <generalization id="28">    
-    <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="15"/>  
-  </generalization>  
-  <nesting id="29">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="4"/>  
-  </nesting>  
   <association id="30">    
     <end type="SOURCE" refId="2" navigable="false">      
       <attribute id="31" name="mHelper"/>      
@@ -201,12 +203,28 @@
   </association>  
   <dependency id="33">    
     <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="8"/>  
+    <end type="TARGET" refId="9"/>  
   </dependency>  
-  <nesting id="34">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="5"/>  
-  </nesting>  
+  <generalization id="34">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="15"/>  
+  </generalization>  
+  <association id="35">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="36" name="mAuthService"/>      
+      <multiplicity id="37" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="38">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="39" name="mPatientService"/>      
+      <multiplicity id="40" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="false" package="false" protected="false" private="false"/>    

@@ -1,7 +1,6 @@
 
 package com.tunav.tunavmedi.dal.sqlite.helper;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,7 +8,7 @@ import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import com.tunav.tunavmedi.dal.abstraction.PatientsHandler;
-import com.tunav.tunavmedi.dal.sqlite.SQLiteSetup;
+import com.tunav.tunavmedi.dal.sqlite.DBSetup;
 import com.tunav.tunavmedi.dal.sqlite.contract.PatientsContract;
 import com.tunav.tunavmedi.datatype.Patient;
 
@@ -22,15 +21,15 @@ public class PatientsHelper extends PatientsHandler {
 
     public static final String tag = "PatientsHelper";
     private Context mContext = null;
-    private SQLiteSetup mDBHelper = null;
+    private DBSetup mDBHelper = null;
 
     public PatientsHelper(Context context) {
         super();
         Log.v(tag, "TasksHelper()");
         mContext = context;
-        mDBHelper = new SQLiteSetup(mContext);
-        setNotificationThread(new Runnable() {
-            private static final String tag = "setNotificationThread";
+        mDBHelper = new DBSetup(mContext);
+        setNotifyTask(new Runnable() {
+            private static final String tag = "com.tunav.tunavmedi.adl.sqlite.notify";
 
             @Override
             public void run() {
@@ -38,9 +37,9 @@ public class PatientsHelper extends PatientsHandler {
                 Random random = new Random();
                 for (int i = 0; i < inserts; i++) {
                     // TODO
-                    ArrayList newTasks = pullPatients();
+                    ArrayList<Patient> newPatientsList = pullPatients();
                     setChanged();
-                    notifyObservers(newTasks);
+                    notifyObservers(newPatientsList);
                     Log.i(tag, "Observers notified");
                     try {
                         Thread.sleep(random.nextInt(5000));
@@ -111,10 +110,6 @@ public class PatientsHelper extends PatientsHandler {
                     Long interned = cursor
                             .getLong(cursor
                                     .getColumnIndexOrThrow(PatientsContract.KEY_INTERNED));
-                    boolean urgent = cursor.getInt(cursor
-                            .getColumnIndexOrThrow(PatientsContract.KEY_ISURGENT)) != 0;
-                    boolean checked = cursor.getInt(cursor
-                            .getColumnIndexOrThrow(PatientsContract.KEY_ALARMEON)) != 0;
                     String recordPath = cursor
                             .getString(cursor
                                     .getColumnIndexOrThrow(PatientsContract.KEY_RECORD));
@@ -147,11 +142,9 @@ public class PatientsHelper extends PatientsHandler {
     public int pushPatients(ArrayList<Patient> updatedTasks) {
         Log.v(tag, "setStatus()");
         SQLiteDatabase database = null;
-        ContentValues cv = null;
         int returnStatus = 0;
         try {
             database = mDBHelper.getWritableDatabase();
-            cv = new ContentValues();
             // TODO
         } catch (SQLiteException tr) {
             // database problem

@@ -10,14 +10,14 @@ import android.util.Log;
 import com.tunav.tunavmedi.dal.sqlite.contract.CredentialsContract;
 import com.tunav.tunavmedi.dal.sqlite.contract.PatientsContract;
 
-public class SQLiteSetup extends SQLiteOpenHelper {
+public class DBSetup extends SQLiteOpenHelper {
 
     private static final String tag = "DemoSQLite";
 
     private static final String DATABASE_NAME = "helpers";
     private static final int DATABASE_VERSION = 1;
 
-    public SQLiteSetup(Context context) {
+    public DBSetup(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         Log.v(tag, "DemoSQLite()");
     }

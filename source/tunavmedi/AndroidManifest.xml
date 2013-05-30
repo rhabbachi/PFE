@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -46,24 +47,31 @@
         </activity>
 
         <receiver
-            android:name="com.tunav.tunavmedi.service.PatientsService$LocationReceiver"
-            android:enabled="true"
-            android:exported="false" >
+            android:name="com.tunav.tunavmedi.broadcastreceiver.BatteryReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.BATTERY_OK" />
+            </intent-filter>
         </receiver>
         <receiver
-            android:name="com.tunav.tunavmedi.service.PatientsService$BatteryReceiver"
-            android:enabled="true"
-            android:exported="false" >
+            android:name="com.tunav.tunavmedi.broadcastreceiver.ChargingReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
         </receiver>
         <receiver
-            android:name="com.tunav.tunavmedi.service.PatientsService$ChargingReceiver"
-            android:enabled="true"
-            android:exported="false" >
+            android:name="com.tunav.tunavmedi.broadcastreceiver.NetworkReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="ConnectivityManager.CONNECTIVITY_ACTION" />
+            </intent-filter>
         </receiver>
         <receiver
-            android:name="com.tunav.tunavmedi.service.PatientsService$NetworkReceiver"
-            android:enabled="true"
-            android:exported="false" >
+            android:name="com.tunav.tunavmedi.broadcastreceiver.LocationReceiver"
+            android:enabled="true" >
         </receiver>
 
         <service

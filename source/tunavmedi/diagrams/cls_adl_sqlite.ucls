@@ -4,7 +4,7 @@
   <class id="1" language="java" name="com.tunav.tunavmedi.dal.sqlite.contract.PatientsContract" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/dal/sqlite/contract/PatientsContract.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="51" width="177" x="438" y="337"/>    
+    <position height="-1" width="-1" x="444" y="578"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
@@ -14,7 +14,7 @@
   <class id="2" language="java" name="com.tunav.tunavmedi.dal.sqlite.contract.CredentialsContract" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/dal/sqlite/contract/CredentialsContract.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="51" width="177" x="41" y="337"/>    
+    <position height="-1" width="-1" x="95" y="578"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
@@ -24,7 +24,7 @@
   <class id="3" language="java" name="com.tunav.tunavmedi.dal.abstraction.AuthenticationHandler" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/dal/abstraction/AuthenticationHandler.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="51" width="164" x="144" y="37"/>    
+    <position height="-1" width="-1" x="95" y="218"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
@@ -33,7 +33,7 @@
   </class>  
   <class id="4" language="java" name="com.tunav.tunavmedi.dal.abstraction.PatientsHandler" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/dal/abstraction/PatientsHandler.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="51" width="164" x="354" y="37"/>    
+    <position height="-1" width="-1" x="444" y="218"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
@@ -43,7 +43,7 @@
   <interface id="5" language="java" name="android.provider.BaseColumns" project="TunavMedi" 
     file="/home/riadh/Development/android-sdk-linux/platforms/android-17/android.jar" binary="true" 
     corner="BOTTOM_RIGHT">    
-    <position height="97" width="105" x="239" y="428"/>    
+    <position height="-1" width="-1" x="264" y="578"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -53,7 +53,7 @@
   <class id="6" language="java" name="com.tunav.tunavmedi.dal.sqlite.helper.AuthenticationHelper" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/dal/sqlite/helper/AuthenticationHelper.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="115" width="170" x="144" y="128"/>    
+    <position height="-1" width="-1" x="169" y="403"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -62,7 +62,7 @@
   </class>  
   <class id="7" language="java" name="com.tunav.tunavmedi.dal.sqlite.helper.PatientsHelper" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/dal/sqlite/helper/PatientsHelper.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="169" width="196" x="354" y="128"/>    
+    <position height="-1" width="-1" x="394" y="403"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -71,55 +71,59 @@
   </class>  
   <class id="8" language="java" name="com.tunav.tunavmedi.dal.sqlite.SQLiteSetup" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/dal/sqlite/SQLiteSetup.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="51" width="140" x="258" y="337"/>    
+    <position height="-1" width="-1" x="263" y="218"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </class>  
-  <association id="9">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="10" name="mDBHelper">        
-        <position height="17" width="78" x="410" y="304"/>      
-      </attribute>      
-      <multiplicity id="11" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <dependency id="12">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="2"/>  
-  </dependency>  
-  <association id="13">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="14" name="mDBHelper">        
-        <position height="17" width="64" x="247" y="280"/>      
-      </attribute>      
-      <multiplicity id="15" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="8" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <realization id="16">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="5"/>  
-  </realization>  
-  <generalization id="17">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="3"/>  
-  </generalization>  
-  <dependency id="18">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="1"/>  
-  </dependency>  
-  <generalization id="19">    
+  <generalization id="9">    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="4"/>  
   </generalization>  
-  <realization id="20">    
+  <realization id="10">    
     <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <dependency id="11">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <association id="12">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="13" name="mDBHelper">        
+        <position height="17" width="64" x="331" y="292"/>      
+      </attribute>      
+      <multiplicity id="14" minimum="0" maximum="1">        
+        <position height="15" width="23" x="298" y="246"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="15">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="16" name="mDBHelper">        
+        <position height="17" width="64" x="210" y="322"/>      
+      </attribute>      
+      <multiplicity id="17" minimum="0" maximum="1">        
+        <position height="15" width="23" x="213" y="248"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="18">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <dependency id="19">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <realization id="20">    
+    <end type="SOURCE" refId="2"/>    
     <end type="TARGET" refId="5"/>  
   </realization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

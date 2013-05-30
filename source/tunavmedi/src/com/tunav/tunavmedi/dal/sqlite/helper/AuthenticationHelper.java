@@ -8,17 +8,17 @@ import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import com.tunav.tunavmedi.dal.abstraction.AuthenticationHandler;
-import com.tunav.tunavmedi.dal.sqlite.SQLiteSetup;
+import com.tunav.tunavmedi.dal.sqlite.DBSetup;
 import com.tunav.tunavmedi.dal.sqlite.contract.CredentialsContract;
 
 public class AuthenticationHelper extends AuthenticationHandler {
 
     private static final String tag = "AuthenticationHelper";
-    private SQLiteSetup mDBHelper = null;
+    private DBSetup mDBHelper = null;
 
     public AuthenticationHelper(Context context) {
         Log.v(tag, "AuthenticationHelper()");
-        mDBHelper = new SQLiteSetup(context);
+        mDBHelper = new DBSetup(context);
     }
 
     @Override

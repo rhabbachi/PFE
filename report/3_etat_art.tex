@@ -2,28 +2,26 @@
 
 \chapter{État de l'art}
 \section{Introduction}
-Dans ce chapitre on présente une étude de marché en énumérant
-les applications dont les fonctionnalités sont équivalentes à la
-notre tout en soulignent les différences qui subsistent. Ensuite on
-présente la plate-forme \android{} et en passe en revu l'architecture
-d'une application android.
+
+Dans ce chapitre on présente une étude du marché en énumérant les
+applications dont les fonctionnalités sont équivalentes à la notre tout
+en soulignent les différences qui subsistent. Ensuite on présente la
+plate-forme ciblé et en passe en revu l’architecture d’une application
+\android{}.
 
 \section{Étude de marché}
-Plusieurs sociétés offre des solution en relation avec celle proposé
-par ce présent rapport. Malheureusement, la plus par d'entre elle sont
-des solutions commerciales et, faute de documentation disponible, on
-n'a pas pu les étudier d'une point de vu techno-technique et on c'est
-contenté de relayé leurs caractéristiques tel que présenté dans
-les sources cités.
+
+Plusieurs sociétés offre des solutions en relation avec celle proposé
+par ce présent rapport. Malheureusement, la plupart d’entre elle sont
+des solutions commerciales et, faute de documentation disponible, on n’a
+pas pu les étudier d’une point de vu techno-technique et on c’est
+contenté de relayer leurs caractéristiques tel que présenté dans les
+sources cités.
 
 \paragraph{NB:} % (fold) 
 \label{par:nb}
 
-Les solutions présenté ici sont le fruit des sociétés bien établis avec des
-ressources considérable et des salariés professionnels. Les comparé avec le
-travail incubé dans ce rapport serai abusive, l'indulgence est de mise.
-
-% paragraph nb (end)
+Les solutions présentées ici sont le fruit des sociétés bien établis avec des ressources considérable et des salariés professionnels. Les comparer avec le travail incubé dans ce rapport serai abusive, l’indulgence est de mise.
 
 \subsection{MIAA - Palomar Pomerado Health}
 
@@ -44,39 +42,48 @@ travail incubé dans ce rapport serai abusive, l'indulgence est de mise.
 
 \gls{miaa} (figure \ref{fig:miaa}) est une application mobile issu d'un
 projet R\&D chez \en{Palomar Pomerado Health}, l'institution public la
-plus large dans l'état de Californie (USA). Elle permet au médecins
-d'accédé rapidement au dossier médical complet du patient depuis une
-variété de source différentes qui s\'affranchie des frontières des
-organisation\cite{pph:eweek}. Elle vise les terminales équiper avec
-le systéme d'exploitation \android{} comme les smartphones et les
-tablettes. \en{Palomar Pomerado Health} a choisie de déployer cette
-application dans le \en{Palomar Medical Center} à \en{Escondido}
-(319 lits) et le \en{Pomerado Hospital} à \en{Poway} (107 lits) sur
-des tablette Cisco Cius\cite{pph:tabtimes}, ce choix s'est basé sur le
-support qu'offre Cisco pour ces divers équipements.
+plus large dans l'état de Californie (USA). Elle permet aux médecins
+d'accéder rapidement au dossier médical complet du patient depuis une
+variété de source différentes qui s'affranchie des frontières des
+organisation\cite{pph:eweek}. Elle vise les terminaux équipés avec le
+système d'exploitation \android{} comme les smartphones et les
+tablettes. \en{Palomar Pomerado Health} a choisi de déployer cette
+application dans le \en{Palomar Medical Center} à \en{Escondido} (319
+lits) et le \en{Pomerado Hospital} à \en{Poway} (107 lits) sur des
+tablettes Cisco Cius\cite{pph:tabtimes}, ce choix s'est basé sur le
+support qu'offre Cisco pour ces équipements.
+
 Les avantages de \gls{miaa} sont:~\cite{pph:yahoo}
+
 \begin{itemize}
+
 \item Application mobile facile à utilisé conçu spécifiquement aux
 médecins, tournant sur la plate-forme \android{}.
+
 \item Un service \en{Cloud} qui fournit un accès permanent à
 l'historique médicale des patients à partir de divers sources de
 données qui s\'affranchie des frontières des organisations.
+
 \item Interopérabilité avec les pionniers des systèmes électroniques
-de l'historique médicales tel que Cerner - \tm{Millennnium},
+de l'historique médical tel que Cerner - \tm{Millennnium},
 \tm{NextGen}, et \en{Veterans Administration} - \tm{VistA}.
+
 \item Intégration en temps-réel des technologies de surveillance
 des signes vitaux sans fils comme l'ECG, SPO$_{2}$, rythme cardiaque,
 température, respiration, et pression du sang à partir des équipements
 sans-fils.
-\item Affichage des information génétique personnel.
-\item Application dynamique qui s'ajuste automatiquement à l\'hôpital,
-clinique, au à la maison.
-\item Simple, facile à utilisé, avec une \gls{ui} tactile
-de nouvelle génération.
-\item Intégration d'une messagerie inter-médecins sécurisé tout en
-maintenant le contexte du patient.
-\item Des plan future pour intégré NHIN \en{Connect} et les services
+
+\item Affichage des informations génétiques personnelles.
+
+\item Application dynamique qui s’ajuste automatiquement à l’hôpital, clinique, et à la maison.
+
+\item Simple, facile à utiliser, avec une tactile de nouvelle génération.
+
+\item Intégration d’une messagerie inter-médecins sécurisée tout en maintenant le contexte du patient.
+
+\item Des plan futurs pour intégré NHIN \en{Connect} et les services
 \en{Direct}.
+
 \end{itemize}
 
 \subsection{\pct{} - Cerner}
@@ -91,27 +98,41 @@ fait parti de l'ensemble de solutions \tm{Millennium+} et qui permet de
 facilité le travail des médecins. Elle offre une expérience native
 sur iPad pour géré les visites médicales et permet aux médecins
 d'effectuer tout une visite typique qui inclue:~\cite{pct:flyer}
+
 \begin{itemize}
+
 \item Consultation des emplois du temps et les chartes des patients.
+
 \item Satisfaire les demandes récurrentes comme les commandes simple
 et les recharges des médicaments.
+
 \item Consultation des diagnostiques et résultats cliniques.
+
 \item Documenté les allergies, les problèmes de santé et l'historique
 du patient.
+
 \item Crée et signé les notes de progressions.
+
 \end{itemize}
 
 Dé la fin du flux de travail du médecin ambulant. Cerner étend ces
 même fonctions et les adaptes aux établissements hospitalier, les
 urgences et les divers spécialistes.
 Les avantages clés du \pct{} sont:~\cite{pct:flyer}
+
 \begin{itemize}
+
 \item Des réponses instantanés avec un flux de travail aisée.
+
 \item Pas besoin de configuré l'application.
-\item Adapter pour les visite médicales, aux patients et aux conditions
+
+\item Adapter pour les visites médicales, aux patients et aux conditions
 de la consultation.
+
 \item Transmission sécurisé des données.
+
 \item Des capacités de reconnaissance vocale.
+
 \end{itemize}
 
 \section{Le système d'exploitation \android{}}
@@ -124,17 +145,17 @@ de la consultation.
 \caption{Logo et sigle d'\android{}}
 \end{figure}
 
-\android{} est un système d'exploitation basé sur \en{Linux} conçu pour les
-équipements mobile avec d'un écran tactile comme les \en{smartphones} et les
-tablettes. Développer à l'origine par \en{\android{}, Inc.} que \en{Google} a
-supporté financièrement et plus-tard acquérir en 2005. \android{} a été
-dévoilé en 2007 parallèlement a la fondation de l'\en{Open Handset Alliance}:
-un consortium composé de sociétés dévoué a l'avancement des standards ouverts
-pour les équipements mobile. Le première téléphone sous \android{} est vendu
-en Octobre 2008.
+\android{} est un système d'exploitation basé sur Linux conçu pour les
+équipements mobile avec d'un écran tactile comme les \en{smartphones} et
+les tablettes. Développer à l'origine par \en{\android{}, Inc.} que
+\en{Google} a supporté financièrement et plus-tard acquis en 2005.
+\android{} a été dévoilé en 2007 parallèlement à la fondation de
+l'\en{Open Handset Alliance}: un consortium composé de sociétés dévoué a
+l'avancement des standards ouverts pour les équipements mobile. Le
+première téléphone  \android{} est sorti en Octobre 2008.
 
-La dernière version stable d'\android{} en date (Mai 2013) est 4.2.2 \en{
-Jelly Bean} sortie le 11 Février 2013.
+La dernière version stable d'\android{} en date (Mai 2013) est 4.2.2
+\en{Jelly Bean} sortie le 11 Février 2013.
 
 \android{} est basé sur le Kernel Linux et utilise pleinement ses capacités de support matériels exhaustif. Mais la comparaison avec les distribution Linux, embarqué ou même destiné aux bureaux, s'arrête a ce niveaux.~\cite{lft:growth_android}
 
@@ -145,7 +166,12 @@ Jelly Bean} sortie le 11 Février 2013.
 \end{figure}
 
 \subsection{Parts du marché}
-L’adoption du système d'exploitation \android suit une courbe exponentiel depuis quelque temps et la tendance n'est pas prête de s’inverser, selon les dernière rapport du cabiné d'analyse \en{Strategy Analytics}, \android a réussi à capturé environ 68.4\% du marché globale \cite{venturebeat.com}.
+
+L’adoption du système d'exploitation \android{} suit une courbe
+exponentielle depuis quelque temps et la tendance n'est pas prête de
+s’inverser, selon les dernière rapport du cabiné d'analyse \en{Strategy
+Analytics}, \android{} a réussi à capturer environ 68.4\% du marché
+globale \cite{venturebeat.com}.
 
 \begin{table}[H]
 \centering
@@ -203,6 +229,7 @@ et du parts de marché en 3\ieme trimestre 2012~\cite{idc}}
 \footnotetext[4]{Estimation}
 
 \subsection{Versions \android{} en circulation}
+
 Le tableaux \ref{tab:androidversion} représente les différentes versions
 d'\android{} et leurs taux d'utilisation respective. On remarque que
 la plupart des terminaux mobiles \android{} sont sous la version 2.3
@@ -251,34 +278,39 @@ jours arrêter le 4 Février 2013.}
 
 Les raisons pour le succès \android{} peuvent être
 dénombrés comme suit:
+
 \begin{description}
+
 \item [Un \en{Framework} d'Application Riche.] \android{} fourni un
-excellent \gls{sdk} avec des \gls{api} stable dans le long-terme, ce
-qui assure au partenaires tiers un écosystème standardisé. Alors que
-le système en lui même est en constante évolution, la stabilité des
-\gls{api} pour la plupart est préserve, ce qui permet d\'investir dans
-le long-terme sur la plate-forme. Concevoir et construire des application
-pour les distribués sur différent plate-formes permet des réductions
-drastique en terme des coûts et effort pour les entreprises.
+excellent \gls{sdk} avec des \gls{api} stable à long-terme, ce qui
+assure aux partenaires tiers un écosystème standardisé. Alors que le
+système en lui même est en constante évolution, la stabilité des
+\gls{api} pour la plupart est préservée, ce qui permet d\'investir dans
+le long-terme. Concevoir et construire des applications pour les
+distribués sur différent plate-formes permet des réductions drastique en
+terme des coûts et effort pour les entreprises.
+
 \item [Un \gls{ttm} Agressif.] Concevoir des appareil avec \android{}
-peut réduire le \gls{ttm} d'une manière significative. Il suffit
-de se procuré les sources, les adapter pour le matériel en question
-et le vendre. Et dans le cas ou les schémas et usages de référence
-sont appliqué, la sorti d'un nouveau produit est possible au cour de
-quelque mois. Seulement voilà, c'est pas aussi facile et une certaine
-expertise et connaissances dans \android{} sont requise. Et même si
-sortir un système basé sur \android{} peut être plus rapide comparé
-à d'autre solutions, le suivit des évolutions du système ainsi que
-maintenir le code à long terme est une autre histoire.
+peut réduire le \gls{ttm} d'une manière significative. Il suffit de se
+procuré les sources, les adapter pour le matériel en question et vendre. Et dans le cas ou les schémas et usages de référence sont
+appliqué, la sorti d'un nouveau produit est possible au cour de quelque
+mois. Seulement voilà, c'est pas aussi facile et une certaine expertise
+et connaissances dans ce domaine sont requise. Et même si sortir un
+système basé sur \android{} peut être plus rapide comparé à d'autre
+solutions, le suivit des évolutions du système ainsi que maintenir le
+code à long terme est une autre histoire.
+
 \item [Concentrer sur \og Ce qui compte réellement \fg.] En fournissant
 un \en{Framework} pratique, \android{} permet aux développeur de se
 concentrer sur les aspects à valeur commercial. L'assemblage d'un
 appareil et une activité qui consomme énormément du temps et de
-ressources et ne pas avoir à réinventer un - encore - autre système
-d exploitation permet d'éviter un autre gaspillage de temps.
+ressources et ne pas avoir à réinventer un - encore - autre système d
+exploitation permet d'éviter un autre gaspillage de temps.
+
 \item [Open Source.] Malgré qu'il n'est pas développer d'une manière
 communautaire, \android{} reste 100\% modifiable et diffuse un sentiment
 de sécurité parmi les entreprises contre les menaces légales.
+
 \end{description}
 
 \subsection[La pile logiciel d'\android{}]{La pile logiciel d'\android{}\cite{pa4ad:chptr1}}
@@ -300,7 +332,7 @@ Se situ au dessus du Kernel, \android{} inclue divers bibliothèques C/C++ de ba
 
 \item Des bibliothèques graphiques qui inclue le \dev{SGL} et \dev{OpenGL} pour les graphiques 2D et 3D.
 
-\item Un support native de base de donnée à travert \dev{SQLite}.
+\item Un support native de base de donnée à travers la base de données \dev{SQLite}.
 
 \item \dev{SSL} et \dev{WebKit} pour le navigateur web intégrer et la sécurité internet.
 

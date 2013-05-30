@@ -4,7 +4,8 @@ package com.tunav.tunavmedi.dal.abstraction;
 import android.graphics.drawable.Drawable;
 
 public abstract class AuthenticationHandler {
-    public String getName() {
+
+    public String getDisplayName() {
         return null;
     }
 
@@ -17,7 +18,7 @@ public abstract class AuthenticationHandler {
         return null;
     }
 
-    public boolean islogged() {
+    public boolean isLogged() {
         return false;
     }
 

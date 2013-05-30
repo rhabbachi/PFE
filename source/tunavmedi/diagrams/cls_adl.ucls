@@ -4,7 +4,7 @@
   <class id="1" language="java" name="com.tunav.tunavmedi.dal.abstraction.AuthenticationHandler" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/dal/abstraction/AuthenticationHandler.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="169" width="164" x="41" y="37"/>    
+    <position height="-1" width="-1" x="153" y="91"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -13,7 +13,7 @@
   </class>  
   <class id="2" language="java" name="com.tunav.tunavmedi.dal.abstraction.PatientsHandler" project="TunavMedi" 
     file="/TunavMedi/src/com/tunav/tunavmedi/dal/abstraction/PatientsHandler.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="169" width="203" x="132" y="246"/>    
+    <position height="-1" width="-1" x="153" y="280"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -23,7 +23,7 @@
   <class id="3" language="java" name="java.util.Observable" project="TunavMedi" 
     file="/home/riadh/Development/android-sdk-linux/platforms/android-17/android.jar" binary="true" 
     corner="BOTTOM_RIGHT">    
-    <position height="51" width="90" x="245" y="37"/>    
+    <position height="-1" width="-1" x="47" y="412"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
@@ -33,25 +33,29 @@
   <interface id="4" language="java" name="java.lang.Runnable" project="TunavMedi" 
     file="/home/riadh/Development/android-sdk-linux/platforms/android-17/android.jar" binary="true" 
     corner="BOTTOM_RIGHT">    
-    <position height="51" width="101" x="132" y="455"/>    
+    <position height="-1" width="-1" x="257" y="412"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
       <attributes public="false" package="false" protected="false" private="false"/>      
       <operations public="false" package="false" protected="false" private="false"/>    
     </display>  
   </interface>  
-  <association id="5">    
+  <generalization id="5">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <association id="6">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="6" name="notificationRunnable"/>      
-      <multiplicity id="7" minimum="0" maximum="1"/>    
+      <attribute id="7" name="notificationRunnable">        
+        <position height="17" width="106" x="120" y="367"/>      
+      </attribute>      
+      <multiplicity id="8" minimum="0" maximum="1">        
+        <position height="15" width="23" x="238" y="370"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="8">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="3"/>  
-  </generalization>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     accessors="true" visibility="true">    
     <attributes public="false" package="false" protected="false" private="false"/>    

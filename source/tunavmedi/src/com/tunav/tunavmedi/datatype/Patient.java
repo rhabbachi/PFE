@@ -43,6 +43,10 @@ public class Patient {
         return mInTime;
     }
 
+    public Long getLastUpdate() {
+        return mLastUpdate;
+    }
+
     public String getName() {
         return mName;
     }
@@ -78,8 +82,8 @@ public class Patient {
         setLastUpdateNow();
     }
 
-    public void setLastUpdate(Long lastUpdated) {
-        mLastUpdate = lastUpdated;
+    public void setLastUpdate(Long lastUpdate) {
+        this.mLastUpdate = lastUpdate;
     }
 
     public void setLastUpdateNow() {

@@ -223,7 +223,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
             case R.id.tasklist_menu_done:
                 spEditor.putBoolean(
                         getActivity().getResources().getString(
-                                R.string.sp_tasklist_key_show_done), state);
+                                R.string.spkey_show_checked), state);
                 spEditor.apply();
                 if (state) {
                     item.setTitle(R.string.tasklist_menu_done_title_on);
@@ -235,7 +235,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
             case R.id.tasklist_menu_location:
                 spEditor.putBoolean(
                         getActivity().getResources().getString(
-                                R.string.sp_tasklist_key_sort_location), state);
+                                R.string.spkey_sort_location), state);
                 spEditor.apply();
                 if (state) {
                     item.setTitle(R.string.tasklist_menu_location_title_on);

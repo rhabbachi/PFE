@@ -47,6 +47,8 @@ public class LoginActivity extends Activity implements ServiceConnection {
          */
         Integer userID = null;
 
+        String err;
+
         public UserLoginTask() {
             Log.v(tag, "UserLoginTask()");
         }
@@ -54,7 +56,12 @@ public class LoginActivity extends Activity implements ServiceConnection {
         @Override
         protected Boolean doInBackground(Void... params) {
             Log.v(tag, "doInBackground()");
-            return mAuthService.authenticate(mID, mPassword);
+            if (mBound) {
+                return mAuthService.authenticate(mID, mPassword);
+            } else {
+                err = "Connection Problemes";
+                return false;
+            }
         }
 
         // invoked on the UI thread
@@ -77,7 +84,7 @@ public class LoginActivity extends Activity implements ServiceConnection {
             } else {
                 Log.d(tag, "Authentication faild!");
                 mPasswordView
-                        .setError(getString(R.string.error_incorrect_id_password));
+                        .setError(err);
                 mPasswordView.requestFocus();
             }
         }
@@ -86,6 +93,7 @@ public class LoginActivity extends Activity implements ServiceConnection {
         @Override
         protected void onPreExecute() {
             Log.v(tag, "onPreExecute()");
+            err = getString(R.string.error_incorrect_id_password);
         }
     }
 

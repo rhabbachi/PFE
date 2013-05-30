@@ -1,21 +1,27 @@
 %!TEX root = report.tex
 
 \chapter{Travail Accompli}
+
 \section{Introduction du chapitre}
-Dans ce chapitre on procéde à la presentation des cas utilisateur de notre systéme ainsi que l'identification des acteurs impliqué dans ces cas. Puis on décortique l'implementation que nous proposant en citant eventuellement nos motifs et intentions.
+
+Dans ce chapitre on procède à la présentation des cas utilisateur de
+notre système ainsi que l'identification des acteurs impliqué dans ces
+cas. Puis on décortique l’implémentation que nous proposant en citant
+éventuellement nos motifs et intentions.
 
 \section{Vue Général}
 \subsubsection{Identification des acteurs}
-Notre systéme interagie essentiellement avec trois acteurs différents:
+
+Notre système interagie essentiellement avec trois acteurs différents:
+
 \begin{description}
-\item[Le medecin] C'est l'acteur principale de notre systéme.
+\item[Le médecin] C'est l'acteur principale de notre système.
 
-\item[Le service web] Source des données à achiminé vers le medecin
-(Tache et )
+\item[Le service web] Source des données à acheminer vers le médecin.
 
-\item[Systéme d'exploitation] Communique à notre systéme les information
-receuille des divers composants qui nous interresse (localisation
-GPS/Network, etat de la connectivité, etat de la battery).
+\item[Système d'exploitation] Communique à notre système les information
+recueille des divers composants qui nous intéresse (localisation
+GPS/Network, état de la connectivité, état de la batterie).
 
 \end{description}
 
@@ -29,55 +35,100 @@ GPS/Network, etat de la connectivité, etat de la battery).
 \end{figure}
 
 \subsubsection{Cas: Authentifier}
-\subsubsection{Cas: Notifier la proximiter d'un patient}
-\subsubsection{Cas: Detecter la position du terminal}
-\subsubsection{Cas: Afficher la list des patients}
-\subsubsection{Cas: Télecharger la list des patients}
-\subsubsection{Cas: Modifier la list des patients}
-\subsubsection{Cas: Mettre à jour la list des patients}
+\subsubsection{Cas: Notifier la proximité d'un patient}
+\subsubsection{Cas: Détecter la position du terminal}
+\subsubsection{Cas: Afficher la liste des patients}
+\subsubsection{Cas: Télécharger la liste des patients}
+\subsubsection{Cas: Modifier la liste des patients}
+\subsubsection{Cas: Mettre à jour la liste des patients}
 
 \subsection{Environnement de développement}%TODO
+Plusieurs outils on était mise à contribution pour développer l'application, tant que sur le plan logiciel que matériel.
+
+\subsubsection{Environnement Logiciel}
+Voici une liste des outils logiciel utilisé pendant le développement de l'application.
+
+\begin{description}
+
+\item [Ubuntu 12.04] Système d'exploitation.\footnotemark[1]
+
+\item [OpenJDK 6] \gls{jdk} version 6.\footnotemark[2]
+
+\item [Eclipse Juno] Environnement de Développement Intégrer dans sa version \en{Service Release 2}.\footnotemark[3]
+
+\item [\gls{adt} (plugin Eclipce)] Intégration des outils de développement fournit dans l'\gls{sdk} \android{}.\footnotemark[4]
+
+\item [ObjectAid (plugin Eclipce)] Génération des diagrammes de classes.\footnotemark[5]
+
+\item [PlantUML (plugin Eclipce)] Génération des diagrammes de séquences.\footnotemark[6]
+
+\item [Git] Gestionnaire des versions\footnotemark[7].
+
+\item [EGit (plugin Eclipse)] Intégration du gestionnaire de version.\footnotemark[8]
+
+\item [Evolus Pencil] Génération de prototypes et des sketchs\footnotemark[9]
+\end{description}
+
+\footnotetext[1]{http://www.ubuntu.com}
+\footnotetext[2]{http://openjdk.java.net}
+\footnotetext[3]{http://www.eclipse.org}
+\footnotetext[4]{https://developer.android.com/tools/sdk/eclipse-adt.html}
+\footnotetext[5]{http://www.objectaid.com/}
+\footnotetext[6]{http://plantuml.sourceforge.net/}
+\footnotetext[7]{ttp://git-csm.com}
+\footnotetext[8]{http://www.eclipse.org/egit/}
+\footnotetext[9]{http://pencil.evolus.vn/}
+
+\subsubsection{Environnement Matériel}
+Le développement de l'application est fait avec une tablette Asus Nexus 7 mise à jour à \android{} 4.2.2 \en{Jelly Bean}.
 
 \section{Architecture Général}
 
-\begin{figure}
+L'architecture globale de l'application (figure \ref{fig:cls_global})
+est calqué sur Le patron "Vue Passive" (Passive View Pattern). Le patron
+\en{Passive View} (fig \ref{fig:passive_view}) est une variation des
+patrons \gls{mvc} et \gls{mvp}, à ce qui ce passe dans ces patrons
+l'interface utilisateur est divisé entre une vu qui s'occupe de
+l'affichage des données et un contrôleur qui répond aux interactions de
+l'utilisateur. La différence majeur avec le \en{Passive View} est que la
+vue est complètement passive et n'ai pas responsable de sa mise à jour
+depuis le modèle. Dans ce cas tout la logique de la vue est dans le
+contrôleur et aucune dépendances ni dans un sens au dans un autre entre
+le vue et le modèle~\cite{fowler:passive_view}.
+
+\begin{figure}[H]
 \center
-\includegraphics[scale=1]{passive_view}
+\includegraphics[width=0.6\textwidth]{passive_view}
 \caption{Diagramme \gls{uml} du patron \en{Passive Viev}~\cite{fowler:passive_view}}
 \label{fig:passive_view}
 \end{figure}
 
-L'architecture globale de l'application est calqué sur Le patron "Vue
-Passive" (Passive View). Le patron \en{Passive View} (fig
-\ref{fig:passive_view}) est une variation des patrons \gls{mvc} et
-\gls{mvp}, à ce qui ce passe dans ces patrons l'interface utilisateur
-est divisé entre une vu qui s'occupe de l'affichage des données et un
-controlleur qui repont aux interactions de l'utilisateur. La différance
-majeur avec le \en{Passive View} est que la vue est completemement
-passive et n'ai pas responsable de sa mise à jour depuis le model. Dans
-ce cas tout la logique de la vue est dans le controlleur et aucune
-dependances ni dans un sens au dans un autre entre le vue et le
-model~\cite{fowler:passive_view}.
-
 Ce patron est idéal dans notre cas pour deux raisons majeurs:
+
 \begin{itemize} 
 
-\item Dans notre projet le en{view} n'est pas une partie très important
-dans la mesure ou l'objectif est d'intégré un système éventuellement
-pré-conçu, donc avec une autre logique de présentation. Déporter les
-interactions avec le modèle dans le contrôleur permet d'intégrer
-d'autre implémentation d'affichage plus facilement.
+\item Dans notre projet la vu n'est pas la partie la important dans la
+mesure ou l'objectif est d'intégré un système développer parallèlement,
+donc éventuellement avec une autre logique de présentation. Déporter les
+interactions avec le modèle dans le contrôleur permet d'intégrer d'autre
+implémentation d'affichage plus facilement.
 
-\item La nature même de cette procédure d'accés - a savoir l’aspect
-abstrait, donc plus fragile - nous pousse à réduire les composants en
-relations pour réduire la marge d'erreur possible et facilité les tests.
+\item La nature même de cette procédure d’accès - a savoir l’aspect
+abstrait, donc plus fragile - nous conduit à réduire les composants en
+relations pour réduire la marge d'erreur possible et facilité les tests d’intégration.
 
-\end{itemize} 
+\end{itemize}
+
+\begin{figure}
+\center
+\includegraphics[angle=90, width=0.8\textwidth]{clsglobalhighlights}
+\caption{Architecture générale de l'application.}
+\label{fig:cls_global}
+\end{figure}
 
 Dans la suite de ce chapitre, on procède à l'explication détaillés de chaque composant de cette architecture.
 
 \section{Le Modèle} 
-
 
 Un des objectifs de ce projet étant de fournir une solution d’accès au
 donnée flexible à fin de couvrir les besoins de chaque client de manière
@@ -91,8 +142,8 @@ deux interfaces (figure \ref{fig:adl}):
 
 \begin{figure}
 \center
-\includegraphics[width=0.8\textwidth]{diagrams/cls_adl}
-\caption{Diagramme de classe de la couche d'accées.}
+\includegraphics[totalheight=0.5\textheight]{diagrams/cls_adl}
+\caption{Diagramme de classes des interfaces de la couche d’accès.}
 \label{fig:adl}
 \end{figure}
 
@@ -101,69 +152,231 @@ Ces ensemble d'interfaces nous permet de construire notre application
 
 \subsection{Implémentation de test} 
 
+Le package \dev{com.tunav.tunavmedi.dal.sqlite} contiens une
+implémentation de la couche d’accès abstraite (figure
+\ref{fig:adl_sqlite}) réalisé dans le cadre de ce projet pour pouvoir
+testé la solution. Cette implémentation est de caractère locale à
+l'application à travers les \gls{api} de la base de données \dev{SQLite}
+qui fait parti de l'\gls{sdk} \android{}. En fait une implémentation
+locale nous affranchies des problèmes qui peuvent se produire dont la
+corrélation avec l'application est faible. Cette même idée a influencé
+la mise en place même de cette implémentation qui à su rester la plus
+simple possible en restant très proches des objets de base de notre
+application.
+
 \begin{figure}
 \center
-\includegraphics[width=0.8\textwidth]{diagrams/cls_adl_sqlite}
+\includegraphics[angle=90, width=\textwidth]{diagrams/cls_adl_sqlite}
+\caption{Diagramme de classe de l'implémentation de la couche d'accès de test à base de SQLite.}
 \label{fig:adl_sqlite}
-\caption{Diagramme de classe de l'implémentation de la couche d'accées de test à base de SQLite.}
 \end{figure}
 
-Une implémentation de la couche d’accès abstraite est réalisé dans le
-cadre de ce projet pour pouvoir testé la solution. Cette implémentation
-est de caractère locale à l'application à travers les \gls{api} de la
-base de données \dev{SQLite} qui fait parti de l'\gls{sdk} \android{}.
-En fait une implémentation locale nous affranchies des problèmes qui
-peuvent se produire dont la corrélation avec l'application est faible.
-Cette même idée a influencé la mise en place même de cette
-implémentation qui à su rester la plus simple possible en restant très
-proches des objets de base de notre application.
+Cette implémentation peut être subdivisé en trois éléments: Les \dev{Contrats}, les \dev{Helpers}, et la classe \dev{DBSetup}.
 
-Se trouvant dans le package \dev{com.tunav.tunavmedi.dal.sqlite}, cette implémentation peut être subdivisé en trois éléments:
+\paragraph{Les Contrats}
 
-\begin{description}
-\item[Les Contrats] représente les contrats relative aux tables dans notre implémentation de test. chaque contrat implémente l'interface \dev{android.provider.BaseColumns} et contient - entre autre - les commandes SQL de création et de suppression de la dite table, des éventuel index, et les commande d'insertion des données de test.
+Représente les contrats relative aux tables dans notre implémentation de
+test. chaque contrat implémente l'interface
+\dev{android.provider.BaseColumns} et contient - entre autre - les
+commandes SQL de création et de suppression de la dite table, des
+éventuel index, et les commande d'insertion des données de test.
 
-\item[Les \en{Helpers}] ce sont les implémentations des classes
-abstraites qui définisse la couche d’accès et présente les procédure d'extraction des données pré-inséré dans nos table fictives en faisant appel à la classe \dev{SQLiteSetup} .
+\paragraph{Les \en{Helpers}} 
 
-\item[la classe \dev{SQLiteSetup}] Elle hérite de la classe \dev{SQLiteOpenHelper} et destiner à contrôler la création et l’accès à notre base de données de teste.
-\end{description}
+Ce sont les implémentations des classes abstraites qui définisse la
+couche d’accès et présente les procédure d'extraction des données pré-
+inséré dans nos table fictives en faisant appel à la classe
+\dev{DBSetup} .
+
+\paragraph[la classe \dev{DBSetup}]{la classe \dev{DBSetup}} 
+
+Elle hérite de la classe \dev{SQLiteOpenHelper} et est destiner à
+contrôler la création et l’accès à notre base de données de teste.
 
 \subsection{Interface d'authentification}
 
-\subsection{Interface des Données}
+\dev{com.tunav.tunavmedi.dal.abstraction.AuthenticationHandler} (figure
+\ref{fig:cls_adl_auth}) est une classe abstraite comportant les méthodes
+requise par notre application pour effectué les actions
+d'authentification, de dé-authentification, de vérification
+d'authenticité ainsi l'obtention des information associé à l'utilisateur
+authentifier.
+
+Malgré la variété des techniques d'authentification utilisé dans le
+domaine informatique, l'étape d'acquisition des identificateurs de
+l'utilisateur représente une point de départ commune. On utilise ce
+charactére dans l'interface d'authentification en demandons à nos client
+d'implémenté la méthode \dev{login()} qui prend en argument
+l'identifiant et le mots de passe fourni par le médecin. Pour effectué
+l’opération inverse le client implémente la méthode \dev{logout()}
+supposé annoncé au service distant la dé-authentification de
+l'utilisateur du terminal. Pour verifié le l'état actuel de la relation
+du terminal avec la base distante, on utilise le booléen retourné par
+\dev{isLogged()}, utile dans les cas de déconnexion temporaire ou du
+redémarrage de notre application. les méthodes \dev{getDisplayName()} et
+\dev{getPhoto()} retourne respectivement le nom de l'utilisateur et sa
+photo.
+
+\begin{figure}[H]
+\center
+\includegraphics[scale=1]{diagrams/cls_adl_auth}
+\caption{Diagramme de classe de l'interface d'authentification.}
+\label{fig:cls_adl_auth}
+\end{figure}
+
+\subsection{Interface d’accès à la liste des patients}
+
+\dev{com.tunav.tunavmedi.dal.abstraction.PatientsHandler} (figure
+\ref{fig:cls_adl_patient}) est une classe abstraite comportant les méthodes
+requise par notre application pour effectué les actions de mise à jour de la liste des patients dans le deux sens (terminal $\rightarrow$ service et terminal $\leftarrow$ service), elle contient aussi 
+
+\begin{figure}[H]
+\center
+\includegraphics[scale=1]{diagrams/cls_adl_patient}
+\caption{Diagramme de classe de l'interface d’accès à la liste des patients.}
+\label{fig:cls_adl_patient}
+\end{figure}
+
 \subsubsection{Mécanisme de notification}
+
+Le patron \textbf{Observateur} (\en{observer pattern}) (fig
+\ref{fig:observer}) et un patron de conception couramment utilisé et qui
+nous permet d'avoir une relation 1$\rightarrow$N entre divers objets. Le
+patron observateur assume que l'objet qui contient les données est
+séparé des l’objet qui les affiche et ces dites objets observe le
+changement de ces données~\cite{jdp_observer}. Quant on implémente le
+patron observateur, on réfère communément à l'objet contenant les
+données par "Sujet"; et chacun des consommateurs des données par
+"Observateur", Et chaque Observateurs implémente une interface préconçu
+que le Sujet invoque quant les données changes~\cite{jdp_observer}.
 
 \begin{figure}[H]
 \center
 \includegraphics[width=0.8\textwidth]{Observer}
-\caption{diagramme UML du patron de conception Observateur~\cite{wiki:observer}}
+\caption{Diagramme UML du patron de conception Observateur~\cite{wiki:observer}}
 \label{fig:observer}
 \end{figure}
 
-Le patron \textbf{Observateur} (\en{observer pattern}) (fig \ref{fig:observer}) et un patron de conception couramment utilisé et qui nous perment d'avoir une relation 1/N entre divers objets.
-Le patron observateur assume que l'objet qui contient les données est séparé des l'objets qui les affiche et ces dites objets \en{observe} le changement de ces données~\cite{jdp-observer}.
-Quant on implémente le patron observateur, on réfère communément à l'objet contenant les données par "Sujet"; et chacun des consommateurs des données par "Observateur", Et chaque Observateurs implémente une interface préconnu que le Sujet invoque quant les données changes~\cite{jdp-observer}.
-Dans le langage Java, ce patron est réaliser à travers la class \dev{java.util.Observable} et l'interface \dev{Java.util.Observer}. Le Sujet hérite de la classe \dev{Observable} et les changements sont signalé par les méthodes \dev{setChanged()} et \dev{notifyObservers()} ou \dev{notifyObservers(Object message)}.
+Dans le langage Java, ce patron est réaliser à travers la classe \dev{java.util.Observable} et l'interface \dev{Java.util.Observer}. Le Sujet hérite de la classe \dev{Observable} et les changements sont signalé par les méthodes \dev{setChanged()} et \dev{notifyObservers()} ou \dev{notifyObservers(Object message)}.
 
-%TODO show in our code
 
 \section{Le Contrôleur}
 
+\subsection{Localisation}
+
+\subsection{Algorithme de Trie}
+
+\subsection{Conscience de l'état du terminal}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+&\textsf{Mises à jour} & \textsf{Localisation}\\
+\hline
+\textsf{Batterie Faible} & déactivé & déactivé\\
+\hline
+\textsf{Batterie en Charge} & activé & déactivé\\
+\hline
+\textsf{Pas de connectivité} & déactivé & activé\\
+\hline
+\end{tabular}
+\end{table}
+\subsubsection{Connectivité}
+
+\begin{lstlisting}[language=xml, caption=Permission d’accès à l’état des interfaces réseaux.]
+
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=xml, caption=Enregistrement du  NetworkReceiver aux événements liée au status des interfaces réseaux.]
+
+        <receiver
+            android:name="com.tunav.tunavmedi.broadcastreceiver.NetworkReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="ConnectivityManager.CONNECTIVITY_ACTION" />
+            </intent-filter>
+        </receiver>
+
+\end{lstlisting}
+
+\subsubsection{Batterie}
+
+\begin{lstlisting}[language=xml, caption=Enregistrement du BatteryReceiver aux événements liée à l’état de la batterie.]
+
+        <receiver
+            android:name="com.tunav.tunavmedi.broadcastreceiver.BatteryReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.BATTERY_OK" />
+            </intent-filter>
+        </receiver>
+
+\end{lstlisting}
+
+
+
+\subsubsection{Mobilité}
+
+\begin{lstlisting}[language=xml, caption=Enregistrement du ChargingReceiver aux événements liée au status de chargement.]
+
+        <receiver
+            android:name="com.tunav.tunavmedi.broadcastreceiver.ChargingReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+        </receiver>
+
+\end{lstlisting}
+
 \section{La Vue}
-Le système d'exploitation \android rend facile le développement des application qui tourne sur des appareils qui possèdes des forme et des taille d’écran différents, une des amélioration
+Le système d'exploitation \android{} rend facile le développement des application qui tourne sur des appareils qui possèdes des forme et des taille d’écran différents, une des amélioration
 
-\section{Testes}
+\section{Détecteur de bugs: Android Lint}
 
-\subsection[Pourquoi tester?]{Pourquoi tester? ~\cite{pycon:getting_started_with_automated_testing}}
+\begin{figure}[H]
+\center
+\includegraphics[width=0.9\textwidth]{lint}
+\caption{Problèmes potentiels dans notre application détecté par Android Lint.}
+\label{fig:lint}
+\end{figure}
+
+\android{} \en{Lint} (figure \ref{fig:lint}) est un outil introduit dans la version 16 de \gls{adt} qui scanne les code sources des projet \android{} afin d'y détecter des mal-fonctions potentiels.
+
+Quelque exemples de types d'erreurs que cet outil permet de détecter sont:
 
 \begin{itemize}
-\item La raison la plus évidente pour écrire les testes - étant la plus populaires aussi - est que c'est un moyen efficace pour savoir si le bout de code ajouté dans le projet marche correctement ou pas, ce qui non seulement fournit une certaine confiance dans la robustesse du logiciel mais présente un effet secondaire bénéfique en réduisant le temps nécessaire pour le débogage à la recherche d'un bug caché. %FIXME
-\item Une autre raison pour écrire les testes est que c'est un autre forme de documentation qui aide les autres développeurs comprendre le code contenu dans le projet.
-\item Une raison non évidente pour écrire des teste est le fait que les tests améliore la manière dont le code est conçu en mettant en évidence les difficultés pour le maintenir.
-\end{itemize}
-\subsubsection{Modifié la localisation dans l'émulateur}%FIXME
 
-\subsection{Quelque difficultées rencontrées}
+\item Translations manquantes ou inutilisés.
+
+\item Les problèmes de performance dans les \dev{Layout}.
+
+\item Ressources inutilisées
+
+\item Tableaux de taille inconsistant (dans le cas ou le tableau est défini dans des configurations différentes).
+
+\item Problème d'accessibilités et d'internationalisation.
+
+\item Problème d'icônes (Tailles manquantes, doubles, fausse résolution).
+
+\item Problème d'usabilité .
+
+\item Erreurs dans le \dev{Manifest}.
+
+\end{itemize}
+
+Dans Eclipse, \android{} Lint est disponible à travers le menu Window $\rightarrow$ Show View $\rightarrow$ Other... puis on sélectionne \en{Lint Warning} dans la fenêtre qui s'affiche (figure \ref{fig:lint_eclipse}).
+
+\begin{figure}
+\center
+\includegraphics[width=0.4\textwidth]{lint_eclipse}
+\caption{Accéder à Android Lint dans Eclipse}
+\label{fig:lint_eclipse}
+\end{figure}
 
 \section{Conclusion du chapitre}
