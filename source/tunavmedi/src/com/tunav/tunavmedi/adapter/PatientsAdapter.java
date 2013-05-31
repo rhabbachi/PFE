@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tunav.tunavmedi.R;
 import com.tunav.tunavmedi.datatype.Patient;
@@ -35,7 +34,9 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
     private static final String tag = "PatientsAdapter";
 
     private volatile ArrayList<Patient> mAllPatients = new ArrayList<Patient>();
+
     private volatile ArrayList<Patient> mRemindPatients = new ArrayList<Patient>();
+
     private Context mContext = null;
     private final LayoutInflater mInflater;
     private Boolean showChecked;
@@ -43,18 +44,8 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
     private Handler handler;
     private String keyShowDone;
     private String keyLocationSort;
-    private static Location currentLocation = null;
-    private static Integer mRadius = null;
-
-    public static void setLocation(Location location) {
-        Log.v(tag, "setLocation()");
-        currentLocation = new Location(location);
-    }
-
-    public static void setRadius(Integer radius) {
-        Log.v(tag, "setRadius()");
-        mRadius = radius;
-    }
+    private Location currentLocation = null;
+    private Integer mRadius = null;
 
     private final Integer MINUT = 1000 * 60;
 
@@ -234,18 +225,21 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
             showChecked = sharedPreferences.getBoolean(key, true);
         } else if (key.equals(keyLocationSort)) {
             locationSort = sharedPreferences.getBoolean(key, true);
-        } else if (key.equals(keyLocationUpdate)) {
-            if (sharedPreferences.getBoolean(key, false)) {
-                Toast.makeText(mContext, "Location updated!", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(mContext, "Location update failed!", Toast.LENGTH_SHORT).show();
-                currentLocation = null;
-            }
         } else {
             return;
         }
         sort();
         notifyDataSetChanged();
+    }
+
+    public void setLocation(Location location) {
+        Log.v(tag, "setLocation()");
+        currentLocation = new Location(location);
+    }
+
+    public void setRadius(Integer radius) {
+        Log.v(tag, "setRadius()");
+        mRadius = radius;
     }
 
     private void sort() {

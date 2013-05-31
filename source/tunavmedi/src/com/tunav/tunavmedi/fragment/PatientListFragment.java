@@ -98,9 +98,19 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
 
     private boolean isBound;
 
-    private void bindToService() {
+    private void doBindService() {
+        if (mPatientService != null) {
+            doUnBindService();
+        }
         Intent service = new Intent(getActivity(), PatientsService.class);
         getActivity().bindService(service, this, Context.BIND_AUTO_CREATE);
+    }
+
+    private void doUnBindService() {
+        if (mPatientService != null) {
+            getActivity().unbindService(this);
+            getActivity().stopService(new Intent(getActivity(), PatientsService.class));
+        }
     }
 
     // Called once the parent Activity and the Fragment's UI have
@@ -117,12 +127,6 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         getListView().setOnItemLongClickListener(mOnItemLongClickListener);
 
         setEmptyText(getResources().getString(R.string.task_list_empty));
-
-        if (isBound) {
-            setListAdapter(mPatientService.getAdapter());
-        } else {
-            bindToService();
-        }
     }
 
     @Override
@@ -163,7 +167,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
 
         // for the action bar items
         setHasOptionsMenu(true);
-        bindToService();
+        doBindService();
     }
 
     @Override
@@ -191,8 +195,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         Log.v(tag, "onDestroy()");
         // Clean up any resources including ending threads,
         // closing database connections etc.
-        getActivity().unbindService(this);
-        getActivity().stopService(new Intent(getActivity(), PatientsService.class));
+
         super.onDestroy();
     }
 
@@ -260,6 +263,8 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         // the active foreground activity.
         // Persist all edits or state changes
         // as after this call the process is likely to be killed.
+
+        doUnBindService();
         super.onPause();
     }
 
@@ -270,8 +275,12 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         Log.v(tag, "onResume()");
         // Resume any paused UI updates, threads, or processes required
         // by the Fragment but suspended when it became inactive.
-
-        getListView().invalidateViews();
+        if (isBound) {
+            setListAdapter(mPatientService.getAdapter());
+            getListView().invalidateViews();
+        } else {
+            doBindService();
+        }
     }
 
     // Called to save UI state changes at the

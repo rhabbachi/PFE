@@ -122,7 +122,7 @@ public class MainActivity extends Activity {
     }
 
     private void clearUserData() {
-        Log.i(TAG, "unLogin()");
+        Log.i(TAG, "clearUserData()");
         SharedPreferences sharedPrefs = getSharedPreferences(
                 TunavMedi.SP_USER_NAME, MODE_PRIVATE);
         Editor sharedPrefsEditor = sharedPrefs.edit();
@@ -233,8 +233,8 @@ public class MainActivity extends Activity {
 
                 if (savedInstanceState != null) {
                     // restor last selected tab
-                    // actionBar.setSelectedNavigationItem(savedInstanceState
-                    // .getInt("tab", 0));
+                    actionBar.setSelectedNavigationItem(savedInstanceState
+                            .getInt("tab", 0));
                 }
             }
         } catch (ActivityNotFoundException e) {
@@ -267,6 +267,7 @@ public class MainActivity extends Activity {
 
     private void onLogout() {
         Log.i(TAG, "Logout()");
+        // TODO authentication serviec logout
         clearUserData();
         onLogin();
     }
