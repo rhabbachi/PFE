@@ -9,7 +9,6 @@ import android.app.FragmentTransaction;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +19,7 @@ import com.tunav.tunavmedi.R;
 import com.tunav.tunavmedi.app.TunavMedi;
 import com.tunav.tunavmedi.fragment.NotImplemetedListFragment;
 import com.tunav.tunavmedi.fragment.PatientListFragment;
+import com.tunav.tunavmedi.service.AuthService;
 
 public class MainActivity extends Activity {
 
@@ -121,20 +121,6 @@ public class MainActivity extends Activity {
 
     }
 
-    private void clearUserData() {
-        Log.i(TAG, "clearUserData()");
-        SharedPreferences sharedPrefs = getSharedPreferences(
-                TunavMedi.SP_USER_NAME, MODE_PRIVATE);
-        Editor sharedPrefsEditor = sharedPrefs.edit();
-        sharedPrefsEditor.remove(TunavMedi.SP_USER_KEY_ISLOGGED);
-        Log.v(TAG, TunavMedi.SP_USER_KEY_ISLOGGED + " removed.");
-        sharedPrefsEditor.remove(TunavMedi.SP_USER_KEY_USERID);
-        Log.v(TAG, TunavMedi.SP_USER_KEY_USERID + " removed.");
-        // critical shared preferences, commiting
-        sharedPrefsEditor.commit();
-        Log.i(TAG, "SharedPreferences commited!");
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i(TAG, "onActivityResult()");
@@ -142,12 +128,6 @@ public class MainActivity extends Activity {
             switch (resultCode) {
                 case (RESULT_OK):
                     onLogin();
-                    break;
-                case (RESULT_CANCELED):
-                    onQuit();
-                    break;
-                case (RESULT_FIRST_USER):
-                    // TODO
                     break;
             }
         }
@@ -255,20 +235,21 @@ public class MainActivity extends Activity {
         // Clean up any resources including ending threads,
         // closing database connections etc.
         Log.i(TAG, "onDestroy");
-        clearUserData();
         super.onDestroy();
     }
 
     private void onLogin() {
-        Log.i(TAG, "onLogin()");
+        Log.v(TAG, "onLogin()");
         Intent loginIntent = new Intent("com.tunav.tunavmedi.action.LOGIN");
         startActivityForResult(loginIntent, RequestCode.LOGIN.ordinal());
     }
 
     private void onLogout() {
-        Log.i(TAG, "Logout()");
+        Log.v(TAG, "Logout()");
         // TODO authentication serviec logout
-        clearUserData();
+        Intent logout = new Intent(this, AuthService.class);
+        logout.setAction(AuthService.ACTION_LOGOUT);
+        startService(logout);
         onLogin();
     }
 
@@ -281,9 +262,6 @@ public class MainActivity extends Activity {
                 return true;
             case R.id.action_logout:
                 onLogout();
-                return true;
-            case R.id.action_quit:
-                onQuit();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -298,13 +276,6 @@ public class MainActivity extends Activity {
         // the active foreground Activity.
         Log.i(TAG, "onPause()");
         super.onPause();
-    }
-
-    private void onQuit() {
-        Log.i(TAG, "quit()");
-        clearUserData();
-        finish();
-        moveTaskToBack(true);
     }
 
     // Called before subsequent visible lifetimes

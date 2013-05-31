@@ -19,9 +19,6 @@
         android:label="@string/app_name"
         android:logo="@drawable/hospital"
         android:theme="@style/HoloLightDarkActionBarTheme" >
-        <receiver android:name="com.commonsware.cwac.locpoll.LocationPoller" />
-
-        <service android:name="com.commonsware.cwac.locpoll.LocationPollerService" />
 
         <activity
             android:name="com.tunav.tunavmedi.activity.LoginActivity"
@@ -64,7 +61,8 @@
         </receiver>
         <receiver
             android:name="com.tunav.tunavmedi.broadcastreceiver.NetworkReceiver"
-            android:enabled="true" >
+            android:enabled="true" 
+            android:exported="false">
             <intent-filter>
                 <action android:name="ConnectivityManager.CONNECTIVITY_ACTION" />
             </intent-filter>
@@ -80,10 +78,10 @@
         </service>
         <service
             android:name="com.tunav.tunavmedi.service.AuthService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.tunav.tunavmedi.action.authentication.AUTHENTICATE" />
-                <action android:name="com.tunav.tunavmedi.action.authentication.DEAUTHENTICATE" />
+                <action android:name="com.tunav.tunavmedi.action.authentication.LOGIN" />
+                <action android:name="com.tunav.tunavmedi.action.authentication.LOGOUT" />
                 <action android:name="com.tunav.tunavmedi.action.authentication.CHECK" />
             </intent-filter>
         </service>

@@ -101,7 +101,9 @@ public class LoginActivity extends Activity implements ServiceConnection {
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     public static final String tag = "LoginActivity";
+
     private UserLoginTask loginTask = null;
+
     // Values for ID and password at the time of the login attempt.
     private String mID;
     private String mPassword;
@@ -143,12 +145,6 @@ public class LoginActivity extends Activity implements ServiceConnection {
             focusView = mPasswordView;
             cancel = true;
         }
-        // FIXME what to do about this?
-        // else if (mPassword.length() < 4) {
-        // mPasswordView.setError(getString(R.string.error_invalid_password));
-        // focusView = mPasswordView;
-        // cancel = true;
-        // }
 
         // Check for a valid ID.
         if (TextUtils.isEmpty(mID)) {
@@ -180,23 +176,31 @@ public class LoginActivity extends Activity implements ServiceConnection {
         }
     }
 
+    private void doBindService() {
+        Log.v(tag, "doBindService()");
+        doUnBindService();
+        if (!mBound) {
+            Intent loginIntent = new Intent(this, AuthService.class);
+            try {
+                bindService(loginIntent, this, Context.BIND_AUTO_CREATE);
+            } catch (SecurityException tr) {
+                Log.e(tag, "SecurityException");
+                Log.d(tag, "SecurityException", tr);
+            }
+        }
+    }
+
+    private void doUnBindService() {
+        Log.v(tag, "doUnBindService()");
+        if (mBound) {
+            unbindService(this);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(tag, "onCreate()");
-
-        Intent loginIntent = new Intent(this, AuthService.class);
-
-        try {
-            if (!bindService(loginIntent, this, Context.BIND_AUTO_CREATE)) {
-                // TODO service not bound.
-                Log.e(tag, "bindService() FAIL!");
-            } else {
-                Log.i(tag, "bindService() OK");
-            }
-        } catch (SecurityException tr) {
-            Log.getStackTraceString(tr);
-        }
 
         setContentView(R.layout.activity_login);
         // Set up the login form.
@@ -234,6 +238,7 @@ public class LoginActivity extends Activity implements ServiceConnection {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+        Log.v(tag, "onCreateOptionsMenu()");
         getMenuInflater().inflate(R.menu.activity_login, menu);
         return true;
     }
@@ -241,18 +246,20 @@ public class LoginActivity extends Activity implements ServiceConnection {
     // Sometimes called at the end of the full lifetime.
     @Override
     public void onDestroy() {
+        Log.v(tag, "onDestroy()");
         // Clean up any resources including ending threads,
         // closing database connections etc.
-        unbindService(this);
         super.onDestroy();
     }
 
     // Called at the end of the active lifetime.
     @Override
     public void onPause() {
+        Log.v(tag, "onPause()");
         // Suspend UI updates, threads, or CPU intensive processes
         // that don't need to be updated when the Activity isn't
         // the active foreground Activity.
+        doUnBindService();
         super.onPause();
     }
 
@@ -261,6 +268,7 @@ public class LoginActivity extends Activity implements ServiceConnection {
     @Override
     public void onRestart() {
         super.onRestart();
+        Log.v(tag, "onRestart()");
         // Load changes knowing that the Activity has already
         // been visible within this process.
     }
@@ -269,6 +277,7 @@ public class LoginActivity extends Activity implements ServiceConnection {
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        Log.v(tag, "onRestoreInstanceState()");
         // Restore UI state from the savedInstanceState.
         // This bundle has also been passed to onCreate.
         // Will only be called if the Activity has been
@@ -279,8 +288,10 @@ public class LoginActivity extends Activity implements ServiceConnection {
     @Override
     public void onResume() {
         super.onResume();
+        Log.v(tag, "onResume()");
         // Resume any paused UI updates, threads, or processes required
         // by the Activity but suspended when it was inactive.
+        doBindService();
     }
 
     // Called to save UI state changes at the
@@ -291,11 +302,13 @@ public class LoginActivity extends Activity implements ServiceConnection {
         // This bundle will be passed to onCreate and
         // onRestoreInstanceState if the process is
         // killed and restarted by the run time.
+        Log.v(tag, "onSaveInstanceState()");
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
+        Log.v(tag, "onServiceConnected()");
         // We've bound to LocalService, cast the IBinder and get
         // LocalService instance
         LocalBinder binder = (LocalBinder) service;
@@ -305,6 +318,7 @@ public class LoginActivity extends Activity implements ServiceConnection {
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
+        Log.v(tag, "onServiceDisconnected()");
         mBound = false;
     }
 
@@ -313,6 +327,7 @@ public class LoginActivity extends Activity implements ServiceConnection {
     public void onStart() {
         super.onStart();
         // Apply any required UI change now that the Activity is visible.
+        Log.v(tag, "onStart()");
     }
 
     // Called at the end of the visible lifetime.
@@ -322,6 +337,7 @@ public class LoginActivity extends Activity implements ServiceConnection {
         // that aren't required when the Activity isn't visible.
         // Persist all edits or state changes
         // as after this call the process is likely to be killed.
+        Log.v(tag, "onStop()");
         super.onStop();
     }
 
@@ -330,6 +346,7 @@ public class LoginActivity extends Activity implements ServiceConnection {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
+        Log.v(tag, "showProgress()");
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.

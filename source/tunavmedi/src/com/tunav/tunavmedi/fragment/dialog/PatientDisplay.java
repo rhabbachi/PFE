@@ -49,7 +49,7 @@ public class PatientDisplay extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 
-        View patientView = inflater.inflate(R.layout.fragment_task_display, container, false);
+        View patientView = inflater.inflate(R.layout.fragment_patient_display, container, false);
 
         TextView patientTitle = (TextView) patientView.findViewById(R.id.task_dialog_title);
         ImageView patientImage = (ImageView) patientView.findViewById(R.id.task_dialog_image);

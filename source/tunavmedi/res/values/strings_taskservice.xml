@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="tasks_service_started">Service Started!</string>
-    <string name="tasks_service_label">Service Label.</string>
-    <string name="tasks_service_stopped">Tasks Service Stopped!</string>
-    
-</resources>

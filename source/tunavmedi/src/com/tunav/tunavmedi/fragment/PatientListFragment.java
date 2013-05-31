@@ -24,6 +24,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.tunav.tunavmedi.R;
+import com.tunav.tunavmedi.adapter.PatientsAdapter;
 import com.tunav.tunavmedi.app.TunavMedi;
 import com.tunav.tunavmedi.datatype.Patient;
 import com.tunav.tunavmedi.fragment.dialog.PatientDisplay;
@@ -34,7 +35,7 @@ import com.tunav.tunavmedi.service.PatientsService.SelfBinder;
 public class PatientListFragment extends ListFragment implements ServiceConnection {
 
     private static final String tag = "PatientListFragment";
-
+    private PatientsAdapter adapter;
     private PatientsService mPatientService = null;
     private final OnItemLongClickListener mOnItemLongClickListener = new OnItemLongClickListener() {
 
@@ -57,7 +58,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
             assert task != null;
             PatientOptions taskOptions = PatientOptions.newInstance(task.getName(),
                     task.getPhoto(),
-                    task.isUrgent(), task.alarmeOn());
+                    task.isUrgent());
             taskOptions.setTargetFragment(thisFragment, REQUESTCODE_TASKOPTIONS);
             ft.add(taskOptions, PatientOptions.tag);
             ft.commit();
@@ -96,20 +97,28 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         }
     };
 
-    private boolean isBound;
+    private boolean isBound = false;
 
     private void doBindService() {
-        if (mPatientService != null) {
-            doUnBindService();
-        }
+        Log.v(tag, "doBindService()");
+        doUnBindService();
+
         Intent service = new Intent(getActivity(), PatientsService.class);
-        getActivity().bindService(service, this, Context.BIND_AUTO_CREATE);
+        Activity activity = getActivity();
+        try {
+            activity.bindService(service, this, Context.BIND_AUTO_CREATE);
+        } catch (SecurityException tr) {
+            Log.e(tag, "SecurityException");
+            Log.d(tag, "SecurityException", tr);
+        }
     }
 
     private void doUnBindService() {
-        if (mPatientService != null) {
+        Log.v(tag, "doUnBindService()");
+        if (isBound) {
+            mPatientService.removePatientsListener(adapter);
             getActivity().unbindService(this);
-            getActivity().stopService(new Intent(getActivity(), PatientsService.class));
+            isBound = false;
         }
     }
 
@@ -125,8 +134,9 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         getListView().setOnItemClickListener(mOnItemClickListener);
         getListView().setLongClickable(true);
         getListView().setOnItemLongClickListener(mOnItemLongClickListener);
-
-        setEmptyText(getResources().getString(R.string.task_list_empty));
+        adapter = new PatientsAdapter(getActivity());
+        setListAdapter(adapter);
+        setEmptyText(getResources().getString(R.string.patientlist_empty));
     }
 
     @Override
@@ -224,27 +234,27 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         boolean state = item.isChecked();
 
         switch (item.getItemId()) {
-            case R.id.tasklist_menu_done:
+            case R.id.patientlist_menu_done:
                 spEditor.putBoolean(
                         getActivity().getResources().getString(
                                 R.string.spkey_show_checked), state);
                 spEditor.apply();
                 if (state) {
-                    item.setTitle(R.string.tasklist_menu_done_title_on);
+                    item.setTitle(R.string.patientlist_menu_show_all_on);
                 } else {
-                    item.setTitle(R.string.tasklist_menu_done_title_off);
+                    item.setTitle(R.string.patientlist_menu_show_all_off);
                 }
                 item.setChecked(!state);
                 return true;
-            case R.id.tasklist_menu_location:
+            case R.id.patientlist_menu_location:
                 spEditor.putBoolean(
                         getActivity().getResources().getString(
                                 R.string.spkey_sort_location), state);
                 spEditor.apply();
                 if (state) {
-                    item.setTitle(R.string.tasklist_menu_location_title_on);
+                    item.setTitle(R.string.patientlist_menu_location_on);
                 } else {
-                    item.setTitle(R.string.tasklist_menu_location_title_off);
+                    item.setTitle(R.string.tasklist_menu_location_off);
                 }
                 item.setChecked(!state);
                 return true;
@@ -265,6 +275,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         // as after this call the process is likely to be killed.
 
         doUnBindService();
+        setListAdapter(null);
         super.onPause();
     }
 
@@ -275,12 +286,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         Log.v(tag, "onResume()");
         // Resume any paused UI updates, threads, or processes required
         // by the Fragment but suspended when it became inactive.
-        if (isBound) {
-            setListAdapter(mPatientService.getAdapter());
-            getListView().invalidateViews();
-        } else {
-            doBindService();
-        }
+        doBindService();
     }
 
     // Called to save UI state changes at the
@@ -301,7 +307,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         mPatientService = binder.getService();
         if (mPatientService != null) {
             isBound = true;
-            setListAdapter(mPatientService.getAdapter());
+            mPatientService.addPatientsListener(adapter);
             Log.i(tag, "binding succesful!");
         } else {
             isBound = false;
@@ -311,6 +317,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
+        Log.v(tag, "onServiceDisconnected()");
         mPatientService = null;
         isBound = false;
     }

@@ -4,10 +4,10 @@ package com.tunav.tunavmedi.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.tunav.tunavmedi.app.TunavMedi;
 import com.tunav.tunavmedi.dal.sqlite.helper.AuthenticationHelper;
@@ -26,23 +26,22 @@ public class AuthService extends IntentService {
     }
 
     private static final String tag = "AuthenticationIntentService";
-    public static final String ACTION_LOGIN = "com.tunav.tunavmedi.action.authentication.AUTHENTICATE";
-    public static final String ACTION_LOGOUT = "com.tunav.tunavmedi.action.authentication.DEAUTHENTICATE";
 
+    public static final String ACTION_LOGIN = "com.tunav.tunavmedi.action.authentication.LOGIN";
+    public static final String ACTION_LOGOUT = "com.tunav.tunavmedi.action.authentication.LOGOUT";
     public static final String ACTION_CHECK = "com.tunav.tunavmedi.action.authentication.CHECK";
+
     public static final String EXTRA_USERNAME = "com.tunav.tunavmedi.action.authentication.USERNAME";
     public static final String EXTRA_PASSWORD = "com.tunav.tunavmedi.action.authentication.PASSWORD";
-    public static final String EXTRA_USERID = "com.tunav.tunavmedi.action.authentication.USERID";
-
-    public static final String EXTRA_CODE = "com.tunav.tunavmedi.action.authentication.CODE";
+    public static final String EXTRA_CODE = "com.tunav.tunavmedi.action.authentication.AUTHENTICATED";
 
     // Binder given to clients
     private final IBinder mBinder = new LocalBinder();
+
     private AuthenticationHelper mHelper;
 
     public AuthService() {
         super(tag);
-        Log.v(tag, "AuthenticationIntentService()");
     }
 
     public boolean authenticate(String login, String password) {
@@ -74,6 +73,26 @@ public class AuthService extends IntentService {
         return false;
     }
 
+    public void deauthenticate() {
+        Log.i(tag, "deauthenticate()");
+
+        mHelper.logout();
+        SharedPreferences sharedPrefs = getSharedPreferences(
+                TunavMedi.SP_USER_NAME, MODE_PRIVATE);
+        Editor sharedPrefsEditor = sharedPrefs.edit();
+        sharedPrefsEditor.remove(TunavMedi.SP_USER_KEY_ISLOGGED);
+        Log.v(tag, TunavMedi.SP_USER_KEY_ISLOGGED + " removed.");
+        sharedPrefsEditor.remove(TunavMedi.SP_USER_KEY_USERID);
+        Log.v(tag, TunavMedi.SP_USER_KEY_USERID + " removed.");
+        // critical shared preferences, commiting
+        sharedPrefsEditor.commit();
+        Log.i(tag, "SharedPreferences commited!");
+    }
+
+    public boolean isAuthenticated() {
+        return mHelper.isLogged();
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
@@ -81,17 +100,24 @@ public class AuthService extends IntentService {
 
     @Override
     public void onCreate() {
+        super.onCreate();
+        Log.v(tag, "onCreate()");
         mHelper = new AuthenticationHelper(this);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        // TODO
-    }
+        if (intent.getAction().equals(ACTION_LOGIN)) {
+            String id = intent.getStringExtra(EXTRA_USERNAME);
+            String password = intent.getStringExtra(EXTRA_PASSWORD);
+            if (id != null || password != null) {
+            } else {
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
-        return super.onStartCommand(intent, flags, startId);
+            }
+        } else if (intent.getAction().equals(ACTION_LOGOUT)) {
+            deauthenticate();
+        } else if (intent.getAction().equals(ACTION_CHECK)) {
+            isAuthenticated();
+        }
     }
 }

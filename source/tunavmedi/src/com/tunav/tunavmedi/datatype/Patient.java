@@ -12,8 +12,6 @@ public class Patient {
     private Long mInTime = null;
     private String mRecord = null;
     private Boolean urgent = false;
-    private Boolean mAlarmeOn = false;
-    private Long mAlarme = null;
     private Placemark mPlacemark = null;
     private String mPhoto = null;
     private Long mLastUpdate = null;
@@ -25,14 +23,6 @@ public class Patient {
         mInTime = interned;
         mRecord = description;
         mLastUpdate = SystemClock.currentThreadTimeMillis();
-    }
-
-    public Boolean alarmeOn() {
-        return mAlarmeOn;
-    }
-
-    public Long getAlarme() {
-        return mAlarme;
     }
 
     public long getId() {
@@ -69,17 +59,6 @@ public class Patient {
 
     public Boolean isUrgent() {
         return urgent;
-    }
-
-    public void setAlarme(Long alarme) {
-        mAlarme = alarme;
-        setLastUpdateNow();
-
-    }
-
-    public void setAlarmeOn(boolean on) {
-        this.mAlarmeOn = on;
-        setLastUpdateNow();
     }
 
     public void setLastUpdate(Long lastUpdate) {

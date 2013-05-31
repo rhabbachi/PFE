@@ -23,8 +23,7 @@ public class PatientOptions extends DialogFragment {
     public static final String ARG_INTERNED = "interned";
     public static final String ARG_OPTIONS = "options";
 
-    public static PatientOptions newInstance(String name, String photo, boolean isUrgent,
-            boolean toRemind) {
+    public static PatientOptions newInstance(String name, String photo, boolean isUrgent) {
         PatientOptions patientOptions = new PatientOptions();
 
         Bundle args = new Bundle();
@@ -32,7 +31,6 @@ public class PatientOptions extends DialogFragment {
         args.putString(ARG_PHOTO, photo);
         boolean[] options = {
                 isUrgent,
-                toRemind,
         };
         args.putBooleanArray(ARG_OPTIONS, options);
         patientOptions.setArguments(args);
@@ -49,7 +47,6 @@ public class PatientOptions extends DialogFragment {
                     Intent intent = new Intent();
                     intent.putExtra(ARG_POSITION, getArguments().getInt(ARG_POSITION));
                     intent.putExtra("isUrgent", choiceValues[0]);
-                    intent.putExtra("toRemind", choiceValues[1]);
                     getTargetFragment().onActivityResult(getTargetRequestCode(),
                             Activity.RESULT_OK, intent);
                     break;
@@ -76,11 +73,11 @@ public class PatientOptions extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle(getArguments().getString(ARG_NAME, ARG_NAME_DEFAULT))
-                .setMultiChoiceItems(R.array.task_options
+                .setMultiChoiceItems(R.array.options_patient
                         , choiceValues
                         , mOnMultiChoiceClickListener)
-                .setPositiveButton(R.string.task_options_ok, mOnClickListener)
-                .setNegativeButton(R.string.task_options_cancel, mOnClickListener);
+                .setPositiveButton(R.string.options_patient_ok, mOnClickListener)
+                .setNegativeButton(R.string.options_patient_cancel, mOnClickListener);
 
         return builder.create();
     }

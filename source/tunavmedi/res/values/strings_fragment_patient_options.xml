@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="options_patient">
+        <item>Mark as Urgent</item>
+    </string-array>
+
+    <string name="options_patient_ok">OK</string>
+    <string name="options_patient_cancel">Cancel</string>
+
+</resources>

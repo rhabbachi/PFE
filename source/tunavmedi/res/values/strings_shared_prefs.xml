@@ -5,7 +5,6 @@
     <string name="sp_patientlist">TaskList</string>
     <string name="spkey_show_checked">SHOW_CHECKED</string>
     <string name="spkey_sort_location">SORT_LOCATION</string>
-    <string name="spkey_location_update">LOCATION_UPDATE</string>
     <!-- status -->
     <string name="sp_status">Status</string>
     <string name="spkey_battery_okey">BATTERY_OKEY</string>
