@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -250,6 +251,18 @@ public class LoginActivity extends Activity implements ServiceConnection {
         // Clean up any resources including ending threads,
         // closing database connections etc.
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i(tag, "onOptionItemSelected()");
+        switch (item.getItemId()) {
+            case R.id.action_about:
+                MainActivity.about(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     // Called at the end of the active lifetime.

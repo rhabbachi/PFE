@@ -36,16 +36,15 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
     private static final String tag = "PatientsAdapter";
 
     private volatile ArrayList<Patient> mAllPatients = new ArrayList<Patient>();
-
-    private volatile ArrayList<Patient> mUrgentPatients = new ArrayList<Patient>();
+    private volatile ArrayList<Patient> mStablePatients = new ArrayList<Patient>();
 
     private Context mContext = null;
     private final LayoutInflater mInflater;
     private Boolean showUrgent;
     private Boolean locationSort;
     private Handler handler;
-    private String keyShowDone;
-    private String keyLocationSort;
+    private String keyShowAll;
+    private String keySortByLocation;
     private Location currentLocation = null;
 
     private final Integer MINUT = 1000 * 60;
@@ -65,44 +64,69 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
         Log.v(tag, "TasksAdapter()");
         mContext = context;
 
-        keyShowDone = mContext.getResources().getString(
-                R.string.spkey_show_checked);
-        keyLocationSort = mContext.getResources().getString(
-                R.string.spkey_sort_location);
+        keyShowAll = mContext.getResources().getString(
+                R.string.spkey_show_all);
+        keySortByLocation = mContext.getResources().getString(
+                R.string.spkey_sort_by_location);
         mInflater = LayoutInflater.from(mContext);
 
         String spPatientsList = mContext.getResources().getString(R.string.sp_patientlist);
         SharedPreferences sharedPrefs = mContext.getSharedPreferences(spPatientsList
                 , Context.MODE_PRIVATE);
-        showUrgent = sharedPrefs.getBoolean(keyShowDone, true);
-        locationSort = sharedPrefs.getBoolean(keyLocationSort, true);
+        showUrgent = sharedPrefs.getBoolean(keyShowAll, true);
+        locationSort = sharedPrefs.getBoolean(keySortByLocation, true);
         sharedPrefs
                 .registerOnSharedPreferenceChangeListener(this);
 
         handler = new Handler();
         handler.postDelayed(refreshList, 3 * MINUT);
-    }
+    };
 
     private Comparator<Patient> generateComparator() {
         Log.v(tag, "generateComparator()");
         return new Comparator<Patient>() {
 
+            int EQL = 0;
+            int SUP = 1;
+            int INF = -1;
+
             @Override
-            public int compare(Patient lhs, Patient rhs) {
-
-                int result = lhs.isUrgent().compareTo(rhs.isUrgent());
-
-                if (result == 0 && locationSort && currentLocation != null) {
-                    Location lhsLocation = lhs.getPlacemark().getLocation();
-                    Location rhsLocation = rhs.getPlacemark().getLocation();
-                    float lhsDistance = lhsLocation.distanceTo(currentLocation);
-                    float rhsDistance = rhsLocation.distanceTo(currentLocation);
-                    float diffDist = lhsDistance - rhsDistance;
-                    result = Math.round(diffDist);
-                }
-
-                if (result == 0) {
-                    result = lhs.getInTime().compareTo(rhs.getInTime());
+            public int compare(Patient rhs, Patient lhs) {
+                int result = 0;
+                try {
+                    result = lhs.isUrgent().compareTo(rhs.isUrgent());
+                    if (result == 0 && locationSort && currentLocation != null) {
+                        if (lhs.getPlacemark() == null
+                                && rhs.getPlacemark() == null) {
+                            result = EQL;
+                        } else if (lhs.getPlacemark() == null
+                                && rhs.getPlacemark() != null) {
+                            result = INF;
+                        } else if (lhs.getPlacemark() != null
+                                && rhs.getPlacemark() == null) {
+                            result = SUP;
+                        } else if (lhs.getPlacemark() != null
+                                && rhs.getPlacemark() != null) {
+                            Location lhsLocation = lhs.getPlacemark().getLocation();
+                            Location rhsLocation = rhs.getPlacemark().getLocation();
+                            float lhsDistance = lhsLocation.distanceTo(currentLocation);
+                            float rhsDistance = rhsLocation.distanceTo(currentLocation);
+                            float diffDist = lhsDistance - rhsDistance;
+                            if (diffDist > 0) {
+                                result = SUP;
+                            } else if (diffDist < 0) {
+                                result = INF;
+                            } else {
+                                result = EQL;
+                            }
+                        }
+                    }
+                    if (result == 0) {
+                        result = lhs.getInterned().compareTo(rhs.getInterned()) * (-1);
+                    }
+                } catch (NullPointerException tr) {
+                    Log.e(tag, "NullPointerException");
+                    Log.d(tag, "NullPointerException", tr);
                 }
                 return result;
             }
@@ -110,7 +134,7 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
     }
 
     public ArrayList<Patient> getConfiguredTasks() {
-        return showUrgent ? mAllPatients : mUrgentPatients;
+        return showUrgent ? mAllPatients : mStablePatients;
     }
 
     @Override
@@ -150,8 +174,8 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
     public View getView(int position, View convertView, ViewGroup parent) {
         Log.v(tag, "getView()");
         TaskViewHolder viewHolder;
-        Patient task = getItem(position);
-        Long taskID = getItemId(position);
+        Patient patient = getItem(position);
+        Long patientID = getItemId(position);
 
         if (convertView == null
                 || convertView.getTag(R.id.TAG_TASKVIEW) == null) {
@@ -170,22 +194,31 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
             viewHolder = (TaskViewHolder) convertView.getTag(R.id.TAG_TASKVIEW);
         }
 
-        if (task.getPhoto() == null) {
+        if (patient.getPhoto() == null) {
             viewHolder.patient_photo.setImageDrawable(mContext.getResources().getDrawable(
                     R.drawable.hospital));
         } else {
-            File imagePath = mContext.getFileStreamPath(task.getPhoto());
+            File imagePath = mContext.getFileStreamPath(patient.getPhoto());
             viewHolder.patient_photo
                     .setImageDrawable(Drawable.createFromPath(imagePath.toString()));
         }
 
-        viewHolder.patient_name.setText(task.getName());
+        viewHolder.patient_name.setText(patient.getName());
 
         viewHolder.patient_timer.setText(android.text.format.DateUtils
-                .getRelativeTimeSpanString(task.getInTime()));
-        // TODO
+                .getRelativeTimeSpanString(patient.getInterned()));
+
+        if (patient.isUrgent()) {
+            viewHolder.patient_name.setTextColor
+                    (mContext.getResources().getColor(
+                            R.color.patient_background_urgent));
+        } else {
+            viewHolder.patient_name.setTextColor(mContext.getResources().getColor(
+                    R.color.patient_background));
+        }
+
         convertView.setTag(R.id.TAG_TASKVIEW, viewHolder);
-        convertView.setTag(R.id.TAG_TASK_ID, taskID);
+        convertView.setTag(R.id.TAG_TASK_ID, patientID);
 
         return convertView;
     }
@@ -200,9 +233,9 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.v(tag, "onSharedPreferenceChanged()");
 
-        if (key.equals(keyShowDone)) {
+        if (key.equals(keyShowAll)) {
             showUrgent = sharedPreferences.getBoolean(key, true);
-        } else if (key.equals(keyLocationSort)) {
+        } else if (key.equals(keySortByLocation)) {
             locationSort = sharedPreferences.getBoolean(key, true);
         } else {
             return;
@@ -221,18 +254,18 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
         Log.v(tag, "sort()");
         Comparator<Patient> taskComparator = generateComparator();
         Collections.sort(mAllPatients, taskComparator);
-        Collections.sort(mUrgentPatients, taskComparator);
+        Collections.sort(mStablePatients, taskComparator);
     }
 
     @Override
     public void updateDataSet(ArrayList<Patient> newPatients) {
         Log.v(tag, "updateDataSet()");
         mAllPatients.clear();
-        mUrgentPatients.clear();
+        mStablePatients.clear();
         mAllPatients.addAll(newPatients);
         for (Patient patient : newPatients) {
-            if (patient.isUrgent()) {
-                mUrgentPatients.add(patient);
+            if (!patient.isUrgent()) {
+                mStablePatients.add(patient);
             }
         }
         sort();

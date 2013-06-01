@@ -5,17 +5,17 @@ import android.location.Location;
 
 public class Placemark {
     private String name;
-    private String description;
+    private String map;
     private Location location;
 
-    public Placemark(String name, String description, Location point) {
+    public Placemark(String name, String path, Location point) {
         this.name = name;
-        this.description = description;
+        this.map = path;
         this.location = point;
     }
 
-    public String getDescription() {
-        return description;
+    public String getMapPath() {
+        return map;
     }
 
     public Location getLocation() {
@@ -26,8 +26,8 @@ public class Placemark {
         return name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setMapPath(String description) {
+        this.map = description;
     }
 
     public void setLocation(Location point) {

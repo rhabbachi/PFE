@@ -14,6 +14,7 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.tunav.tunavmedi.broadcastreceiver.BatteryReceiver;
 import com.tunav.tunavmedi.broadcastreceiver.ChargingReceiver;
@@ -61,7 +62,7 @@ public class PatientsService extends Service implements
             mScheduler.submit(new Runnable() {
                 @Override
                 public void run() {
-                    syncPatients(oPatient, true);
+                    syncPatients(oPatient);
                 }
             });
         }
@@ -117,7 +118,7 @@ public class PatientsService extends Service implements
 
         mHelper = new PatientsHelper(this);
         mHelper.addObserver(mHelperObserver);
-        syncPatients(mHelper.pullPatients(), true);
+        syncPatients(mHelper.pullPatients());
 
         boolean batteryOk = BatteryReceiver.getBatteryOk(this);
         boolean isCharging = ChargingReceiver.isCharging(this);
@@ -234,25 +235,31 @@ public class PatientsService extends Service implements
         }
     }
 
-    public void syncPatient(Patient newPatient) {
+    public void syncPatient(Patient updatedPatient) {
         Log.v(tag, "syncPatient()");
-        ArrayList<Patient> newPatients = new ArrayList<Patient>();
-        newPatients.add(newPatient);
-        syncPatients(newPatients, false);
+        for (Patient patient : mPatientsCache) {
+            if (patient.getId() == updatedPatient.getId()) {
+                int index = mPatientsCache.indexOf(patient);
+                mPatientsCache.set(index, updatedPatient);
+                break;
+            }
+        }
+        if (mHelper.pushPatients(mPatientsCache) > 0) {
+            updateListeners();
+        } else {
+            Toast.makeText(this, "Probleme while updating from server!", Toast.LENGTH_LONG).show();
+        }
     }
 
-    public void syncPatients(ArrayList<Patient> newPatients, boolean override) {
+    public void syncPatients(ArrayList<Patient> newPatients) {
         Log.d(tag, "syncPatients()");
-        if (override) {
-            mPatientsCache.clear();
-            mPatientsCache.addAll(newPatients);
-        } else {
-            // TODO
-        }
+        mPatientsCache.clear();
+        mPatientsCache.addAll(newPatients);
         updateListeners();
     }
 
     public void updateListeners() {
+        Log.v(tag, "updateListeners()");
         for (PatientsListener listener : mPatientsListeners) {
             if (mLocationCache != null) {
                 listener.setLocation(mLocationCache);

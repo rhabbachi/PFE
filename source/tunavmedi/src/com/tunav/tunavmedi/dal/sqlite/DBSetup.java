@@ -9,10 +9,11 @@ import android.util.Log;
 
 import com.tunav.tunavmedi.dal.sqlite.contract.CredentialsContract;
 import com.tunav.tunavmedi.dal.sqlite.contract.PatientsContract;
+import com.tunav.tunavmedi.dal.sqlite.contract.PlacemarksContract;
 
 public class DBSetup extends SQLiteOpenHelper {
 
-    private static final String tag = "DemoSQLite";
+    private static final String tag = "DBSetup";
 
     private static final String DATABASE_NAME = "helpers";
     private static final int DATABASE_VERSION = 1;
@@ -27,19 +28,30 @@ public class DBSetup extends SQLiteOpenHelper {
         Log.v(tag, "onCreate()");
         Log.i(tag, "Creating New database.");
         try {
+            Log.v(tag, "executing:" + PlacemarksContract.SQL_CREATE_TABLE);
+            db.execSQL(PlacemarksContract.SQL_CREATE_TABLE);
+            Log.v(tag, "executing:" + PlacemarksContract.SQL_CREATE_INDEX_ID);
+            db.execSQL(PlacemarksContract.SQL_CREATE_INDEX_ID);
+            for (int i = 0; i < PlacemarksContract.DUMMIES_LATITUDE.length; i++) {
+                String sql = PlacemarksContract.getInsert(i);
+                Log.v(tag, "executing: " + sql);
+                db.execSQL(sql);
+            }
             // Credentials
-            Log.v(tag, CredentialsContract.SQL_CREATE_TABLE);
+            Log.v(tag, "executing: " + CredentialsContract.SQL_CREATE_TABLE);
             db.execSQL(CredentialsContract.SQL_CREATE_TABLE);
-            Log.v(tag, CredentialsContract.SQL_CREATE_INDEX_LOGIN);
+            Log.v(tag, "executing: " + CredentialsContract.SQL_CREATE_INDEX_LOGIN);
             db.execSQL(CredentialsContract.SQL_CREATE_INDEX_LOGIN);
+            Log.v(tag, "executing: " + CredentialsContract.SQL_INSERT_DUMMY);
             db.execSQL(CredentialsContract.SQL_INSERT_DUMMY);
-            Log.v(tag, CredentialsContract.SQL_INSERT_DUMMY);
+            Log.v(tag, "executing: " + CredentialsContract.SQL_INSERT_DUMMY);
 
-            // Tasks
-            Log.v(tag, PatientsContract.SQL_CREATE_TABLE);
+            // Patients
+            Log.v(tag, "executing: " + PatientsContract.SQL_CREATE_TABLE);
             db.execSQL(PatientsContract.SQL_CREATE_TABLE);
-            Log.v(tag, PatientsContract.SQL_CREATE_INDEX_ID);
+            Log.v(tag, "executing: " + PatientsContract.SQL_CREATE_INDEX_ID);
             db.execSQL(PatientsContract.SQL_CREATE_INDEX_ID);
+
             for (String insert : PatientsContract.SQL_INSERT_DUMMIES) {
                 Log.v(tag, insert);
                 db.execSQL(insert);

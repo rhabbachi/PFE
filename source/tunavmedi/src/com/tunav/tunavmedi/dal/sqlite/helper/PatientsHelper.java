@@ -1,6 +1,7 @@
 
 package com.tunav.tunavmedi.dal.sqlite.helper;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -35,19 +36,19 @@ public class PatientsHelper extends PatientsHandler {
             public void run() {
                 int inserts = 3;
                 Random random = new Random();
+                try {
+                    Thread.sleep(random.nextInt(1000 * 60 * 15));
+                } catch (InterruptedException tr) {
+                    String msg = "InterruptedException";
+                    Log.v(tag, msg);
+                    Log.d(tag, msg, tr);
+                }
                 for (int i = 0; i < inserts; i++) {
                     // TODO
                     ArrayList<Patient> newPatientsList = pullPatients();
                     setChanged();
                     notifyObservers(newPatientsList);
                     Log.i(tag, "Observers notified");
-                    try {
-                        Thread.sleep(random.nextInt(5000));
-                    } catch (InterruptedException tr) {
-                        String msg = "InterruptedException";
-                        Log.v(tag, msg);
-                        Log.d(tag, msg, tr);
-                    }
                 }
             }
         });
@@ -110,14 +111,22 @@ public class PatientsHelper extends PatientsHandler {
                     Long interned = cursor
                             .getLong(cursor
                                     .getColumnIndexOrThrow(PatientsContract.KEY_INTERNED));
+                    Long updated = cursor
+                            .getLong(cursor
+                                    .getColumnIndexOrThrow(PatientsContract.KEY_UPDATED));
+                    boolean urgent = cursor.getInt(cursor
+                            .getColumnIndexOrThrow(PatientsContract.KEY_ISURGENT)) == 0 ? false
+                            : true;
                     String recordPath = cursor
                             .getString(cursor
                                     .getColumnIndexOrThrow(PatientsContract.KEY_RECORD));
+
                     String description = null;
                     if (recordPath != null) {
                         description = getStringFromAssets(recordPath);
                     }
-                    Patient patient = new Patient(id, name, interned, description);
+                    Patient patient = new Patient(id, name, interned, description, updated);
+                    patient.setUrgent(urgent);
                     // TODO some magic to get placemark instead of placemarkID
                     patients.add(patient);
                 } while (cursor.moveToNext());
@@ -139,15 +148,31 @@ public class PatientsHelper extends PatientsHandler {
     }
 
     @Override
-    public int pushPatients(ArrayList<Patient> updatedTasks) {
-        Log.v(tag, "setStatus()");
+    public int pushPatients(ArrayList<Patient> updatedPatients) {
+        Log.v(tag, "pushPatients()");
         SQLiteDatabase database = null;
+        ContentValues values = null;
         int returnStatus = 0;
         try {
             database = mDBHelper.getWritableDatabase();
-            // TODO
+            values = new ContentValues();
+            for (Patient patient : updatedPatients) {
+                values.clear();
+
+                values.put(PatientsContract.KEY_UPDATED, patient.getUpdated());
+                values.put(PatientsContract.KEY_ISURGENT, patient.isUrgent());
+
+                String selection = PatientsContract._ID + " LIKE ?";
+                String[] selectionArgs = {
+                        String.valueOf(patient.getId())
+                };
+
+                int affected = database.update(PatientsContract.TABLE_NAME, values, selection,
+                        selectionArgs);
+                Log.i(tag, "rows affected= " + affected);
+                returnStatus++;
+            }
         } catch (SQLiteException tr) {
-            // database problem
             Log.e(tag, "SQLiteException");
             Log.d(tag, "SQLiteException", tr);
         } finally {

@@ -32,71 +32,16 @@ import com.tunav.tunavmedi.fragment.dialog.PatientOptions;
 import com.tunav.tunavmedi.service.PatientsService;
 import com.tunav.tunavmedi.service.PatientsService.SelfBinder;
 
-public class PatientListFragment extends ListFragment implements ServiceConnection {
+public class PatientListFragment extends ListFragment implements ServiceConnection,
+        OnItemLongClickListener, OnItemClickListener {
 
     private static final String tag = "PatientListFragment";
     private PatientsAdapter adapter;
     private PatientsService mPatientService = null;
-    private final OnItemLongClickListener mOnItemLongClickListener = new OnItemLongClickListener() {
-
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.v(tag, "onItemLongClick()");
-            Log.i(tag, "Item clicked: " + id);
-
-            Patient task = (Patient) parent.getItemAtPosition(position);
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            Fragment prev = getFragmentManager().findFragmentByTag(PatientDisplay.tag);
-
-            if (prev != null) {
-                ft.remove(prev);
-            }
-            ft.addToBackStack(null);
-
-            // Create and show the dialog.
-            assert task != null;
-            PatientOptions taskOptions = PatientOptions.newInstance(task.getName(),
-                    task.getPhoto(),
-                    task.isUrgent());
-            taskOptions.setTargetFragment(thisFragment, REQUESTCODE_TASKOPTIONS);
-            ft.add(taskOptions, PatientOptions.tag);
-            ft.commit();
-            return true;
-        }
-    };
 
     public static final int REQUESTCODE_TASKDISPLAY = 0;
+
     public static final int REQUESTCODE_TASKOPTIONS = 1;
-    private final Fragment thisFragment = this;
-
-    private final OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.v(tag, "onListItemClick()");
-            Log.i(tag, "Item clicked: " + id);
-
-            Patient patient = (Patient) parent.getItemAtPosition(position);
-
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            Fragment prev = getFragmentManager().findFragmentByTag(PatientDisplay.tag);
-
-            if (prev != null) {
-                ft.remove(prev);
-            }
-            ft.addToBackStack(null);
-
-            // Create and show the dialog.
-            assert patient != null;
-            PatientDisplay patientDisplay = PatientDisplay.newInstance(patient.getName(),
-                    patient.getPhoto(),
-                    patient.getRecord(), patient.getInTime());
-            patientDisplay.setTargetFragment(thisFragment, REQUESTCODE_TASKDISPLAY);
-            ft.add(patientDisplay, PatientDisplay.tag);
-            ft.commit();
-        }
-    };
-
     private boolean isBound = false;
 
     private void doBindService() {
@@ -131,9 +76,9 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         // Complete the Fragment initialization Ð particularly anything
         // that requires the parent Activity to be initialized or the
         // Fragment's view to be fully inflated.
-        getListView().setOnItemClickListener(mOnItemClickListener);
+        getListView().setOnItemClickListener(this);
         getListView().setLongClickable(true);
-        getListView().setOnItemLongClickListener(mOnItemLongClickListener);
+        getListView().setOnItemLongClickListener(this);
         adapter = new PatientsAdapter(getActivity());
         setListAdapter(adapter);
         setEmptyText(getResources().getString(R.string.patientlist_empty));
@@ -146,10 +91,19 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         switch (requestCode) {
             case REQUESTCODE_TASKOPTIONS:
                 switch (resultCode) {
-                    default:
-                        break;
                     case Activity.RESULT_OK:
-                        // TODO update task
+                        int position = data.getIntExtra(PatientOptions.BDL_POSITION, -1);
+                        if (position != -1) {
+                            Patient toUpdate = adapter.getItem(position);
+                            boolean isUrgent = data.getBooleanExtra(PatientOptions.BDL_URGENT,
+                                    toUpdate.isUrgent());
+                            if (isUrgent != toUpdate.isUrgent()) {
+                                toUpdate.setUrgent(isUrgent);
+                                mPatientService.syncPatient(toUpdate);
+                            }
+                        }
+                        break;
+                    default:
                         break;
                 }
                 break;
@@ -225,6 +179,57 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
     }
 
     @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.v(tag, "onListItemClick()");
+        Log.i(tag, "Item clicked: " + id);
+
+        Patient patient = (Patient) parent.getItemAtPosition(position);
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag(PatientDisplay.tag);
+
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        assert patient != null;
+        PatientDisplay patientDisplay = PatientDisplay.newInstance(patient.getName(),
+                patient.getPhoto(),
+                patient.getRecord(), patient.getInterned());
+        patientDisplay.setTargetFragment(this, REQUESTCODE_TASKDISPLAY);
+        ft.add(patientDisplay, PatientDisplay.tag);
+        ft.commit();
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.v(tag, "onItemLongClick()");
+        Log.i(tag, "Item clicked: " + id);
+
+        Patient task = (Patient) parent.getItemAtPosition(position);
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag(PatientDisplay.tag);
+
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        assert task != null;
+        PatientOptions taskOptions = PatientOptions.newInstance(task.getName(),
+                task.getPhoto(),
+                task.isUrgent());
+        taskOptions.setTargetFragment(this, REQUESTCODE_TASKOPTIONS);
+        ft.add(taskOptions, PatientOptions.tag);
+        ft.commit();
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.v(tag, "onOptionsItemSelected()");
 
@@ -237,7 +242,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
             case R.id.patientlist_menu_done:
                 spEditor.putBoolean(
                         getActivity().getResources().getString(
-                                R.string.spkey_show_checked), state);
+                                R.string.spkey_show_all), state);
                 spEditor.apply();
                 if (state) {
                     item.setTitle(R.string.patientlist_menu_show_all_on);
@@ -249,12 +254,12 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
             case R.id.patientlist_menu_location:
                 spEditor.putBoolean(
                         getActivity().getResources().getString(
-                                R.string.spkey_sort_location), state);
+                                R.string.spkey_sort_by_location), state);
                 spEditor.apply();
                 if (state) {
                     item.setTitle(R.string.patientlist_menu_location_on);
                 } else {
-                    item.setTitle(R.string.tasklist_menu_location_off);
+                    item.setTitle(R.string.patientlist_menu_location_off);
                 }
                 item.setChecked(!state);
                 return true;

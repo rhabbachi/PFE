@@ -2,9 +2,9 @@
 <resources>
 
     <!-- patient_list -->
-    <string name="sp_patientlist">TaskList</string>
-    <string name="spkey_show_checked">SHOW_CHECKED</string>
-    <string name="spkey_sort_location">SORT_LOCATION</string>
+    <string name="sp_patientlist">PatientList</string>
+    <string name="spkey_show_all">SHOW_ALL</string>
+    <string name="spkey_sort_by_location">SORT_BY_LOCATION</string>
     <!-- status -->
     <string name="sp_status">Status</string>
     <string name="spkey_battery_okey">BATTERY_OKEY</string>

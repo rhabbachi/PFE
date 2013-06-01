@@ -15,24 +15,20 @@ import com.tunav.tunavmedi.R;
 
 public class PatientOptions extends DialogFragment {
     public static final String tag = "PatientOptions";
-    public static final String ARG_POSITION = "position";
-    public static final String ARG_PHOTO = "photo";
-    public static final String ARG_NAME = "name";
-    public static final String ARG_NAME_DEFAULT = "N/A";
+    public static final String BDL_POSITION = "position";
+    public static final String BDL_PHOTO = "photo";
+    public static final String BDL_NAME = "name";
+    public static final String BDL_NAME_DEFAULT = "N/A";
     public static final String DEFAULT_PHOTO_NAME = "hospital";
-    public static final String ARG_INTERNED = "interned";
-    public static final String ARG_OPTIONS = "options";
+    public static final String BDL_URGENT = "isUrgent";
 
     public static PatientOptions newInstance(String name, String photo, boolean isUrgent) {
         PatientOptions patientOptions = new PatientOptions();
 
         Bundle args = new Bundle();
-        args.putString(ARG_NAME, name);
-        args.putString(ARG_PHOTO, photo);
-        boolean[] options = {
-                isUrgent,
-        };
-        args.putBooleanArray(ARG_OPTIONS, options);
+        args.putString(BDL_NAME, name);
+        args.putString(BDL_PHOTO, photo);
+        args.putBoolean(BDL_URGENT, isUrgent);
         patientOptions.setArguments(args);
 
         return patientOptions;
@@ -45,8 +41,8 @@ public class PatientOptions extends DialogFragment {
             switch (which) {
                 case AlertDialog.BUTTON_POSITIVE:
                     Intent intent = new Intent();
-                    intent.putExtra(ARG_POSITION, getArguments().getInt(ARG_POSITION));
-                    intent.putExtra("isUrgent", choiceValues[0]);
+                    intent.putExtra(BDL_POSITION, getArguments().getInt(BDL_POSITION));
+                    intent.putExtra(BDL_URGENT, isUrgent);
                     getTargetFragment().onActivityResult(getTargetRequestCode(),
                             Activity.RESULT_OK, intent);
                     break;
@@ -62,19 +58,30 @@ public class PatientOptions extends DialogFragment {
 
         @Override
         public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-            choiceValues[which] = isChecked;
+            switch (which) {
+                case 0:
+                    isUrgent = isChecked;
+                    break;
+
+                default:
+                    break;
+            }
         }
     };
-    boolean[] choiceValues = null;
+    boolean isUrgent;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        choiceValues = getArguments().getBooleanArray(ARG_OPTIONS);
+        isUrgent = getArguments().getBoolean(BDL_URGENT);
+        boolean[] values = {
+                isUrgent
+        };
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle(getArguments().getString(ARG_NAME, ARG_NAME_DEFAULT))
+        builder.setTitle(getArguments().getString(BDL_NAME, BDL_NAME_DEFAULT))
                 .setMultiChoiceItems(R.array.options_patient
-                        , choiceValues
+                        , values
                         , mOnMultiChoiceClickListener)
                 .setPositiveButton(R.string.options_patient_ok, mOnClickListener)
                 .setNegativeButton(R.string.options_patient_cancel, mOnClickListener);

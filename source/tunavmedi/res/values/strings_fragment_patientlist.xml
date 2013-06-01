@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="tab_todo_text">Todo Tasks</string>
-    <string name="patientlist_menu_show_all_on">Show Urgent Patients</string>
+    <string name="tab_patient_text">Patients</string>
+    <string name="patientlist_menu_show_all_on">Show Urgent Only</string>
     <string name="patientlist_menu_show_all_off">Show All Patients</string>
     <string name="patientlist_menu_location_on">Dont Notify When Near Patient</string>
-    <string name="tasklist_menu_location_off">Notify When Near Patient</string>
+    <string name="patientlist_menu_location_off">Notify When Near Patient</string>
     <string name="patientlist_empty">No Patients!</string>
 
 </resources>

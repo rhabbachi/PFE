@@ -1,40 +1,45 @@
 
 package com.tunav.tunavmedi.datatype;
 
-import android.os.SystemClock;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.format.Time;
 
 public class Patient {
 
     private Long mID = null;
     private String mName = null;
-    private Long mInTime = null;
+    private Long mInterned = null;
     private String mRecord = null;
-    private Boolean urgent = false;
+    private Boolean mUrgent = false;
     private Placemark mPlacemark = null;
     private String mPhoto = null;
-    private Long mLastUpdate = null;
+    private Long mUpdated = null;
 
     public Patient(Long id, String source, Long interned,
             String description) {
         mID = id;
         mName = source;
-        mInTime = interned;
+        mInterned = interned;
         mRecord = description;
-        mLastUpdate = SystemClock.currentThreadTimeMillis();
+        setUpdatedNow();
+    }
+
+    public Patient(Long id, String source, Long interned,
+            String description, Long updated) {
+        mID = id;
+        mName = source;
+        mInterned = interned;
+        mRecord = description;
+        mUpdated = updated;
     }
 
     public long getId() {
         return mID;
     }
 
-    public Long getInTime() {
-        return mInTime;
-    }
-
-    public Long getLastUpdate() {
-        return mLastUpdate;
+    public Long getInterned() {
+        return mInterned;
     }
 
     public String getName() {
@@ -57,16 +62,12 @@ public class Patient {
         return Html.fromHtml(mRecord);
     }
 
+    public Long getUpdated() {
+        return mUpdated;
+    }
+
     public Boolean isUrgent() {
-        return urgent;
-    }
-
-    public void setLastUpdate(Long lastUpdate) {
-        this.mLastUpdate = lastUpdate;
-    }
-
-    public void setLastUpdateNow() {
-        mLastUpdate = SystemClock.currentThreadTimeMillis();
+        return mUrgent;
     }
 
     public void setPhoto(String photoPath) {
@@ -77,9 +78,19 @@ public class Patient {
         this.mPlacemark = placemark;
     }
 
+    public void setUpdated(Long lastUpdate) {
+        this.mUpdated = lastUpdate;
+    }
+
+    public void setUpdatedNow() {
+        Time now = new Time();
+        now.setToNow();
+        mUpdated = now.toMillis(true);
+    }
+
     public void setUrgent(boolean urgent) {
-        this.urgent = urgent;
-        setLastUpdateNow();
+        this.mUrgent = urgent;
+        setUpdatedNow();
     }
 
     @Override

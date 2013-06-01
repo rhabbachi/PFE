@@ -27,5 +27,7 @@
     <color name="text_description">#7e7e7e</color>
 
     <color name="line">#ffbcbcbc</color>
-
+    
+    <color name="patient_background_urgent">#FF0000</color>
+    <color name="patient_background">#000000</color>
 </resources>
