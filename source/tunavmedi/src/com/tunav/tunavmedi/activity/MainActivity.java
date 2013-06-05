@@ -18,43 +18,36 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.tunav.tunavmedi.R;
-import com.tunav.tunavmedi.app.TunavMedi;
 import com.tunav.tunavmedi.fragment.NotImplemetedListFragment;
 import com.tunav.tunavmedi.fragment.PatientListFragment;
-import com.tunav.tunavmedi.service.AuthService;
+import com.tunav.tunavmedi.service.PatientsService;
 
 public class MainActivity extends Activity {
 
-    private enum RequestCode {
-        LOGIN
-    }
-
     private enum TabEnum {
-        TASK(R.string.tab_patient_text, android.R.drawable.ic_menu_today,
-                "TaskListFragment")//
-        , DICT(R.string.tab_dict_text, android.R.drawable.ic_menu_zoom,
-                "DictListFragment")//
-        , MAIL(R.string.tab_mail_text, android.R.drawable.sym_action_email,
-                "MailsListFragment")//
-        , CALL(R.string.tab_call_text, android.R.drawable.ic_dialog_dialer,
-                "Call")//
-        , CONTACTS(R.string.tab_contacts_text, android.R.drawable.ic_menu_view,
-                "ContactsListFragment");//
+        TASK(R.string.tab_patient_text,
+                "TaskListFragment")
+        , DICT(R.string.tab_dict_text,
+                "DictListFragment")
+        , MAIL(R.string.tab_mail_text,
+                "MailsListFragment")
+        , CALL(R.string.tab_call_text,
+                "Call")
+        , CONTACTS(R.string.tab_contacts_text,
+                "ContactsListFragment");
 
         private Integer textID = null;
-        private Integer iconID = null;
         private String tag = null;
 
-        private TabEnum(Integer textID, Integer iconID, String tag) {
+        private TabEnum(Integer textID, String tag) {
             this.textID = textID;
-            this.iconID = iconID;
             this.tag = tag;
         }
     };
 
     public static class TabListener<T extends Fragment> implements
             ActionBar.TabListener {
-        private static final String TAG = "TabListener";
+        private static final String tag = "TabListener";
 
         private final Activity mActivity;
         private final String mTag;
@@ -64,12 +57,12 @@ public class MainActivity extends Activity {
 
         public TabListener(Activity activity, String tag, Class<T> clz) {
             this(activity, tag, clz, null);
-            Log.v(TAG, "TabListener()");
+            Log.v(tag, "TabListener()");
         }
 
         public TabListener(Activity activity, String tag, Class<T> clz,
                 Bundle args) {
-            Log.v(TAG, "TabListener()");
+            Log.v(tag, "TabListener()");
             mActivity = activity;
             mTag = tag;
             mClass = clz;
@@ -89,13 +82,13 @@ public class MainActivity extends Activity {
 
         @Override
         public void onTabReselected(Tab tab, FragmentTransaction ft) {
-            Log.v(TAG, "onTabReselected()");
+            Log.v(tag, "onTabReselected()");
             Toast.makeText(mActivity, "Reselected!", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
-            Log.v(TAG, "onTabSelected()");
+            Log.v(tag, "onTabSelected()");
             if (mFragment == null) {
                 mFragment = Fragment.instantiate(mActivity, mClass.getName(),
                         mArgs);
@@ -107,7 +100,7 @@ public class MainActivity extends Activity {
 
         @Override
         public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-            Log.v(TAG, "onTabUnselected()");
+            Log.v(tag, "onTabUnselected()");
             if (mFragment != null) {
                 ft.detach(mFragment);
             }
@@ -117,6 +110,8 @@ public class MainActivity extends Activity {
     private static final String tag = "MainActivity";
 
     private static long back_pressed;
+
+    public static final int RC_LOGIN = 0;
 
     public static void about(Context context) {
         Log.v(tag, "about()");
@@ -128,18 +123,29 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i(tag, "onActivityResult()");
-        if (requestCode == RequestCode.LOGIN.ordinal()) {
-            switch (resultCode) {
-                case (RESULT_OK):
-                    onLogin();
-                    break;
-            }
+        switch (requestCode) {
+            case RC_LOGIN:
+                switch (resultCode) {
+                    case RESULT_CANCELED:
+                        finish();
+                        break;
+                    case RESULT_OK:
+                        setupActionBar();
+                        break;
+                    default:
+                        break;
+                }
+                break;
+
+            default:
+                break;
         }
     }
 
     @Override
     public void onBackPressed() {
+        Log.v(tag, "onBackPressed()");
+
         if (back_pressed + 2000 > System.currentTimeMillis()) {
             super.onBackPressed();
         } else {
@@ -151,85 +157,87 @@ public class MainActivity extends Activity {
     // Called at the start of the full lifetime.
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i(tag, "onCreate()");
+        Log.v(tag, "onCreate()");
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPrefs = getSharedPreferences(
+                getResources().getString(R.string.sp_user)
+                , MODE_PRIVATE);
+        boolean isLogged = sharedPrefs.getBoolean(
+                getResources().getString(R.string.spkey_is_logged), false);
+        if (!isLogged) {
+            Intent loginIntent = new Intent(LoginActivity.ACTION_LOGIN);
+            startActivityForResult(loginIntent, RC_LOGIN);
+        }
+
         try {
-            SharedPreferences sharedPrefs = getSharedPreferences(
-                    TunavMedi.SP_USER_NAME, Activity.MODE_PRIVATE);
-            boolean isLogged = sharedPrefs.getBoolean(
-                    TunavMedi.SP_USER_KEY_ISLOGGED, false);
-            if (!isLogged) {
-                onLogin();
-            } else {
-
-                // TODO bindService(service, conn, flags)
-
-                ActionBar actionBar = getActionBar();
-                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-                actionBar
-                        .setLogo(getResources().getDrawable(R.drawable.doctor));
-                actionBar.setTitle("Dr. Who");// TODO
-                // TASK tab
-                actionBar.addTab(actionBar
-                        .newTab()
-                        .setText(TabEnum.TASK.textID)
-                        .setIcon(TabEnum.TASK.iconID)
-                        .setTabListener(
-                                new TabListener<PatientListFragment>(this,
-                                        TabEnum.TASK.tag,
-                                        PatientListFragment.class)));
-                // MAIL tab
-                actionBar.addTab(actionBar
-                        .newTab()
-                        .setText(TabEnum.MAIL.textID)
-                        .setIcon(TabEnum.MAIL.iconID)
-                        .setTabListener(
-                                new TabListener<NotImplemetedListFragment>(
-                                        this, TabEnum.MAIL.tag,
-                                        NotImplemetedListFragment.class)));
-                // CALL tab
-                actionBar.addTab(actionBar
-                        .newTab()
-                        .setText(TabEnum.CALL.textID)
-                        .setIcon(TabEnum.CALL.iconID)
-                        .setTabListener(
-                                new TabListener<NotImplemetedListFragment>(
-                                        this, TabEnum.CALL.tag,
-                                        NotImplemetedListFragment.class)));
-                // CONTACT tab
-                actionBar.addTab(actionBar
-                        .newTab()
-                        .setText(TabEnum.CONTACTS.textID)
-                        .setIcon(TabEnum.CONTACTS.iconID)
-                        .setTabListener(
-                                new TabListener<NotImplemetedListFragment>(
-                                        this, TabEnum.CONTACTS.tag,
-                                        NotImplemetedListFragment.class)));
-                // DICT tab
-                actionBar.addTab(actionBar
-                        .newTab()
-                        .setText(TabEnum.DICT.textID)
-                        .setIcon(TabEnum.DICT.iconID)
-                        .setTabListener(
-                                new TabListener<NotImplemetedListFragment>(
-                                        this, TabEnum.DICT.tag,
-                                        NotImplemetedListFragment.class)));
-
-                if (savedInstanceState != null) {
-                    // restor last selected tab
-                    actionBar.setSelectedNavigationItem(savedInstanceState
-                            .getInt("tab", 0));
-                }
+            if (isLogged) {
+                setupActionBar();
             }
+
+            ActionBar actionBar = getActionBar();
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+            actionBar
+                    .setLogo(getResources().getDrawable(R.drawable.doctor));
+            actionBar.setTitle("Dr. Who");// TODO
+            // TASK tab
+            actionBar.addTab(actionBar
+                    .newTab()
+                    .setText(TabEnum.TASK.textID)
+                    .setTabListener(
+                            new TabListener<PatientListFragment>(this,
+                                    TabEnum.TASK.tag,
+                                    PatientListFragment.class)));
+            // MAIL tab
+            actionBar.addTab(actionBar
+                    .newTab()
+                    .setText(TabEnum.MAIL.textID)
+                    .setTabListener(
+                            new TabListener<NotImplemetedListFragment>(
+                                    this, TabEnum.MAIL.tag,
+                                    NotImplemetedListFragment.class)));
+            // CALL tab
+            actionBar.addTab(actionBar
+                    .newTab()
+                    .setText(TabEnum.CALL.textID)
+                    .setTabListener(
+                            new TabListener<NotImplemetedListFragment>(
+                                    this, TabEnum.CALL.tag,
+                                    NotImplemetedListFragment.class)));
+            // CONTACT tab
+            actionBar.addTab(actionBar
+                    .newTab()
+                    .setText(TabEnum.CONTACTS.textID)
+                    .setTabListener(
+                            new TabListener<NotImplemetedListFragment>(
+                                    this, TabEnum.CONTACTS.tag,
+                                    NotImplemetedListFragment.class)));
+            // DICT tab
+            actionBar.addTab(actionBar
+                    .newTab()
+                    .setText(TabEnum.DICT.textID)
+                    .setTabListener(
+                            new TabListener<NotImplemetedListFragment>(
+                                    this, TabEnum.DICT.tag,
+                                    NotImplemetedListFragment.class)));
+
+            if (savedInstanceState != null) {
+                // restor last selected tab
+                actionBar.setSelectedNavigationItem(savedInstanceState
+                        .getInt("tab", 0));
+            }
+            Intent patients = new Intent(this, PatientsService.class);
+            startService(patients);
         } catch (ActivityNotFoundException e) {
             Log.d(tag, null, e);
+
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.i(tag, "onCreateOptionsMenu()");
+        Log.v(tag, "onCreateOptionsMenu()");
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
@@ -239,34 +247,25 @@ public class MainActivity extends Activity {
     public void onDestroy() {
         // Clean up any resources including ending threads,
         // closing database connections etc.
-        Log.i(tag, "onDestroy");
+        Log.v(tag, "onDestroy");
+
+        Intent patients = new Intent(this, PatientsService.class);
+        stopService(patients);
+
         super.onDestroy();
-    }
-
-    private void onLogin() {
-        Log.v(tag, "onLogin()");
-        Intent loginIntent = new Intent("com.tunav.tunavmedi.action.LOGIN");
-        startActivityForResult(loginIntent, RequestCode.LOGIN.ordinal());
-    }
-
-    private void onLogout() {
-        Log.v(tag, "Logout()");
-        // TODO authentication serviec logout
-        Intent logout = new Intent(this, AuthService.class);
-        logout.setAction(AuthService.ACTION_LOGOUT);
-        startService(logout);
-        onLogin();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(tag, "onOptionItemSelected()");
+        Log.v(tag, "onOptionItemSelected()");
+        Log.i(tag, "item selected: " + item.toString());
         switch (item.getItemId()) {
             case R.id.action_about:
                 about(this);
                 return true;
             case R.id.action_logout:
-                onLogout();
+                Intent logout = new Intent(LoginActivity.ACTION_LOGIN);
+                startActivityForResult(logout, RC_LOGIN);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -279,7 +278,7 @@ public class MainActivity extends Activity {
         // Suspend UI updates, threads, or CPU intensive processes
         // that don't need to be updated when the Activity isn't
         // the active foreground Activity.
-        Log.i(tag, "onPause()");
+        Log.v(tag, "onPause()");
         super.onPause();
     }
 
@@ -287,7 +286,7 @@ public class MainActivity extends Activity {
     // for an activity process.
     @Override
     public void onRestart() {
-        Log.i(tag, "onRestart()");
+        Log.v(tag, "onRestart()");
         super.onRestart();
         // Load changes knowing that the Activity has already
         // been visible within this process.
@@ -296,7 +295,7 @@ public class MainActivity extends Activity {
     // Called after onCreate has finished, use to restore UI state
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        Log.i(tag, "onRestoreInstanceState()");
+        Log.v(tag, "onRestoreInstanceState()");
         super.onRestoreInstanceState(savedInstanceState);
         // Restore UI state from the savedInstanceState.
         // This bundle has also been passed to onCreate.
@@ -307,7 +306,7 @@ public class MainActivity extends Activity {
     // Called at the start of the active lifetime.
     @Override
     public void onResume() {
-        Log.i(tag, "onResume()");
+        Log.v(tag, "onResume()");
         super.onResume();
         // Resume any paused UI updates, threads, or processes required
         // by the Activity but suspended when it was inactive.
@@ -321,7 +320,7 @@ public class MainActivity extends Activity {
         // This bundle will be passed to onCreate and
         // onRestoreInstanceState if the process is
         // killed and restarted by the run time.
-        Log.i(tag, "onSaveInstanceState()");
+        Log.v(tag, "onSaveInstanceState()");
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt("tab", getActionBar()
                 .getSelectedNavigationIndex());
@@ -330,7 +329,7 @@ public class MainActivity extends Activity {
     // Called at the start of the visible lifetime.
     @Override
     public void onStart() {
-        Log.i(tag, "onStart()");
+        Log.v(tag, "onStart()");
         super.onStart();
         // Apply any required UI change now that the Activity is visible.
     }
@@ -342,7 +341,14 @@ public class MainActivity extends Activity {
         // that aren't required when the Activity isn't visible.
         // Persist all edits or state changes
         // as after this call the process is likely to be killed.
-        Log.i(tag, "onStop()");
+        Log.v(tag, "onStop()");
+
         super.onStop();
+    }
+
+    private void setupActionBar() {
+        getActionBar()
+                .setLogo(getResources().getDrawable(R.drawable.doctor));
+        getActionBar().setTitle("Dr. Who");// TODO
     }
 }

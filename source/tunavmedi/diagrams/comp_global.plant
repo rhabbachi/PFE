@@ -1,0 +1,43 @@
+@startuml
+skinparam componentStyle uml2
+
+interface "LocationListener" as listener_location
+
+node "Model"{
+interface "AuthenticationHandler" as auth_interface
+interface "PatientsHandler" as patient_interface
+
+database "SQLite test implementation" {
+component "AuthenticationHelper" as auth_helper
+component "PatientsHelper" as patient_helper
+component "DBSetup"
+}
+
+auth_helper -> auth_interface
+patient_helper -> patient_interface
+}
+
+node "Controller" {
+interface "PatientListener" as listener_patient
+component "PatientService" as service
+
+service - listener_patient
+service -> listener_location
+service -> patient_helper
+}
+
+node "View" {
+component "PatientsAdapter" as adapter
+component "PatientDisplay" as display
+component "PatientOptions" as options
+component "PatientListFragment" as list
+
+list -> adapter
+list -> display
+list -> options
+
+adapter --> listener_patient
+
+}
+
+@enduml

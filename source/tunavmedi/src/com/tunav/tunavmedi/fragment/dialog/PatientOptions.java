@@ -22,13 +22,16 @@ public class PatientOptions extends DialogFragment {
     public static final String DEFAULT_PHOTO_NAME = "hospital";
     public static final String BDL_URGENT = "isUrgent";
 
-    public static PatientOptions newInstance(String name, String photo, boolean isUrgent) {
+    public static PatientOptions newInstance(int position, String name, String photo,
+            boolean isUrgent) {
         PatientOptions patientOptions = new PatientOptions();
 
         Bundle args = new Bundle();
+        args.putInt(BDL_POSITION, position);
         args.putString(BDL_NAME, name);
         args.putString(BDL_PHOTO, photo);
         args.putBoolean(BDL_URGENT, isUrgent);
+
         patientOptions.setArguments(args);
 
         return patientOptions;

@@ -454,12 +454,12 @@ militaire, civile et commercial partout dans le monde. Il est maintenu
 par les États Unis d'Amérique et accessible à quiconque possédant un
 récepteur gls{gps}.
 
-\subsubsection[Point de vu \android{}]{Point de vu \android{}\cite{pa4ad:chptr13}}
+\subsubsection[La localisation dans \android{}]{La localisation dans \android{}\cite{pa4ad:chptr13}}\label{sss:android_localisation}
 
 L'accès aux \gls{lbs} se fait essentiellement via deux objets:
 \begin{description}
-\item [\dev{Location Manager}] Permet d'exploiter les services basés sur la localisation.
-\item [\dev{Location Providers}] Chaque \en{providers} représente une technologie de localisation utilisé afin de déterminer la localisation actuel du terminale.
+\item [\dev{Location Manager}]\footnote{android.location.LocationManager} Permet d'exploiter les services basés sur la localisation.
+\item [\dev{Location Providers}]\footnote{android.location.LocationProvider} Chaque \en{Providers} représente une technologie de localisation utilisé afin de déterminer la localisation actuel du terminale.
 
 \end{description}
 On utilise ces deux Classes pour les fins suivantes:
@@ -476,7 +476,7 @@ Généralement deux techniques de détection de localisation sont disponibles da
 \paragraph{Niveau de permission \textbf{COARSE} } % (fold)
 \label{par:coarse}
 
-\begin{lstlisting}[language=xml, caption=permission pour la localisation par le réseau.]
+\begin{lstlisting}[language=xml, caption=Permission pour la localisation par le réseau.]
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 \end{lstlisting}
 % paragraph par:coarse (end)
@@ -484,11 +484,21 @@ Généralement deux techniques de détection de localisation sont disponibles da
 \paragraph{niveau de permission \textbf{FINE} } % (fold)
 \label{par:fine}
 
-\begin{lstlisting}[language=xml, caption=permission pour la localisation par GPS.]
+\begin{lstlisting}[language=xml, caption=Permission pour la localisation par GPS.]
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 \end{lstlisting}
 
 A noter qu'une application ayant la permission \dev{FINE} possède implicitement la permission \dev{COARSE}.
+
+Avoir la localisation dans la plat-forme \android{} se fait par le biais de
+\en{callback}, on indique au \dev{LocationManager} qu'on veut recevoir des mise
+à jour de la localisation par la fonction \dev{requestLocationUpdates()} en lui
+passant une implémentation de
+\dev{LocationListener}\footnote{android.location.LocationListener}. Cette
+interface contient plusieurs fonctions de \en{callback} que le
+\dev{LocationManager} appel quant la localisation de l'utilisateur change ou
+l'état du service change\cite{guide:location_strategies}.
+
 
 \section{Conclusion}
 

@@ -16,11 +16,12 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.tunav.tunavmedi.R;
 import com.tunav.tunavmedi.broadcastreceiver.BatteryReceiver;
 import com.tunav.tunavmedi.broadcastreceiver.ChargingReceiver;
 import com.tunav.tunavmedi.broadcastreceiver.NetworkReceiver;
+import com.tunav.tunavmedi.dal.datatype.Patient;
 import com.tunav.tunavmedi.dal.sqlite.helper.PatientsHelper;
-import com.tunav.tunavmedi.datatype.Patient;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -34,9 +35,8 @@ public class PatientsService extends Service implements
         LocationListener {
 
     public interface PatientsListener {
-        public void setLocation(Location location);
 
-        public void updateDataSet(ArrayList<Patient> newPatients);
+        public void updateDataSet(ArrayList<Patient> newPatients, Location location);
     }
 
     public class SelfBinder extends Binder {
@@ -74,7 +74,14 @@ public class PatientsService extends Service implements
     private PatientsHelper mHelper = null;
     private ScheduledExecutorService mScheduler = null;
     private Future<?> mPatientsFuture = null;
-    private Future<?> mLocationFuture = null;
+
+    private boolean isLogged;
+
+    private boolean batteryOk;
+
+    private boolean powerConnected;
+
+    private boolean isConnected;
 
     public void addPatientsListener(PatientsListener listener) {
         if (listener != null && !mPatientsListeners.contains(listener)) {
@@ -89,20 +96,16 @@ public class PatientsService extends Service implements
         return mBinder;
     }
 
-    private void onConfigure(boolean batteryOk, boolean isCharging, boolean isConnected) {
+    private void onConfigure() {
         Log.v(tag, "onConfigure()");
-        // DEBUG ONLY
-        batteryOk = true;
-        isCharging = false;
-        isConnected = true;
 
-        if (batteryOk && !isCharging) {
+        if (batteryOk && !powerConnected) {
             startLocationPolling(Criteria.ACCURACY_FINE, Criteria.POWER_HIGH, 1000 * 60 * 15, 30);
         } else {
             stopLocationPolling();
         }
 
-        if (batteryOk && isConnected) {
+        if (isLogged && batteryOk && isConnected) {
             startPatientNotification();
         } else {
             stopPatientsNotification();
@@ -120,16 +123,38 @@ public class PatientsService extends Service implements
         mHelper.addObserver(mHelperObserver);
         syncPatients(mHelper.pullPatients());
 
-        boolean batteryOk = BatteryReceiver.getBatteryOk(this);
-        boolean isCharging = ChargingReceiver.isCharging(this);
-        boolean noConnection = NetworkReceiver.isConnected(this);
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocationCache = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-        onConfigure(batteryOk, isCharging, noConnection);
+        SharedPreferences spUser = getSharedPreferences(getResources()
+                .getString(R.string.sp_user), MODE_PRIVATE);
+
+        isLogged = spUser.getBoolean(getResources()
+                .getString(R.string.spkey_sort_by_location), false);
+        spUser.registerOnSharedPreferenceChangeListener(this);
+
+        SharedPreferences spStatus = getSharedPreferences(
+                getResources().getString(R.string.sp_status), MODE_PRIVATE);
+        spStatus.registerOnSharedPreferenceChangeListener(this);
+
+        batteryOk = BatteryReceiver.getBatteryOk(this);
+        powerConnected = ChargingReceiver.isCharging(this);
+        isConnected = NetworkReceiver.isConnected(this);
+
+        onConfigure();
     }
 
     @Override
     public void onDestroy() {
         Log.v(tag, "onDestroy()");
+
+        SharedPreferences spUser = getSharedPreferences(getResources()
+                .getString(R.string.sp_user), MODE_PRIVATE);
+        spUser.unregisterOnSharedPreferenceChangeListener(this);
+
+        SharedPreferences spStatus = getSharedPreferences(
+                getResources().getString(R.string.sp_status), MODE_PRIVATE);
+        spStatus.unregisterOnSharedPreferenceChangeListener(this);
 
         mHelper.deleteObserver(mHelperObserver);
 
@@ -166,7 +191,16 @@ public class PatientsService extends Service implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.v(tag, "onSharedPreferenceChanged()");
-        // TODO Auto-generated method stub
+        if (key.equals(getResources().getString(R.string.spkey_is_logged))) {
+            isLogged = sharedPreferences.getBoolean(key, false);
+        } else if (key.equals(getResources().getString(R.string.spkey_battery_okey))) {
+            batteryOk = sharedPreferences.getBoolean(key, batteryOk);
+        } else if (key.equals(getResources().getString(R.string.spkey_is_connected))) {
+            isConnected = sharedPreferences.getBoolean(key, isConnected);
+        } else if (key.equals(getResources().getString(R.string.spkey_power_connected))) {
+            powerConnected = sharedPreferences.getBoolean(key, powerConnected);
+        }
+        onConfigure();
     }
 
     @Override
@@ -212,6 +246,7 @@ public class PatientsService extends Service implements
 
     private void startPatientNotification() {
         Log.v(tag, "startPatientNotification()");
+
         if (mPatientsFuture != null) {
             mPatientsFuture.cancel(true);
             mPatientsFuture = null;
@@ -261,10 +296,7 @@ public class PatientsService extends Service implements
     public void updateListeners() {
         Log.v(tag, "updateListeners()");
         for (PatientsListener listener : mPatientsListeners) {
-            if (mLocationCache != null) {
-                listener.setLocation(mLocationCache);
-            }
-            listener.updateDataSet(mPatientsCache);
+            listener.updateDataSet(mPatientsCache, mLocationCache);
         }
     }
 }

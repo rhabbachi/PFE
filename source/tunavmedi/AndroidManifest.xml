@@ -19,16 +19,14 @@
         android:label="@string/app_name"
         android:logo="@drawable/hospital"
         android:theme="@style/HoloLightDarkActionBarTheme" >
-
         <activity
             android:name="com.tunav.tunavmedi.activity.LoginActivity"
-            android:excludeFromRecents="true"
             android:label="@string/app_name"
-            android:noHistory="true"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
+                <action android:name="com.tunav.tunavmedi.action.LOGOUT" />
                 <action android:name="com.tunav.tunavmedi.action.LOGIN" />
             </intent-filter>
         </activity>
@@ -39,6 +37,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -47,6 +46,8 @@
             android:name="com.tunav.tunavmedi.broadcastreceiver.BatteryReceiver"
             android:enabled="true" >
             <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="android.intent.action.BATTERY_LOW" />
                 <action android:name="android.intent.action.BATTERY_OK" />
             </intent-filter>
@@ -55,34 +56,28 @@
             android:name="com.tunav.tunavmedi.broadcastreceiver.ChargingReceiver"
             android:enabled="true" >
             <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
         <receiver
             android:name="com.tunav.tunavmedi.broadcastreceiver.NetworkReceiver"
-            android:enabled="true" 
-            android:exported="false">
+            android:enabled="true"
+            android:exported="false" >
             <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="ConnectivityManager.CONNECTIVITY_ACTION" />
             </intent-filter>
-        </receiver>
-        <receiver
-            android:name="com.tunav.tunavmedi.broadcastreceiver.LocationReceiver"
-            android:enabled="true" >
         </receiver>
 
         <service
             android:name="com.tunav.tunavmedi.service.PatientsService"
             android:exported="false" >
-        </service>
-        <service
-            android:name="com.tunav.tunavmedi.service.AuthService"
-            android:exported="false">
             <intent-filter>
-                <action android:name="com.tunav.tunavmedi.action.authentication.LOGIN" />
-                <action android:name="com.tunav.tunavmedi.action.authentication.LOGOUT" />
-                <action android:name="com.tunav.tunavmedi.action.authentication.CHECK" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
     </application>

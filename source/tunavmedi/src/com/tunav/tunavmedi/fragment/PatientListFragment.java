@@ -25,8 +25,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.tunav.tunavmedi.R;
 import com.tunav.tunavmedi.adapter.PatientsAdapter;
-import com.tunav.tunavmedi.app.TunavMedi;
-import com.tunav.tunavmedi.datatype.Patient;
+import com.tunav.tunavmedi.dal.datatype.Patient;
 import com.tunav.tunavmedi.fragment.dialog.PatientDisplay;
 import com.tunav.tunavmedi.fragment.dialog.PatientOptions;
 import com.tunav.tunavmedi.service.PatientsService;
@@ -37,11 +36,11 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
 
     private static final String tag = "PatientListFragment";
     private PatientsAdapter adapter;
-    private PatientsService mPatientService = null;
+    private PatientsService mPatientService;
 
     public static final int REQUESTCODE_TASKDISPLAY = 0;
-
     public static final int REQUESTCODE_TASKOPTIONS = 1;
+
     private boolean isBound = false;
 
     private void doBindService() {
@@ -94,6 +93,8 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
                     case Activity.RESULT_OK:
                         int position = data.getIntExtra(PatientOptions.BDL_POSITION, -1);
                         if (position != -1) {
+                            Log.i(tag, "position: " + position);
+
                             Patient toUpdate = adapter.getItem(position);
                             boolean isUrgent = data.getBooleanExtra(PatientOptions.BDL_URGENT,
                                     toUpdate.isUrgent());
@@ -138,7 +139,20 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu, menuInflater);
         Log.v(tag, "onCreateOptionsMenu()");
-        menuInflater.inflate(R.menu.fragment_tasklist, menu);
+
+        menuInflater.inflate(R.menu.fragment_patientlist, menu);
+
+        String spPatientList = getActivity().getResources().getString(R.string.sp_patientlist);
+        String spkeyShowAll = getActivity().getResources().getString(R.string.spkey_show_all);
+        String spkeySortLocation = getActivity().getResources().getString(
+                R.string.spkey_sort_by_location);
+
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(spPatientList,
+                Context.MODE_PRIVATE);
+
+        MenuItem item = (MenuItem) getActivity().findViewById(R.id.patientlist_menu_show);
+        item.setChecked(
+                sharedPref.getBoolean(spkeyShowAll, true));
     }
 
     // Called once the Fragment has been created in order for it to
@@ -208,7 +222,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         Log.v(tag, "onItemLongClick()");
         Log.i(tag, "Item clicked: " + id);
 
-        Patient task = (Patient) parent.getItemAtPosition(position);
+        Patient patient = (Patient) parent.getItemAtPosition(position);
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag(PatientDisplay.tag);
@@ -219,10 +233,10 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        assert task != null;
-        PatientOptions taskOptions = PatientOptions.newInstance(task.getName(),
-                task.getPhoto(),
-                task.isUrgent());
+        assert patient != null;
+        PatientOptions taskOptions = PatientOptions.newInstance(position, patient.getName(),
+                patient.getPhoto(),
+                patient.isUrgent());
         taskOptions.setTargetFragment(this, REQUESTCODE_TASKOPTIONS);
         ft.add(taskOptions, PatientOptions.tag);
         ft.commit();
@@ -232,36 +246,37 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.v(tag, "onOptionsItemSelected()");
+        Log.i(tag, "ItemSelected: " + item.toString());
 
         SharedPreferences.Editor spEditor = getActivity()
-                .getSharedPreferences(TunavMedi.SP_USER_NAME,
+                .getSharedPreferences(
+                        getActivity().getResources().getString(R.string.sp_patientlist),
                         Context.MODE_PRIVATE).edit();
-        boolean state = item.isChecked();
 
         switch (item.getItemId()) {
-            case R.id.patientlist_menu_done:
+            case R.id.patientlist_menu_show:
                 spEditor.putBoolean(
                         getActivity().getResources().getString(
-                                R.string.spkey_show_all), state);
+                                R.string.spkey_show_all), item.isChecked());
                 spEditor.apply();
-                if (state) {
+                if (item.isChecked()) {
                     item.setTitle(R.string.patientlist_menu_show_all_on);
                 } else {
                     item.setTitle(R.string.patientlist_menu_show_all_off);
                 }
-                item.setChecked(!state);
+                item.setChecked(!item.isChecked());
                 return true;
             case R.id.patientlist_menu_location:
                 spEditor.putBoolean(
                         getActivity().getResources().getString(
-                                R.string.spkey_sort_by_location), state);
+                                R.string.spkey_sort_by_location), item.isChecked());
                 spEditor.apply();
-                if (state) {
+                if (item.isChecked()) {
                     item.setTitle(R.string.patientlist_menu_location_on);
                 } else {
                     item.setTitle(R.string.patientlist_menu_location_off);
                 }
-                item.setChecked(!state);
+                item.setChecked(!item.isChecked());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

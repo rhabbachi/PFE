@@ -5,14 +5,11 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,16 +21,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.tunav.tunavmedi.R;
-import com.tunav.tunavmedi.service.AuthService;
-import com.tunav.tunavmedi.service.AuthService.LocalBinder;
+import com.tunav.tunavmedi.dal.sqlite.helper.AuthenticationHelper;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
 
-public class LoginActivity extends Activity implements ServiceConnection {
-
+public class LoginActivity extends Activity {
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -57,12 +52,8 @@ public class LoginActivity extends Activity implements ServiceConnection {
         @Override
         protected Boolean doInBackground(Void... params) {
             Log.v(tag, "doInBackground()");
-            if (mBound) {
-                return mAuthService.authenticate(mID, mPassword);
-            } else {
-                err = "Connection Problemes";
-                return false;
-            }
+            mHelper.login(mID, mPassword);
+            return mHelper.getStatus();
         }
 
         // invoked on the UI thread
@@ -75,19 +66,17 @@ public class LoginActivity extends Activity implements ServiceConnection {
         // invoked on the UI thread
         @Override
         protected void onPostExecute(final Boolean success) {
-            loginTask = null;
-            showProgress(false);
             if (success) {
-                Intent mainActivity = new Intent(mActivity, MainActivity.class);
                 setResult(RESULT_OK);
                 finish();
-                startActivity(mainActivity);
             } else {
-                Log.d(tag, "Authentication faild!");
+                Log.i(tag, "Authentication faild!");
                 mPasswordView
-                        .setError(err);
+                        .setError(mHelper.getError());
                 mPasswordView.requestFocus();
             }
+            loginTask = null;
+            showProgress(false);
         }
 
         // invoked on the UI thread
@@ -98,25 +87,30 @@ public class LoginActivity extends Activity implements ServiceConnection {
         }
     }
 
+    private String spName;
+    private String spIsLogged;
+    private String spDisplayName;
+    private String spPhoto;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     public static final String tag = "LoginActivity";
-
     private UserLoginTask loginTask = null;
-
     // Values for ID and password at the time of the login attempt.
     private String mID;
+
     private String mPassword;
-    private LoginActivity mActivity = this;
+
     // UI references.
     private EditText mIDView;
     private EditText mPasswordView;
     private View mLoginFormView;
     private View mLoginStatusView;
     private TextView mLoginStatusMessageView;
-    private boolean mBound = false;
-    private AuthService mAuthService;
+    private AuthenticationHelper mHelper;
+
+    public static final String ACTION_LOGIN = "com.tunav.tunavmedi.action.LOGIN";
+    public static final String ACTION_LOGOUT = "com.tunav.tunavmedi.action.LOGOUT";
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -177,31 +171,25 @@ public class LoginActivity extends Activity implements ServiceConnection {
         }
     }
 
-    private void doBindService() {
-        Log.v(tag, "doBindService()");
-        doUnBindService();
-        if (!mBound) {
-            Intent loginIntent = new Intent(this, AuthService.class);
-            try {
-                bindService(loginIntent, this, Context.BIND_AUTO_CREATE);
-            } catch (SecurityException tr) {
-                Log.e(tag, "SecurityException");
-                Log.d(tag, "SecurityException", tr);
-            }
-        }
-    }
-
-    private void doUnBindService() {
-        Log.v(tag, "doUnBindService()");
-        if (mBound) {
-            unbindService(this);
-        }
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        finish();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(tag, "onCreate()");
+        mHelper = new AuthenticationHelper(this);
+
+        spName = getResources().getString(R.string.sp_user);
+        spIsLogged = getResources().getString(R.string.spkey_is_logged);
+        spDisplayName = getResources().getString(R.string.spkey_name);
+        spPhoto = getResources().getString(R.string.spkey_password);
+
+        mHelper.logout();
+        onLogout();
 
         setContentView(R.layout.activity_login);
         // Set up the login form.
@@ -253,6 +241,37 @@ public class LoginActivity extends Activity implements ServiceConnection {
         super.onDestroy();
     }
 
+    public void onLogin(String name, String photo) {
+        Log.v(tag, "onLogin()");
+        SharedPreferences.Editor editor = getSharedPreferences(
+                spName, Context.MODE_PRIVATE).edit();
+        editor.putBoolean(spIsLogged, true);
+        Log.v(tag, "sharedpreference set: " + spIsLogged);
+
+        editor.putString(spDisplayName, mHelper.getDisplayName());
+        Log.v(tag, "sharedpreference set: " + spDisplayName);
+
+        editor.putString(spPhoto, mHelper.getPhoto());
+        Log.v(tag, "sharedpreference set: " + spPhoto);
+
+        editor.commit();
+        Log.d(tag, "SharedPreferences commited!");
+    }
+
+    public void onLogout() {
+        Log.i(tag, "onLogout()");
+        SharedPreferences.Editor spEditor = getSharedPreferences(spName, Context.MODE_PRIVATE)
+                .edit();
+        spEditor.remove(spIsLogged);
+        Log.v(tag, "sharedpreference removed: " + spIsLogged);
+        spEditor.remove(spDisplayName);
+        Log.v(tag, "sharedpreference removed: " + spDisplayName);
+        spEditor.remove(spPhoto);
+        Log.v(tag, "sharedpreference removed: " + spPhoto);
+        spEditor.commit();
+        Log.d(tag, "SharedPreferences commited!");
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.i(tag, "onOptionItemSelected()");
@@ -272,7 +291,6 @@ public class LoginActivity extends Activity implements ServiceConnection {
         // Suspend UI updates, threads, or CPU intensive processes
         // that don't need to be updated when the Activity isn't
         // the active foreground Activity.
-        doUnBindService();
         super.onPause();
     }
 
@@ -304,7 +322,6 @@ public class LoginActivity extends Activity implements ServiceConnection {
         Log.v(tag, "onResume()");
         // Resume any paused UI updates, threads, or processes required
         // by the Activity but suspended when it was inactive.
-        doBindService();
     }
 
     // Called to save UI state changes at the
@@ -317,22 +334,6 @@ public class LoginActivity extends Activity implements ServiceConnection {
         // killed and restarted by the run time.
         Log.v(tag, "onSaveInstanceState()");
         super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-        Log.v(tag, "onServiceConnected()");
-        // We've bound to LocalService, cast the IBinder and get
-        // LocalService instance
-        LocalBinder binder = (LocalBinder) service;
-        mAuthService = binder.getService();
-        mBound = true;
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-        Log.v(tag, "onServiceDisconnected()");
-        mBound = false;
     }
 
     // Called at the start of the visible lifetime.

@@ -15,5 +15,7 @@
     <string name="spkey_is_logged">isLogged</string>
     <string name="spkey_id">ID</string>
     <string name="spkey_password">Password</string>
+    <string name="spkey_name">NAME</string>
+    <string name="spkey_photo">PHOTO</string>
 
 </resources>
