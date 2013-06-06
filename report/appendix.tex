@@ -112,21 +112,40 @@ L'usage de Git est très simple, un des workflow simplifier serai comme suit:
 
 \item On à maintenant réussi a corrigé le bug en question, et aussi travailler un peut sur notre rapport. On peut avoir un rapport sur les fichiers modifier pendant ce processus (listing \ref{lst:git_status}).
 
+\item Vérification faite, on valide nos modification pour les enregistrés dons l'historique des modifications, chaque validation est accompagné par un message détaillant les ajouts effectuées (listing \ref{lst:git_commit}).
+
 \item Après on peut appliquer nos changements dans la branche master de notre répertoire Git (listing \ref{lst:git_merge}).
 
 \end{itemize}
 
 \begin{lstlisting}[language=bash, label=lst:git_branch, caption=Git Branch]
 
+$  PFE git:(master)  git branch bug_MenuItem
+
 \end{lstlisting}
 
 \begin{lstlisting}[language=bash, label=lst:git_checkout, caption=Git checkout]
+
+$  PFE git:(bug_MenuItem)  git checkout master
+
+M   README.md
+M   pfe.sublime-project
+M   report/2_cadre_general.tex
+M   report/4_travail.tex
+M   report/acronyms.tex
+M   report/appendix.tex
+M   report/bibliography.bib
+M   report/report.pdf
+M   report/report.tex
+M   res/ep/Scenarios.ep
+M   res/ep/architecture.ep
+M   source/tunavmedi/src/com/tunav/tunavmedi/fragment/PatientListFragment.java
 
 \end{lstlisting}
 
 \begin{lstlisting}[language=bash, label=lst:git_status, caption=Git status]
 
-➜  PFE git:(bug_MenuItem) ✗ git status
+$  PFE git:(bug_MenuItem)  git status
 
 # On branch bug_MenuItem
 # Changes not staged for commit:
@@ -161,6 +180,94 @@ no changes added to commit (use "git add" and/or "git commit -a")
 
 \end{lstlisting}
 
+\begin{lstlisting}[language=bash, label=lst:git_commit, caption=Git Commit]
+
+$  PFE git:(bug_MenuItem)  git commit -a
+
+### TEXT EDITOR START ###
+App:
+
+* Fixed Menu Item Bug
+
+Report:
+
+* Worked on the git annexe chapter
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch bug_MenuItem
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#   modified:   README.md
+#   modified:   pfe.sublime-project
+#   modified:   report/2_cadre_general.tex
+#   modified:   report/4_travail.tex
+#   modified:   report/acronyms.tex
+#   modified:   report/appendix.tex
+#   modified:   report/bibliography.bib
+#   modified:   report/report.pdf
+#   modified:   report/report.tex
+#   new file:   res/architecture-interfaces.png
+#   modified:   res/ep/Scenarios.ep
+#   modified:   res/ep/architecture.ep
+#   new file:   res/ep/scenarioactors.png
+#   new file:   res/ep/scenarioalltunav.png
+#   new file:   res/ep/scenariointeractions.png
+#   new file:   res/ep/scenarioother.png
+#   new file:   res/sc_display.png
+#   new file:   res/sc_options.png
+#   new file:   res/sc_urgent.png
+#   modified:   source/tunavmedi/src/com/tunav/tunavmedi/fragment/PatientListFragment.java
+#
+#### TEXT EDITOR END ###
+
+[bug_MenuItem e951505] App:
+ 20 files changed, 743 insertions(+), 254 deletions(-)
+ create mode 100644 res/architecture-interfaces.png
+ create mode 100644 res/ep/scenarioactors.png
+ create mode 100644 res/ep/scenarioalltunav.png
+ create mode 100644 res/ep/scenariointeractions.png
+ create mode 100644 res/ep/scenarioother.png
+ create mode 100644 res/sc_display.png
+ create mode 100644 res/sc_options.png
+ create mode 100644 res/sc_urgent.png
+
+\end{lstlisting}
+
 \begin{lstlisting}[language=bash, label=lst:git_merge, caption=Git merge]
+
+$  PFE git:(master) git merge bug_MenuItem 
+Updating 330f830..e951505
+Fast-forward
+ README.md                                          |    4 +-
+ pfe.sublime-project                                |    5 +
+ report/2_cadre_general.tex                         |   27 +-
+ report/4_travail.tex                               |   94 +++-
+ report/acronyms.tex                                |    3 +-
+ report/appendix.tex                                |  159 ++++++-
+ report/bibliography.bib                            |   35 +-
+ report/report.pdf                                  |  Bin 2495326 -> 3213273 bytes
+ report/report.tex                                  |    8 +-
+ res/architecture-interfaces.png                    |  Bin 0 -> 202897 bytes
+ res/ep/Scenarios.ep                                |  462 ++++++++++++--------
+ res/ep/architecture.ep                             |  188 ++++++--
+ res/ep/scenarioactors.png                          |  Bin 0 -> 126059 bytes
+ res/ep/scenarioalltunav.png                        |  Bin 0 -> 183287 bytes
+ res/ep/scenariointeractions.png                    |  Bin 0 -> 155178 bytes
+ res/ep/scenarioother.png                           |  Bin 0 -> 186564 bytes
+ res/sc_display.png                                 |  Bin 0 -> 136024 bytes
+ res/sc_options.png                                 |  Bin 0 -> 84087 bytes
+ res/sc_urgent.png                                  |  Bin 0 -> 109422 bytes
+ .../tunavmedi/fragment/PatientListFragment.java    |   12 +-
+ 20 files changed, 743 insertions(+), 254 deletions(-)
+ create mode 100644 res/architecture-interfaces.png
+ create mode 100644 res/ep/scenarioactors.png
+ create mode 100644 res/ep/scenarioalltunav.png
+ create mode 100644 res/ep/scenariointeractions.png
+ create mode 100644 res/ep/scenarioother.png
+ create mode 100644 res/sc_display.png
+ create mode 100644 res/sc_options.png
+ create mode 100644 res/sc_urgent.png
 
 \end{lstlisting}
