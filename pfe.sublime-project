@@ -6,6 +6,9 @@
             "name": "Report",
             "file_exclude_patterns": 
             [".*",
+            "*.bcf",
+            "*.dvi",
+            "*.xml",
             "*.aux",
             "*.pdf",
             "*.toc",
@@ -35,6 +38,8 @@
             "name": "Presentation",
             "file_exclude_patterns": 
             [".*",
+            "*.nav",
+            "*.snm",
             "*.aux",
             "*.pdf",
             "*.toc",

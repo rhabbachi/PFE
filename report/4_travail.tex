@@ -4,9 +4,9 @@
 
 \section{Introduction du chapitre}
 
-Dans ce chapitre on procède à la présentation des cas utilisateur de
+Dans ce chapitre on va procéder à la présentation des cas utilisateur de
 notre système ainsi que l'identification des acteurs impliqués dans ces
-cas. Puis on décortique l’implémentation que nous proposons en citant
+cas. Puis on va décortiquer l’implémentation que nous proposons en citant
 éventuellement nos motifs et intentions.
 
 \section{Vue d'Ensemble}
@@ -154,7 +154,7 @@ que le Sujet invoque quant les données changes~\cite{jdp_observer}.
 \begin{figure}[H]
 \center
 \includegraphics[width=0.8\textwidth]{Observer}
-\caption{Diagramme UML du patron de conception Observateur~\cite{wiki:observer}}
+\caption{Diagramme UML du patron de conception Observateur~\cite{wikipedia:observer}}
 \label{fig:observer}
 \end{figure}
 
@@ -551,7 +551,7 @@ Cette opération est réalisé la méthode static \dev{java.util.Collections.sor
 
 \paragraph{Affichage du dossier médicale}
 
-Le dossier étant sous la forme d'un document HTML, pour l'afficher on utilise un \dev{android.webkit.WebView} (voir listing \ref{lst:xml_patientdisplay})qui nous offre les capacités d'un vrais navigateur web.
+Le dossier étant sous la forme d'un document HTML, pour l'afficher on utilise un \dev{WebView}\footnote{android.webkit.WebView} (listing \ref{lst:xml_patientdisplay})qui nous offre les capacités d'affichage d'un vrais navigateur web.
 
 
 \begin{lstlisting}[language=xml, label=lst:xml_patientdisplay, caption=Déclaration XML du \gls{ui} utilisé par PatientDisplay]
@@ -607,8 +607,84 @@ Le dossier étant sous la forme d'un document HTML, pour l'afficher on utilise u
 
 \end{lstlisting}
 
+\begin{figure}
+\center
+\includegraphics[height=0.4\textheight]{sc_urgent}
+\caption{Capture écran de l'interface affiché par \dev{PatientListFragment}}
+\label{fig:sc_urgent}
+\end{figure}
+
+\begin{figure}
+\center
+\includegraphics[height=0.4\textheight]{sc_display}
+\caption{Capture écran de l'interface affiché par \dev{PatientDisplay}}
+\label{fig:sc_display}
+\end{figure}
+
+\begin{figure}
+\center
+\includegraphics[height=0.4\textheight]{sc_options}
+\caption{Capture écran de l'interface affiché par \dev{PatientOptions}}
+\label{fig:sc_options}
+\end{figure}
 
 \section{Déploiement et Tests}
+
+Pour transférer notre application sur le terminal \android{} on utilise un outil fourni dans l'\gls{sdk}: \gls{adb}.
+
+\gls{adb}\cite{tools:adb} est un outil versatile en ligne de commande qui nous permet de communiqué avec une instance d'un emulateur ou un equipement \android{} connecter. C'est un programme de type client-serveur qui inclue 3 composants:
+
+\begin{itemize}
+
+\item Un client, qui tourne sur notre machine de développement. On peut invoqué
+un client depuis un invite de commande par l’envoi d'une commande \gls{adb}.
+D'autre outils \android{} comme le plugin \gls{adt} et le \gls{ddms} crée eux
+aussi des clients \gls{adb}.
+
+\item Un serveur, qui tourne comme un processus de fond dans notre machine de
+développement. Le serveur gère les communications entre le client et le démon
+\gls{adb} qui tourne dans une instance d'un émulateur ou un terminal.
+
+\item Un démon, qui tourne comme un processus de fond dans chaque instance de l’émulateur ou terminal.
+
+\end{itemize}
+
+On peut retrouvé l'outil \gls{adb} dans le dossier <sdk>/platform-tools/.
+
+On peut utilisé \gls{adb} pour copier une application depuis notre machine de développement et l'installer dans une instance d'un émulateur ou un terminal, pour cela on utilise la commande \cmd{install}. Cette commande exige comme paramètre le chemin du fichier .apk que nous voulant l'installer.
+
+
+\begin{lstlisting}[language=bash, label=lst:adb_install, caption=Exemple d'utilisation du commande adb install]
+
+$adb install ~/tunavmedi.apk
+
+\end{lstlisting}
+
+Notant que avec Eclipse équiper du plugin \gls{adt} on n'a pas besoin d'utilisé
+\gls{adb} directement pour installer notre application sur l'émulateur ou le
+terminal. Le plugin \gls{adt} s'occupe du packaging et de l'installation de
+l'application pour nous.
+
+
+Pour désinstaller une application on utilise le \en{Package Manager}. On peut
+envoyer des commandes avec le \en{Package Manager} pour effectuer des actions et
+des opération de recherches sur les paquetages des applications installer dans
+l'émulateur ou le terminal. Listing \ref{lst:adb_pm} présente la syntaxe
+générale de l'outil tan-disque le listing \ref{lst:adb_uninstall} présente la
+syntaxe utilisé pour désinstaller notre application.
+
+
+\begin{lstlisting}[language=bash, label=lst:adb_pm, caption=Syntaxe génerale de l'utilisation du Package Manager]
+
+$pm <command>
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, label=lst:adb_uninstall, caption=Exemple de désinstallation]
+
+$adb shell pm uninstall com.tunav.tunavmedi
+
+\end{lstlisting}
 
 \subsection{Détecteur de bugs: Android Lint}
 
@@ -652,4 +728,12 @@ Dans Eclipse, \android{} Lint est disponible à travers le menu Window $\rightar
 \label{fig:lint_eclipse}
 \end{figure}
 
+\subsection[UI/Application Exerciser Monkey]{\en{UI/Application Exerciser Monkey}}
+
+\en{Monkey} \cite{tools:monkey} est un programme qui tourne sur notre émulateur ou terminal \android{} et qui génère des flux pseudo-aléatoire d’événements utilisateur comme par exemple les clics, les touchés, les geste, ou encore un nombre d’événements de niveau système. On peut utilisés \en{Monkey} pour effectuée des testes de stresse sur notre application dans une manière aléatoire et répétitive.
+
+L'annexe \ref{chptr:monkey} montre un exemple de test effectué avec l'outil \en{Monkey} sur notre application.
+
 \section{Conclusion du chapitre}
+
+Dans ce chapitre on a passer en revu les solutions choisie pour résoudre les problématiques posés par le projet ainsi que les outils et les techniques utilisés pour développer et tester notre application.

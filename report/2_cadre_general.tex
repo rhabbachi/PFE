@@ -10,6 +10,12 @@ différents facteurs qui ont pesé lors du passage vers la réalisation.
 
 \section{Présentation de l'organisme d'accueil}  
 
+\begin{figure}
+\center
+\includegraphics[scale=1]{tunav-logo}
+\caption{Logo \textsc{Tunav}.}
+\end{figure}
+
 TUNAV se situe à la Cité Technologique des Communications, Parc
 Technologique El Gazala à l’ARIANA, et a été fondé par son Président
 Directeur Général Mohamed Anis Kallel.
@@ -33,6 +39,18 @@ localisation qui peux être exploité dans le domaine médical.
 
 \section{Présentation du projet}
 
+\begin{figure}
+\center
+\includegraphics[width=0.8\textwidth]{scenario-other}
+\caption{Illustration des besoins fonctionnels.}
+\end{figure}
+
+\begin{figure}
+\center
+\includegraphics[width=0.8\textwidth]{architecture-interfaces}
+\caption{Illustration des besoins techniques.}
+\end{figure}
+
 \subsection{Utilisateurs Cibles}
 
 Cette application vise \underline{principalement} les médecins. Et
@@ -54,9 +72,6 @@ patient en fonction de la position actuelle du terminal.
 
 \item Le médecin peut télé-consulter le dossier médical du patient.
 
-% \item Le médecin peut effectuer des maintenances des données contenu
-% dans les dossiers médicaux des patients.
-
 \end{itemize}
 
 \subsubsection{Besoins non fonctionnels}
@@ -72,7 +87,11 @@ sont des considérations à tenir en compte.
 \subsubsection{Besoins techniques}
 \begin{itemize}
 
-\item L’application mobile vise à utiliser les systèmes déjà en place des établissements clients. Vu l’absence de standardisation et les différentes implémentations possibles, une certaine abstraction est requise pour pouvoir déployer l’application dans des environnements possibles avec le minimum de modification.
+\item L’application mobile vise à utiliser les systèmes déjà en place des
+établissements clients pour réduire les coûts. Vu l’absence d'un protocole
+standards et les différentes implémentations possibles des différents clients,
+l'implémentation d'une couche d’accès abstraite est requise pour pouvoir
+déployer l’application avec le minimum de modification.
 
 \end{itemize}
 

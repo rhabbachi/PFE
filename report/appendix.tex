@@ -1,7 +1,91 @@
 %!TEX root = report.tex
 \appendix
-\chapter{Structure du project}
-\chapter{Usage du gestionnaire de version Git}
+
+\chapter{UI/Application Exerciser Monkey}
+\label{chptr:monkey}
+
+\begin{lstlisting}[language=bash, label=lst:adb_monkey, caption=Utilisation de l'UI/Application Exerciser Monkey]
+
+$ adb shell monkey -v -p com.tunav.tunavmedi 300
+:Monkey: seed=1371512317847 count=300
+:AllowPackage: com.tunav.tunavmedi
+:IncludeCategory: android.intent.category.LAUNCHER
+:IncludeCategory: android.intent.category.MONKEY
+// Event percentages:
+//   0: 15.0%
+//   1: 10.0%
+//   2: 2.0%
+//   3: 15.0%
+//   4: -0.0%
+//   5: 25.0%
+//   6: 15.0%
+//   7: 2.0%
+//   8: 2.0%
+//   9: 1.0%
+//   10: 13.0%
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=com.tunav.tunavmedi/.activity.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.tunav.tunavmedi/.activity.MainActivity } in package com.tunav.tunavmedi
+:Sending Touch (ACTION_DOWN): 0:(190.0,120.0)
+:Sending Touch (ACTION_UP): 0:(191.60419,128.55092)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,-3.0)
+:Sending Touch (ACTION_DOWN): 0:(473.0,23.0)
+:Sending Touch (ACTION_UP): 0:(473.1426,23.805832)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,3.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,-5.0)
+:Sending Touch (ACTION_DOWN): 0:(5.0,341.0)
+:Sending Touch (ACTION_UP): 0:(4.349031,340.68045)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-3.0)
+:Sending Touch (ACTION_DOWN): 0:(611.0,766.0)
+    //[calendar_time:2013-06-05 10:14:32.168  system_uptime:1098585565]
+    // Sending event #100
+:Sending Touch (ACTION_UP): 0:(678.4827,701.28955)
+:Sending Touch (ACTION_DOWN): 0:(680.0,240.0)
+:Sending Touch (ACTION_UP): 0:(669.64984,250.41994)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,2.0)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,4.0)
+:Sending Touch (ACTION_DOWN): 0:(33.0,339.0)
+:Sending Touch (ACTION_UP): 0:(20.433603,303.77527)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(556.0,636.0)
+:Sending Touch (ACTION_UP): 0:(592.86835,561.529)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,2.0)
+:Sending Touch (ACTION_DOWN): 0:(233.0,837.0)
+:Sending Touch (ACTION_UP): 0:(226.95929,825.0325)
+:Sending Touch (ACTION_DOWN): 0:(71.0,554.0)
+:Sending Touch (ACTION_UP): 0:(73.91967,528.69226)
+:Sending Touch (ACTION_DOWN): 0:(30.0,341.0)
+:Sending Touch (ACTION_UP): 0:(84.22933,308.51373)
+    //[calendar_time:2013-06-05 10:14:32.873  system_uptime:1098586237]
+    // Sending event #200
+    //[calendar_time:2013-06-05 10:14:32.874  system_uptime:1098586238]
+    // Sending event #200
+:Sending Trackball (ACTION_MOVE): 0:(1.0,-2.0)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,0.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(782.0,261.0)
+:Sending Touch (ACTION_UP): 0:(789.2555,259.95465)
+:Sending Touch (ACTION_DOWN): 0:(480.0,1180.0)
+:Sending Touch (ACTION_UP): 0:(517.4512,1113.8969)
+:Sending Touch (ACTION_DOWN): 0:(775.0,965.0)
+:Sending Touch (ACTION_UP): 0:(762.51733,968.3565)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,-4.0)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,-2.0)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,1.0)
+:Sending Touch (ACTION_DOWN): 0:(89.0,1185.0)
+:Sending Touch (ACTION_UP): 0:(109.65848,1195.4576)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-5.0)
+:Sending Touch (ACTION_DOWN): 0:(339.0,280.0)
+:Sending Touch (ACTION_UP): 0:(351.69287,274.5476)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-1.0)
+Events injected: 300
+:Sending rotation degree=0, persist=false
+:Dropped: keys=0 pointers=0 trackballs=0 flips=0 rotations=0
+## Network stats: elapsed time=1986ms (0ms mobile, 1986ms wifi, 0ms not connected)
+
+\end{lstlisting}
+
+\chapter{Logiciel de gestion de versions Git}
 
 \begin{figure}
 \center
@@ -9,3 +93,74 @@
 \caption{Logo du logiciel de gestion de version Git}
 \label{fig:git}
 \end{figure}
+
+\en{Git}\cite{wikipedia:git} est un système de gestion de versions et un gestionnaire de code source connu pour sa rapidité. Conçu et développée initialement par \textsf{Linus Torvalds} pour le développement du \en{Kernel} \en{Linux}, Git a depuis éte adopter par plusieurs autre projets.
+
+Chaque répertoire de travail de Git est un dépôt complet avec un historique complet et des capacité de suivit de version, il est indépendant d'un accès réseau ou d'un serveur centrale.
+
+Git est un logiciel libre distribuer sous les termes de la licence  \en{GNU General Public License} version 2.
+
+L'usage de Git est très simple, un des workflow simplifier serai comme suit:
+
+\begin{itemize}
+
+\item La branche master contient la dernière version de l'application. Malheureusement, cette version contient un bug dans le \dev{MenuItem}
+
+\item Pour éviter, pendant qu'on corrige le bug, d'altérer la version courante de  l'application de façon nuisible, on crée une branche différente ou on peut tester nos modification tranquillement (listing \ref{lst:git_branch}).
+
+\item On peut passer vers la nouvelle branche crée précédemment (listing \ref{lst:git_checkout}).
+
+\item On à maintenant réussi a corrigé le bug en question, et aussi travailler un peut sur notre rapport. On peut avoir un rapport sur les fichiers modifier pendant ce processus (listing \ref{lst:git_status}).
+
+\item Après on peut appliquer nos changements dans la branche master de notre répertoire Git (listing \ref{lst:git_merge}).
+
+\end{itemize}
+
+\begin{lstlisting}[language=bash, label=lst:git_branch, caption=Git Branch]
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, label=lst:git_checkout, caption=Git checkout]
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, label=lst:git_status, caption=Git status]
+
+➜  PFE git:(bug_MenuItem) ✗ git status
+
+# On branch bug_MenuItem
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#   modified:   README.md
+#   modified:   pfe.sublime-project
+#   modified:   report/2_cadre_general.tex
+#   modified:   report/4_travail.tex
+#   modified:   report/acronyms.tex
+#   modified:   report/appendix.tex
+#   modified:   report/bibliography.bib
+#   modified:   report/report.pdf
+#   modified:   report/report.tex
+#   modified:   res/ep/Scenarios.ep
+#   modified:   res/ep/architecture.ep
+#   modified:   source/tunavmedi/src/com/tunav/tunavmedi/fragment/PatientListFragment.java
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#   res/architecture-interfaces.png
+#   res/ep/scenarioactors.png
+#   res/ep/scenarioalltunav.png
+#   res/ep/scenariointeractions.png
+#   res/ep/scenarioother.png
+#   res/sc_display.png
+#   res/sc_options.png
+#   res/sc_urgent.png
+no changes added to commit (use "git add" and/or "git commit -a")
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, label=lst:git_merge, caption=Git merge]
+
+\end{lstlisting}

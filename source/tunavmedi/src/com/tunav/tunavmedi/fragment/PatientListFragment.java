@@ -150,9 +150,15 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         SharedPreferences sharedPref = getActivity().getSharedPreferences(spPatientList,
                 Context.MODE_PRIVATE);
 
-        MenuItem item = (MenuItem) getActivity().findViewById(R.id.patientlist_menu_show);
-        item.setChecked(
-                sharedPref.getBoolean(spkeyShowAll, true));
+        MenuItem item = menu.findItem(R.id.patientlist_menu_show);
+
+        boolean showAll = sharedPref.getBoolean(spkeyShowAll, true);
+
+        if (showAll) {
+            item.setTitle(R.string.patientlist_menu_show_all_on);
+        } else {
+            item.setTitle(R.string.patientlist_menu_show_all_off);
+        }
     }
 
     // Called once the Fragment has been created in order for it to

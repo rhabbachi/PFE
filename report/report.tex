@@ -26,9 +26,6 @@ a4paper,
     pdfkeywords={ENIG, Tunav, Stage, Stage ingenieur, project de fin d'etudes, LaTeX, PDF, hyperlinks}
 }
 
-\usepackage{cite}
-\bibliographystyle{unsrt}
-
 \usepackage{color}
 \usepackage{xcolor}
 \usepackage{listings}
@@ -60,6 +57,7 @@ a4paper,
 \newcommand{\dev}[1]{\textit{#1}}
 \newcommand{\pct}{PowerChart Touch\texttrademark}
 \newcommand{\tm}[1]{\textbf{#1}\texttrademark}
+\newcommand{\cmd}[1]{\textbf{#1}}
 
 \graphicspath{{../res/}}
 
@@ -82,6 +80,10 @@ a4paper,
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
 \renewcommand\thesubsubsection{\thesubsection.\alph{subsubsection}}
+
+\usepackage{csquotes}
+\usepackage{cite}
+\bibliographystyle{unsrt}
 
 \begin{document}
 
