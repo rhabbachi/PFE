@@ -282,7 +282,7 @@ public class PatientsService extends Service implements
         if (mHelper.pushPatients(mPatientsCache) > 0) {
             updateListeners();
         } else {
-            Toast.makeText(this, "Probleme while updating from server!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Sync Problems!", Toast.LENGTH_LONG).show();
         }
     }
 

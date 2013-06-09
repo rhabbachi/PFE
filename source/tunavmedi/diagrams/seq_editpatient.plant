@@ -1,0 +1,34 @@
+@startuml
+hide footbox
+title "Edit Patient Status"
+
+actor "Doctor" as doc
+entity "PatientListFragment" as list
+control "PatientsAdapter" as adapter
+control "PatientsService" as service
+
+activate list
+activate adapter
+activate service
+
+doc -> list : onLongClickItem(position)
+list -> adapter : Patient:getItem(position)
+
+create boundary "PatientOptions" as options
+list -> options : newInstance(Patient)
+activate options
+
+options -> doc : Show Dialog Box Options
+doc -> options : Click Button
+
+alt BUTTON_POSITIVE
+options -> list : onActivityResult(position, new Patient, RESULT_OK)
+list -> service : syncPatient(new Patient)
+ref over service : Upload Patients
+
+else BUTTON_NEGATIVE || DISMISS
+options -> list : onActivityResult(RESULT_CANCELED);
+end
+
+deactivate options
+@enduml

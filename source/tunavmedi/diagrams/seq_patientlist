@@ -1,0 +1,37 @@
+@startuml
+hide footbox
+title "sd Show Patient List"
+
+actor "Doctor" as doc
+boundary "PatientListFragment" as list
+control "PatientsService" as service
+
+activate service
+
+== Initialization ==
+list -> list : onCreate()
+activate list
+
+list -> list : View:inflate(android.R.layout.list_content)
+
+create control "PatientsAdapter" as adapter
+list -> adapter : create
+activate adapter
+
+list ->> service : bindService()
+list <-- service : isBound
+
+alt isBound
+adapter -> service : addPatientListener()
+
+else
+list -> doc : show message "No Patient"
+end
+
+== Post-initialization || Patients List change || Location change ==
+service -> adapter : updateDataSet(Patients, Location)
+adapter -> adapter : Comparator<Patient> : generateComparator()
+adapter -> adapter : sort(Comparator, PatientList)
+adapter -> list : notifyDataSetChanged()
+list -> doc : Display Patient List View
+@enduml

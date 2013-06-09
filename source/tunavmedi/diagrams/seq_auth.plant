@@ -1,32 +1,28 @@
 @startuml
 hide footbox
-participant "LoginActivity:Activity" as login
+
 actor "Doctor" as doc
-participant "UserLoginTask:AsyncTask<Void, Void, Boolean>" as logintask
-participant "AuthHelper:AuthenticationHandler" as helper
-participant "sharedPrefs:SharedPreferentce" as shared
+boundary "LoginActivity:Activity" as login
 
-activate login
-login -> helper : new
+create entity "AuthHelper:AuthenticationHandler" as helper
+login -> helper : create
+
+login ->> helper : logout()
 activate helper
-activate shared
+deactivate helper
 
-login --> helper : logout()
-login -> shared : onLogout()
-activate shared
-shared -> shared : commit()
-deactivate shared
+login -> login : onLogout()
 
 loop
 
 doc -> login : id, password
 
-alt input wrong
+alt wrong input
 login -> doc : display input error message
 
-else input correct
-login -> logintask : new
-activate logintask
+else
+create control "UserLoginTask:AsyncTask<Void, Void, Boolean>" as logintask
+login -> logintask : create
 login -> logintask : execute()
 
 logintask -> logintask : onPreExecete()
@@ -35,9 +31,8 @@ deactivate logintask
 
 logintask -> logintask : doInBackgroud()
 activate logintask
-logintask --> helper : login(id, password)
-helper <- logintask : getStatus()
-helper -> logintask : success
+logintask ->> helper : login(id, password)
+helper <- logintask : success:getStatus()
 deactivate logintask
 
 logintask -> logintask : onPostEexecute(success)
@@ -46,11 +41,9 @@ alt success == true
 
 break
 
-login -> shared : onLogin()
-
-activate shared
-shared -> shared : commit()
-deactivate shared
+login -> login : onLogin()
+activate login
+deactivate login
 
 logintask -> login : setReselt(Context.RESULT_OK)
 logintask -> login : finish()
@@ -58,10 +51,9 @@ end
 
 else success == false
 
-logintask -> helper : getError()
-logintask <- helper : loginError
+logintask -> helper : loginError:getError()
 logintask -> login : setError(loginError)
-login -> doc : display login error message
+login -> doc : Display Login Error Message
 
 end
 deactivate logintask
@@ -71,6 +63,4 @@ deactivate logintask
 
 end
 deactivate helper
-deactivate shared
-deactivate login
 @enduml

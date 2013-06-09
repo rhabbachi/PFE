@@ -1,0 +1,22 @@
+@startuml
+hide footbox
+title "Display Patient Record"
+
+actor "Doctor" as doc
+entity "PatientListFragment" as list
+control "PatientAdapter" as adapter
+boundary "PatientDisplay" as display
+
+activate list
+activate adapter
+
+doc -> list : ItemClick(position)
+list -> adapter : Patient:getItem(position)
+create display
+list -> display : newInstance(Patient)
+activate display
+display -> doc : Display Patient Information and Record
+doc -> display : DISMISS || BACK BUTTON
+deactivate display
+
+@enduml
