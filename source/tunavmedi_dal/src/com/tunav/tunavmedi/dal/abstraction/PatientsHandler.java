@@ -1,6 +1,7 @@
 
 package com.tunav.tunavmedi.dal.abstraction;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.tunav.tunavmedi.dal.datatype.Patient;
@@ -23,6 +24,10 @@ public abstract class PatientsHandler extends Observable {
 
     protected static void setNotifyTask(Runnable runnable) {
         notifyTask = runnable;
+    }
+
+    public PatientsHandler(Context context) {
+
     }
 
     public Runnable getNotifyTask() {

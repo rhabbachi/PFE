@@ -1,20 +1,15 @@
 %!TEX root = report.tex
 
-\chapter{Études Préliminaires}
+\chapter{Environnement \& Étude du Besoin}
 
 \section{Introduction du chapitre}
 
-Dans ce chapitre on va procéder à la présentation des cas utilisateur de
-notre système ainsi que l'identification des acteurs impliqués dans ces
-cas. Puis on va décortiquer l’implémentation que nous proposons en citant
-éventuellement nos motifs et intentions.
+%TODO
 
-\section{Environnement de travail}
-
-\subsection{Environnement de développement}%TODO
+\section{Environnement de développement}%TODO
 Plusieurs outils on était mise à contribution pour développer l'application, tant que sur le plan logiciel que matériel.
 
-\subsubsection{Environnement Logiciel}
+\subsection{Environnement Logiciel}
 Voici une liste des outils logiciels utilisés pendant le développement de l'application.
 
 \begin{description}
@@ -48,11 +43,51 @@ Voici une liste des outils logiciels utilisés pendant le développement de l'ap
 \footnotetext[8]{http://www.eclipse.org/egit/}
 \footnotetext[9]{http://pencil.evolus.vn/}
 
-\subsubsection{Environnement Matériel}
+\subsection{Environnement Matériel}
 
 Le développement de l'application est fait avec une tablette Asus Nexus 7 (mise à jour à \android{} 4.2.2 \en{Jelly Bean}).
 
-\section{Étude fonctionnel}
+\section{Étude fonctionnelle}
+
+\section{Spécification des Besoins}
+
+\subsection{Besoins fonctionnels}
+
+\begin{itemize}
+
+\item Le médecin doit être capable à partir de son terminal d’avoir des
+informations sur les patients qui lui sont assigné en fonction de leur position
+géographique.
+
+\item L'application doit être capable de détecter la proximité d'un
+patient en fonction de la position actuelle du terminal.
+
+\item Le médecin peut télé-consulter le dossier médical du patient.
+
+\end{itemize}
+
+\subsection{Besoins non fonctionnels}
+
+\begin{itemize}
+
+\item Une bonne ergonomie qui vise à faciliter l'obtention de
+l'information, avec un minimum d'effort pour l'utilisateur cible et
+avec le moindre risque d'erreur. Les choix graphiques et conceptuels
+sont des considérations à tenir en compte.
+
+\end{itemize}
+
+\subsection{Besoins techniques}
+
+\begin{itemize}
+
+\item L’application mobile vise à utiliser les systèmes déjà en place des
+établissements clients pour réduire les coûts. Vu l’absence d'un protocole
+standards et les différentes implémentations possibles des différents clients,
+l'implémentation d'une couche d’accès abstraite est requise pour pouvoir
+déployer l’application avec le minimum de modification.
+
+\end{itemize}
 
 \subsection{Identification des acteurs}
 
@@ -82,13 +117,6 @@ On peut présenter les interactions fonctionnelles entre les acteurs gouverner p
 \label{fig:uml_usecase}
 \end{figure}
 
-% \subsubsection{Cas: Authentifier}
-% \subsubsection{Cas: Détecter la position du terminal}
-% \subsubsection{Cas: Afficher la liste des patients}
-% \subsubsection{Cas: Trier la liste des patients}
-% \subsubsection{Cas: Modifier l’état d'un patients}
-% \subsubsection{Cas: Afficher le dossier médical}
-% \subsubsection{Cas: Télécharger la liste des patients}
-% \subsubsection{Cas: Mettre à jour la liste des patients}
-
 \subsection{Table de priorité}
+
+%TODO

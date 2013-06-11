@@ -1,6 +1,6 @@
 @startuml
 hide footbox
-title "Edit Patient Status"
+title "sd Edit Patient Status"
 
 actor "Doctor" as doc
 entity "PatientListFragment" as list
@@ -24,7 +24,7 @@ doc -> options : Click Button
 alt BUTTON_POSITIVE
 options -> list : onActivityResult(position, new Patient, RESULT_OK)
 list -> service : syncPatient(new Patient)
-ref over service : Upload Patients
+ref over service : "sd Upload Patients"
 
 else BUTTON_NEGATIVE || DISMISS
 options -> list : onActivityResult(RESULT_CANCELED);

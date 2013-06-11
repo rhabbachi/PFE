@@ -1,0 +1,26 @@
+@startuml
+hide footbox
+
+title "sd Upload Patients"
+
+actor "Doctor" as doc
+control "PatientsService" as service
+entity "PatientsHelper" as helper
+entity "PatientsAdapter" as adapter
+
+service -> service : updatePatientArray(mPatientsSyncQueue, Patient)
+service -> service : updatePatientArray(mPatientsCache, Patient)
+
+par
+service ->> helper : nUpload:pushPatients(mPatientsSyncQueue)
+alt nUpload != mPatientsSyncQueue.size()
+service -> doc : Toast Message ("Sync Problem!")
+service -> service : reschedule sync after SYNC_DELAY
+else
+service -> service :mPatientsSyncQueue .clear()
+end
+
+else
+service -> adapter : updatePatientListener()
+end
+@enduml

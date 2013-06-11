@@ -1,7 +1,8 @@
 %!TEX root = report.tex
-\chapter{Études Comportementaux}
+\chapter{Étude Comportementalle}
 
 \section{Introduction du Chapitre}
+%TODO
 
 \section{Navigation dans l'interface utilisateur}
 
@@ -156,7 +157,7 @@ La figure \ref{fig:seq_display} présente le comportement de l'application pour 
 \begin{figure}
 \center
 \includegraphics[width=0.8\textwidth]{diagrams/seq_editpatient}
-\caption{Diagramme de séquence \gls{uml} de modification du status du patient}
+\caption{Diagramme de séquence \gls{uml} de modification du status du patient.}
 \label{fig:seq_edit}
 \end{figure}
 
@@ -213,4 +214,70 @@ mis à jour ainsi que sa position dans la liste et un drapeau
 \section{Mise à jour des patients à partir du terminal}
 \label{s:patientUpdate}
 
-\section{Conclusion du Chapitre}
+\begin{figure}
+\center
+\includegraphics[width=0.9\textwidth]{diagrams/seq_uploadpatients}
+\caption{Diagramme de séquence \gls{uml} Mise à jour des patients.}
+\label{fig:seq_uploadpatients}
+\end{figure}
+
+La figure \ref{fig:seq_uploadpatients} présente le comportement de l'application pour réaliser l'opération de mise à jour d'un patient à travers un diagramme de séquence \gls{uml}. On peut décrire textuellement le processus par les points suivants:
+
+
+\begin{description}
+
+\item[Acteurs:] Docteur.
+
+\item[Pré-conditions:] Le patient mis à jour par le docteur est disponible au \dev{PatientsService}, Le terminal est connecter au service distant.
+
+\item[Post-conditions:] Le patient mis à jour par le docteur est transférer vers le service distant ou en cas de problème sauvegarder pour une mis à jour ultérieur.
+
+\end{description}
+
+\paragraph{Scénarios nominal:}
+
+\begin{enumerate}
+
+\item Le \dev{PatientsService} procède à la mise à jour de deux \dev{ArrayList}: \dev{mPatientSyncQueue} qui sert pour le fils d'attente pour les mises à jour et \dev{mPatientCache} que contient la liste des patients utilisé par notre application.
+
+\item Deux démarches sont exécutées en parallèle:\label{enu:par}
+
+\begin{enumerate}[label=\ref{enu:par}.\Alph*]
+
+\item Premier démarche.\label{enu:par1}
+
+\begin{enumerate}[label=\ref{enu:par1}.\arabic*]
+
+\item \dev{PatientService} fait appel au \dev{PatientHelper} pour le transfer, en retour il reçoi le nombre des patients mis à jour.
+
+\item Le nombre des patients reçu correspond au patients dans la file d'attente alors on vide celle çi.\label{enu:equalpatients}
+
+\end{enumerate}
+
+\item Deuxieme démarche.\label{enu:par2}
+
+\begin{enumerate}[label=\ref{enu:par2}.\arabic*]
+
+\item Le \dev{PatientAdapter} est notifier par les changements effectuer dans la liste des patients courante.
+
+\end{enumerate}
+
+\end{enumerate}
+
+\end{enumerate}
+
+\paragraph{Scénarios alternatives:}
+
+\begin{enumerate}[label=\ref{enu:equalpatients}.\alph*]
+
+\item Le nombre des patients mis à jour telque retourner à par \dev{PatientsHelper} est différant de celui des patients dans la file d'attente:\label{enu:alt_equalSpatients}
+
+\begin{enumerate}[label=\ref{enu:alt_equalSpatients}.\arabic*]
+
+\item \dev{PatientsService} notifie le docteur de ce probléme.
+
+\item Puis une autre mise à jour est configuré pour se déclanché apres un SYNC\_DELAY.
+
+\end{enumerate}
+
+\end{enumerate}

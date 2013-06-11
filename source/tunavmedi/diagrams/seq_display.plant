@@ -1,6 +1,6 @@
 @startuml
 hide footbox
-title "Display Patient Record"
+title "sd Display Patient Record"
 
 actor "Doctor" as doc
 entity "PatientListFragment" as list

@@ -1,5 +1,6 @@
 @startuml
 hide footbox
+title "sd Authentication"
 
 actor "Doctor" as doc
 boundary "LoginActivity:Activity" as login

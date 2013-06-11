@@ -39,6 +39,20 @@ localisation qui peux être exploité dans le domaine médical.
 
 \section{Présentation du projet}
 
+\begin{figure}
+\center
+\includegraphics[width=0.8\textwidth]{scenario-other}
+\caption{Illustration des besoins fonctionnels.}
+\end{figure}
+
+\begin{figure}
+\center
+\includegraphics[width=0.8\textwidth]{architecture-interfaces}
+\caption{Illustration des besoins techniques.}
+\end{figure}
+
+%TODO
+
 \subsection{Utilisateurs Cibles}
 
 Cette application vise \underline{principalement} les médecins. Et
@@ -49,58 +63,6 @@ l’application. Les médecins, malgré leur formation prolongé dans le
 domaine médical, représente une cible sans une vrais profondeur
 technique, ce que requière de l’application d’être le plus simple
 possible.
-
-\subsection{Spécification des Besoins}
-
-\subsubsection{Besoins fonctionnels}
-
-\begin{figure}
-\center
-\includegraphics[width=0.8\textwidth]{scenario-other}
-\caption{Illustration des besoins fonctionnels.}
-\end{figure}
-
-\begin{itemize}
-
-\item Le médecin doit être capable à partir de son terminal d’avoir des
-informations sur les patients qui lui sont assigné en fonction de leur position
-géographique.
-
-\item L'application doit être capable de détecter la proximité d'un
-patient en fonction de la position actuelle du terminal.
-
-\item Le médecin peut télé-consulter le dossier médical du patient.
-
-\end{itemize}
-
-\subsubsection{Besoins non fonctionnels}
-
-\begin{itemize}
-
-\item Une bonne ergonomie qui vise à faciliter l'obtention de
-l'information, avec un minimum d'effort pour l'utilisateur cible et
-avec le moindre risque d'erreur. Les choix graphiques et conceptuels
-sont des considérations à tenir en compte.
-
-\end{itemize}
-
-\subsubsection{Besoins techniques}
-
-\begin{figure}
-\center
-\includegraphics[width=0.8\textwidth]{architecture-interfaces}
-\caption{Illustration des besoins techniques.}
-\end{figure}
-
-\begin{itemize}
-
-\item L’application mobile vise à utiliser les systèmes déjà en place des
-établissements clients pour réduire les coûts. Vu l’absence d'un protocole
-standards et les différentes implémentations possibles des différents clients,
-l'implémentation d'une couche d’accès abstraite est requise pour pouvoir
-déployer l’application avec le minimum de modification.
-
-\end{itemize}
 
 \section{Conclusion} 
 
