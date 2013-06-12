@@ -12,6 +12,22 @@ public class TunavMedi extends Application {
     // DEV MODE
     public static final boolean DEVELOPER_MODE = true;
 
+    public static boolean debugLocation() {
+        if (DEVELOPER_MODE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean debugNotification() {
+        if (DEVELOPER_MODE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static Context getContext() {
         return context;
     }

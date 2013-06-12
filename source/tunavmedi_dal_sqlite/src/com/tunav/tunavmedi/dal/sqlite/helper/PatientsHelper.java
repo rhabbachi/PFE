@@ -6,12 +6,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.location.Location;
 import android.util.Log;
 
 import com.tunav.tunavmedi.dal.abstraction.PatientsHandler;
 import com.tunav.tunavmedi.dal.datatype.Patient;
+import com.tunav.tunavmedi.dal.datatype.Placemark;
 import com.tunav.tunavmedi.dal.sqlite.DBSetup;
 import com.tunav.tunavmedi.dal.sqlite.contract.PatientsContract;
+import com.tunav.tunavmedi.dal.sqlite.contract.PlacemarksContract;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +28,7 @@ public class PatientsHelper extends PatientsHandler {
     private DBSetup mDBHelper = null;
 
     public PatientsHelper(Context context) {
-        super();
+        super(context);
         Log.v(tag, "TasksHelper()");
         mContext = context;
         mDBHelper = new DBSetup(mContext);
@@ -34,6 +37,7 @@ public class PatientsHelper extends PatientsHandler {
 
             @Override
             public void run() {
+
                 int inserts = 3;
                 Random random = new Random();
                 try {
@@ -52,6 +56,65 @@ public class PatientsHelper extends PatientsHandler {
                 }
             }
         });
+    }
+
+    private Placemark getPlacemark(int id) {
+        Placemark placemark = null;
+        SQLiteDatabase database;
+        Cursor cursor;
+        try {
+            database = mDBHelper.getReadableDatabase();
+
+            String table = PlacemarksContract.TABLE_NAME;
+            String[] columns = {
+                    "*"
+            };
+            String selection = PlacemarksContract._ID + "=" + id;
+            String[] selectionArgs = null;
+            String groupBy = null;
+            String having = null;
+            String orderBy = null;
+
+            assert database != null;
+            cursor = database.query(//
+                    table,// The table to query
+                    columns,// The columns to return
+                    selection,// The columns for the WHERE clause
+                    selectionArgs,// The values for the WHERE clause
+                    groupBy,// don't group the rows
+                    having,// don't filter by row groups
+                    orderBy);// The sort order
+
+            if (cursor.moveToFirst()) {
+                String name = cursor.getString(cursor
+                        .getColumnIndexOrThrow(PlacemarksContract.KEY_NAME));
+                String map = cursor.getString(cursor
+                        .getColumnIndexOrThrow(PlacemarksContract.KEY_MAP));
+                double longitude = cursor.getDouble(cursor
+                        .getColumnIndexOrThrow(PlacemarksContract.KEY_LONGITUDE));
+                double latitude = cursor.getDouble(cursor
+                        .getColumnIndexOrThrow(PlacemarksContract.KEY_LATITUDE));
+                double altitude = cursor.getDouble(cursor
+                        .getColumnIndexOrThrow(PlacemarksContract.KEY_ALTITUDE));
+
+                Location location = new Location("TunavMedi");
+                location.setLongitude(longitude);
+                location.setLatitude(latitude);
+                location.setAltitude(altitude);
+
+                placemark = new Placemark(name, map, location);
+            }
+
+        } catch (SQLiteException tr) {
+            // database problem
+            Log.e(tag, "SQLiteException");
+            Log.d(tag, "SQLiteException", tr);
+        } catch (IllegalArgumentException tr) {
+            // something wired happened in the cursor
+            Log.e(tag, "IllegalArgumentException");
+            Log.d(tag, "IllegalArgumentException", tr);
+        }
+        return placemark;
     }
 
     private String getStringFromAssets(String description_file) {
@@ -120,14 +183,17 @@ public class PatientsHelper extends PatientsHandler {
                     String recordPath = cursor
                             .getString(cursor
                                     .getColumnIndexOrThrow(PatientsContract.KEY_RECORD));
+                    int placemark_id = cursor.getInt(cursor
+                            .getColumnIndexOrThrow(PatientsContract.KEY_PLACEMARK_ID));
 
                     String description = null;
                     if (recordPath != null) {
                         description = getStringFromAssets(recordPath);
                     }
+
                     Patient patient = new Patient(id, name, interned, description, updated);
                     patient.setUrgent(urgent);
-                    // TODO some magic to get placemark instead of placemarkID
+                    patient.setPlacemark(getPlacemark(placemark_id));
                     patients.add(patient);
                 } while (cursor.moveToNext());
             } else {

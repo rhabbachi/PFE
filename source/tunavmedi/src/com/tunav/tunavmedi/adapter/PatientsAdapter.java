@@ -244,7 +244,6 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
             }
         }
         currentLocation = new Location(newLocation);
-
         sort();
     }
 }

@@ -25,13 +25,18 @@ public class PlacemarksContract implements BaseColumns {
     public static final String KEY_LATITUDE_TYPE = "REAL";
     public static final String KEY_LATITUDE_CONS = "NOT NULL";
 
+    public static final String KEY_ALTITUDE = "altitude";
+    public static final String KEY_ALTITUDE_TYPE = "REAL";
+    public static final String KEY_ALTITUDE_CONS = "NOT NULL";
+
     public static final String SQL_CREATE_TABLE = String
             .format("CREATE TABLE IF NOT EXISTS %s(", TABLE_NAME)//
             + String.format(" %s %s %s,", _ID, _ID_TYPE, _ID_CONS)//
             + String.format(" %s %s %s,", KEY_NAME, KEY_NAME_TYPE, KEY_MAP_CONS)//
             + String.format(" %s %s %s,", KEY_MAP, KEY_MAP_TYPE, KEY_MAP_CONS)//
             + String.format(" %s %s %s,", KEY_LONGITUDE, KEY_LONGITUDE_TYPE, KEY_LONGITUDE_CONS)//
-            + String.format(" %s %s %s", KEY_LATITUDE, KEY_LATITUDE_TYPE, KEY_LATITUDE_CONS)//
+            + String.format(" %s %s %s,", KEY_LATITUDE, KEY_LATITUDE_TYPE, KEY_LATITUDE_CONS)//
+            + String.format(" %s %s %s", KEY_ALTITUDE, KEY_ALTITUDE_TYPE, KEY_ALTITUDE_CONS)//
             + ");";
 
     public static final String SQL_DROP_TABLE = String.format(
@@ -61,18 +66,23 @@ public class PlacemarksContract implements BaseColumns {
             36.8378091, 36.83809698, 36.83864308, 36.83805462, 36.83887902
     };
 
+    public static final double[] DUMMIES_ALTITUDE = {
+            0, 0, 0, 0, 0
+    };
+
     public static final String getInsert(int i) {
         String sql = "INSERT INTO "
                 + TABLE_NAME
                 + String.format(
-                        "(%s, %s, %s, %s)"//
-                        , KEY_NAME, KEY_MAP, KEY_LONGITUDE, KEY_LATITUDE)
+                        "(%s, %s, %s, %s, %s)"//
+                        , KEY_NAME, KEY_MAP, KEY_LONGITUDE, KEY_LATITUDE, KEY_ALTITUDE)
                 + String.format(
-                        " VALUES ('%s', '%s', %f, %f);"//
+                        " VALUES ('%s', '%s', %f, %f, %f);"//
                         , DUMMIES_NAME[i]
                         , DUMMIES_MAP[i]
                         , DUMMIES_LONGITUDE[i]
-                        , DUMMIES_LATITUDE[i]);
+                        , DUMMIES_LATITUDE[i]
+                        , DUMMIES_ALTITUDE[i]);
         return sql;
     }
 }

@@ -17,6 +17,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.tunav.tunavmedi.R;
+import com.tunav.tunavmedi.TunavMedi;
 import com.tunav.tunavmedi.broadcastreceiver.BatteryReceiver;
 import com.tunav.tunavmedi.broadcastreceiver.ChargingReceiver;
 import com.tunav.tunavmedi.broadcastreceiver.NetworkReceiver;
@@ -68,26 +69,34 @@ public class PatientsService extends Service implements
         }
     };
 
-    private ArrayList<Patient> mPatientsCache = new ArrayList<Patient>();
-    private ArrayList<PatientsListener> mPatientsListeners = new ArrayList<PatientsService.PatientsListener>();
-    private Location mLocationCache;
+    private volatile ArrayList<Patient> mPatientsCache = new ArrayList<Patient>();
+    private volatile ArrayList<PatientsListener> mPatientsListeners = new ArrayList<PatientsService.PatientsListener>();
+    private volatile Location mLocationCache;
     private PatientsHelper mHelper = null;
     private ScheduledExecutorService mScheduler = null;
     private Future<?> mPatientsFuture = null;
-
+    private static final int MIN_TIME = 1000 * 60 * 15;
+    private static final int MIN_DIST = 30;
     private boolean isLogged;
-
     private boolean batteryOk;
-
     private boolean powerConnected;
-
     private boolean isConnected;
+
+    private static final int LOCATION_THRESHOLD = 50;
 
     public void addPatientsListener(PatientsListener listener) {
         if (listener != null && !mPatientsListeners.contains(listener)) {
             mPatientsListeners.add(listener);
         }
         updateListeners();
+    }
+
+    private int getPowerCriteria() {
+        if (BatteryReceiver.getBatteryLevel(this) > LOCATION_THRESHOLD) {
+            return Criteria.POWER_HIGH;
+        } else {
+            return Criteria.POWER_LOW;
+        }
     }
 
     @Override
@@ -99,13 +108,13 @@ public class PatientsService extends Service implements
     private void onConfigure() {
         Log.v(tag, "onConfigure()");
 
-        if (batteryOk && !powerConnected) {
-            startLocationPolling(Criteria.ACCURACY_FINE, Criteria.POWER_HIGH, 1000 * 60 * 15, 30);
+        if (TunavMedi.debugLocation() || batteryOk && !powerConnected) {
+            startLocationPolling(Criteria.ACCURACY_FINE, getPowerCriteria(), MIN_TIME, MIN_DIST);
         } else {
             stopLocationPolling();
         }
 
-        if (isLogged && batteryOk && isConnected) {
+        if (TunavMedi.debugNotification() || isLogged && batteryOk && isConnected) {
             startPatientNotification();
         } else {
             stopPatientsNotification();

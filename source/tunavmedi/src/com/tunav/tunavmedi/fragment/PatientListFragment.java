@@ -79,7 +79,6 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         getListView().setLongClickable(true);
         getListView().setOnItemLongClickListener(this);
         adapter = new PatientsAdapter(getActivity());
-        setListAdapter(adapter);
         setEmptyText(getResources().getString(R.string.patientlist_empty));
     }
 
@@ -334,6 +333,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         if (mPatientService != null) {
             isBound = true;
             mPatientService.addPatientsListener(adapter);
+            setListAdapter(adapter);
             Log.i(tag, "binding succesful!");
         } else {
             isBound = false;

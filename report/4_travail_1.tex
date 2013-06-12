@@ -1,13 +1,14 @@
 %!TEX root = report.tex
 
-\chapter{Environnement \& Étude du Besoin}
+\chapter{Environnement \& Étude des Besoins}
 
 \section{Introduction du chapitre}
 
-%TODO
+Dans ce chapitre on présente les environnements logiciels et matériels dans lesquelles s'est dérouler le développement de l'application ainsi qu'une étude des besoins effectué pour cerner nos objectifs.
 
 \section{Environnement de développement}%TODO
-Plusieurs outils on était mise à contribution pour développer l'application, tant que sur le plan logiciel que matériel.
+
+Plusieurs outils ont été mises à contribution pour développer l'application, tant sur le plan logiciel que matériel.
 
 \subsection{Environnement Logiciel}
 Voici une liste des outils logiciels utilisés pendant le développement de l'application.
@@ -18,7 +19,7 @@ Voici une liste des outils logiciels utilisés pendant le développement de l'ap
 
 \item [OpenJDK 6] \gls{jdk} version 6.\footnotemark[2]
 
-\item [Eclipse Juno] Environnement de Développement Intégrer dans sa version \en{Service Release 2}.\footnotemark[3]
+\item [Eclipse Juno] Environnement de Développement Intégré dans sa version \en{Service Release 2}.\footnotemark[3]
 
 \item [\gls{adt} (plugin Eclipce)] Intégration des outils de développement fournit dans l'\gls{sdk} \android{}.\footnotemark[4]
 
@@ -47,16 +48,21 @@ Voici une liste des outils logiciels utilisés pendant le développement de l'ap
 
 Le développement de l'application est fait avec une tablette Asus Nexus 7 (mise à jour à \android{} 4.2.2 \en{Jelly Bean}).
 
-\section{Étude fonctionnelle}
 
-\section{Spécification des Besoins}
+\section{Étude des Besoins}
 
 \subsection{Besoins fonctionnels}
+
+\begin{figure}[H]
+\center
+\includegraphics[width=0.8\textwidth]{scenario-other}
+\caption{Illustration des besoins fonctionnels.}
+\end{figure}
 
 \begin{itemize}
 
 \item Le médecin doit être capable à partir de son terminal d’avoir des
-informations sur les patients qui lui sont assigné en fonction de leur position
+informations sur les patients qui lui sont assignés en fonction de leur position
 géographique.
 
 \item L'application doit être capable de détecter la proximité d'un
@@ -78,6 +84,12 @@ sont des considérations à tenir en compte.
 \end{itemize}
 
 \subsection{Besoins techniques}
+
+\begin{figure}[H]
+\center
+\includegraphics[width=0.8\textwidth]{architecture-interfaces}
+\caption{Illustration des besoins techniques.}
+\end{figure}
 
 \begin{itemize}
 
@@ -108,7 +120,7 @@ batterie).
 
 \subsection{Cas d'utilisations}
 
-On peut présenter les interactions fonctionnelles entre les acteurs gouverner par leurs besoins avec un diagramme des cas d'utilisations (figure \ref{fig:uml_usecase}).
+On peut présenter les interactions fonctionnelles entre les acteurs gouverné par leurs besoins avec un diagramme des cas d'utilisations (figure \ref{fig:uml_usecase}).
 
 \begin{figure}
 \center
@@ -116,7 +128,3 @@ On peut présenter les interactions fonctionnelles entre les acteurs gouverner p
 \caption{Diagramme des cas d'utilisation \gls{uml} globale.}
 \label{fig:uml_usecase}
 \end{figure}
-
-\subsection{Table de priorité}
-
-%TODO

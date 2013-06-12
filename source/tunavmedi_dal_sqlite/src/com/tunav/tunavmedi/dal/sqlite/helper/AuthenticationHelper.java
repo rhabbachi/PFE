@@ -17,6 +17,7 @@ public class AuthenticationHelper extends AuthenticationHandler {
     private DBSetup mDBHelper = null;
 
     public AuthenticationHelper(Context context) {
+        super(context);
         Log.v(tag, "AuthenticationHelper()");
         mDBHelper = new DBSetup(context);
     }
@@ -25,23 +26,6 @@ public class AuthenticationHelper extends AuthenticationHandler {
     public void login(String login, String password) {
         Log.i(tag, "authenticate()");
         Log.v(tag, "login is " + login + " passhash is " + password);
-        // hash password if needed
-        // String hash = null;
-        // if (hash != null) {
-        // byte[] passwordHash = null;
-        // try {
-        // MessageDigest digest;
-        //
-        // Log.d(TAG, "Hash used by the implementation is " + hash);
-        // digest = MessageDigest.getInstance(hash);
-        // digest.reset();
-        // digest.update(password.getBytes());
-        // password = digest.digest().toString();
-        // Log.d(TAG, "Hashed password is " + password);
-        // } catch (NoSuchAlgorithmException nsae) {
-        // Log.d(TAG, "NoSuchAlgorithmException", nsae);
-        // }
-        // }
 
         SQLiteDatabase database = null;
         Cursor cursor = null;

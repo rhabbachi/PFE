@@ -1,5 +1,10 @@
 %!TEX root = report.tex
+
 \chapter{Déploiement et Tests}
+
+\section{Introduction du Chapitre}
+
+Ce chapitre porte sur les méthodes utilisées pour déployer notre application dans l'environnement de test ainsi que les techniques de teste utilisés.
 
 \section{Déploiement}
 
@@ -22,7 +27,7 @@ développement. Le serveur gère les communications entre le client et le démon
 
 \end{itemize}
 
-On peut retrouver l'outil \gls{adb} dans le dossier <sdk>/platform-tools/.
+On peut retrouver l'outil \gls{adb} dans le dossier $<sdk>/platform-tools/$.
 
 On peut utiliser \gls{adb} pour copier une application depuis notre machine de développement et l'installer dans une instance d'un émulateur ou un terminal, pour cela on utilise la commande \cmd{install}. Cette commande exige comme paramètre le chemin du fichier .apk que nous voulons installer.
 
@@ -101,12 +106,8 @@ Dans Eclipse, \android{} Lint est disponible à travers le menu Window $\rightar
 \label{fig:lint_eclipse}
 \end{figure}
 
-\subsection[UI/Application Exerciser Monkey]{\en{UI/Application Exerciser Monkey}}
+\section[UI/Application Exerciser Monkey]{\en{UI/Application Exerciser Monkey}}
 
 \en{Monkey} \cite{tools:monkey} est un programme qui tourne sur notre émulateur ou terminal \android{} et qui génère des flux pseudo-aléatoire d’événements utilisateur comme par exemple les clics, les touchés, les gestes, ou encore un nombre d’événements de niveau système. On peut utilisés \en{Monkey} pour effectuer des tests de stresse sur notre application dans une manière aléatoire et répétitive.
 
 L'annexe \ref{chptr:monkey} montre un exemple de test effectué avec l'outil \en{Monkey} sur notre application.
-
-\section{Conclusion du chapitre}
-
-Dans ce chapitre on a passé en revu les solutions choisies pour résoudre les problématiques posés par le projet ainsi que les outils et les techniques utilisés pour développer et tester notre application.

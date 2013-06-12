@@ -64,63 +64,73 @@ public abstract class PatientsContract implements BaseColumns {
             "INSERT INTO "
                     + TABLE_NAME
                     + String.format(
-                            "(%s, %s, %s, %s, %s)"//
-                            , KEY_INTERNED, KEY_UPDATED, KEY_NAME, KEY_RECORD, KEY_ISURGENT)
+                            "(%s, %s, %s, %s, %s, %s)"//
+                            , KEY_INTERNED, KEY_UPDATED, KEY_NAME, KEY_RECORD, KEY_ISURGENT,
+                            KEY_PLACEMARK_ID)
                     + String.format(
-                            " VALUES ( %d , %d, '%s', '%s', %d)"//
+                            " VALUES ( %d , %d, '%s', '%s', %d, %d)"//
                             , getTime(1, 5, 2013)
                             , getTime(1, 5, 2013)
                             , "Mr John Doe [A06/65]"
                             , "html/dossier1.html"
-                            , 0),
+                            , 0
+                            , 1),
             "INSERT INTO "
                     + TABLE_NAME
                     + String.format(
-                            "(%s, %s, %s, %s, %s)"//
-                            , KEY_INTERNED, KEY_UPDATED, KEY_NAME, KEY_RECORD, KEY_ISURGENT)
+                            "(%s, %s, %s, %s, %s, %s)"//
+                            , KEY_INTERNED, KEY_UPDATED, KEY_NAME, KEY_RECORD, KEY_ISURGENT,
+                            KEY_PLACEMARK_ID)
                     + String.format(
-                            " VALUES ( %d , %d, '%s', '%s', %d)"//
+                            " VALUES ( %d , %d, '%s', '%s', %d, %d)"//
                             , getTime(5, 5, 2013)
                             , getTime(5, 5, 2013)
                             , "Ms Jane Doe [B06/65]"
                             , "html/dossier1.html"
-                            , 0),
+                            , 0
+                            , 2),
             "INSERT INTO "
                     + TABLE_NAME
                     + String.format(
-                            "(%s, %s, %s, %s, %s)"//
-                            , KEY_INTERNED, KEY_UPDATED, KEY_NAME, KEY_RECORD, KEY_ISURGENT)
+                            "(%s, %s, %s, %s, %s, %s)"//
+                            , KEY_INTERNED, KEY_UPDATED, KEY_NAME, KEY_RECORD, KEY_ISURGENT,
+                            KEY_PLACEMARK_ID)
                     + String.format(
-                            " VALUES ( %d , %d, '%s', '%s', %d)"//
+                            " VALUES ( %d , %d, '%s', '%s', %d, %d)"//
                             , getTime(10, 5, 2013)
                             , getTime(10, 5, 2013)
                             , "Mr Flan Ben Foulan [C06/65]"
                             , "html/dossier1.html"
-                            , 0),
+                            , 0
+                            , 3),
             "INSERT INTO "
                     + TABLE_NAME
                     + String.format(
-                            "(%s, %s, %s, %s, %s)"//
-                            , KEY_INTERNED, KEY_UPDATED, KEY_NAME, KEY_RECORD, KEY_ISURGENT)
+                            "(%s, %s, %s, %s, %s, %s)"//
+                            , KEY_INTERNED, KEY_UPDATED, KEY_NAME, KEY_RECORD, KEY_ISURGENT,
+                            KEY_PLACEMARK_ID)
                     + String.format(
-                            " VALUES ( %d , %d, '%s', '%s', %d)"//
+                            " VALUES ( %d , %d, '%s', '%s', %d, %d)"//
                             , getTime(15, 5, 2013)
                             , getTime(15, 5, 2013)
                             , "Mme Foulana Bent Faltana [D06/65]"
                             , "html/dossier1.html"
-                            , 0),
+                            , 0
+                            , 4),
             "INSERT INTO "
                     + TABLE_NAME
                     + String.format(
-                            "(%s, %s, %s, %s, %s)"//
-                            , KEY_INTERNED, KEY_UPDATED, KEY_NAME, KEY_RECORD, KEY_ISURGENT)
+                            "(%s, %s, %s, %s, %s, %s)"//
+                            , KEY_INTERNED, KEY_UPDATED, KEY_NAME, KEY_RECORD, KEY_ISURGENT,
+                            KEY_PLACEMARK_ID)
                     + String.format(
-                            " VALUES ( %d , %d, '%s', '%s', %d)"//
+                            " VALUES ( %d , %d, '%s', '%s', %d, %d)"//
                             , getTime(20, 5, 2013)
                             , getTime(20, 5, 2013)
                             , "Mr Ammar Ben Zwer [E06/65]"
                             , "html/dossier1.html"
-                            , 0)
+                            , 0
+                            , 5)
 
     };
 

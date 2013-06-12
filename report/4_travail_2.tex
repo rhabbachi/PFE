@@ -4,10 +4,12 @@
 
 \section{Introduction du chapitre}
 
+Dans ce chapitre on présente la structure globale de l'application
+
 \section[Couche d'Accès aux Données]{Couche D'Accés aux Données}
 
-Un des objectifs principales de ce projet étant de fournir une solution
-d’accès aux données flexibles à fin de couvrir les besoins de chaque
+Un des objectifs principals de ce projet étant de fournir une solution
+d’accès aux données flexibles afin de couvrir les besoins de chaque
 client de manière individuelle. On a opté donc pour un modèle basé sur
 l’implémentation de deux interfaces (figure \ref{fig:cls_dal}):
 
@@ -26,27 +28,27 @@ l’implémentation de deux interfaces (figure \ref{fig:cls_dal}):
 \label{fig:cls_dal}
 \end{figure}
 
-L'idée est simple: pour chaque client, une implémentation spécifique à son infrastructure sera développée soit par son propre effectif, soit par une des équipes de \textsc{Tunav}, ou dans le cas idéal par une alliance formé par des agents des deux camps qui garantie une collaboration plus poussée pour des résultats meilleurs.
+L'idée est simple: pour chaque client, une implémentation spécifique à son infrastructure sera développée soit par son propre effectif, soit par une des équipes de \textsc{Tunav}, ou dans le cas idéal par une alliance formé par des agents des deux camps qui garantit une collaboration plus poussée pour des résultats meilleurs.
 Ces ensembles d'interfaces nous permettent de construire notre application.
 
 \subsection{Interface d'authentification}
 
 \dev{AuthenticationHandler}\footnotetext{com.tunav.tunavmedi.dal.abstraction.AuthenticationHandler} (figure
 \ref{fig:cls_dal}) est une classe abstraite comportant les méthodes
-requise par notre application pour effectué les actions
+requise par notre application pour effectuer les actions
 d'authentification, de dé-authentification, de vérification
 d'authenticité ainsi l'obtention des informations associées à l'utilisateur
-authentifier.
+authentifié.
 
 Malgré la variété des techniques d'authentification utilisée dans le domaine
 informatique, l'étape d'acquisition des identificateurs de l'utilisateur
 représente un point de départ commun. On utilise ce caractère dans l'interface
 d'authentification en demandant à nos clients d'implémenter la méthode
-\dev{login()} qui prend en argument l'identifiant et le mots de passe fourni par
+\dev{login()} qui prend en argument l'identifiant et le mot de passe fourni par
 le médecin, dans le cas d'une éventuelle erreur d'authentification,
 l’implémentation met a notre disposition un message d'erreur accessible par la
 méthode \dev{getError()}. Pour effectuer l’opération inverse le client
-implémente la méthode \dev{logout()} supposée annoncer au service distant la dé-
+implémente la méthode \dev{logout()} supposée annoncée au service distant la dé-
 authentification de l'utilisateur du terminal. Pour vérifier le l'état actuel de
 la relation du terminal avec la base distante, on utilise le booléen retourné
 par \dev{getStatus()}, utile dans les cas de déconnexion temporaire ou du
@@ -68,11 +70,11 @@ Le patron \textbf{Observateur} (\en{observer pattern}) (fig
 \ref{fig:observer}) et un patron de conception couramment utilisé et qui
 nous permet d'avoir une relation 1$\rightarrow$N entre divers objets. Le
 patron observateur assume que l'objet qui contient les données est
-séparé des l’objet qui les affiche et ces dites objets observe le
+séparé des objets qui les affiche et ces dites objets observent le
 changement de ces données~\cite{jdp_observer}. Quand on implémente le
 patron observateur, on réfère communément à l'objet contenant les
 données par "Sujet"; et chacun des consommateurs des données par
-"Observateur", Et chaque Observateur implémente une interface préconçu
+"Observateur", Et chaque Observateur implémente une interface préconçue
 que le Sujet invoque quant les données changent~\cite{jdp_observer}.
 
 \begin{figure}[H]
@@ -82,7 +84,7 @@ que le Sujet invoque quant les données changent~\cite{jdp_observer}.
 \label{fig:observer}
 \end{figure}
 
-Dans le langage Java, ce patron est réalisé à travers la classe \dev{java.util.Observable} et l'interface \dev{Observer}\footnotetext{Java.util.Observer}. Le Sujet hérite de la classe \dev{Observable} et les changements sont signalés par les méthodes \dev{setChanged()} et \dev{notifyObservers()} ou \dev{notifyObservers(Object message)}.
+Dans le langage Java, ce patron est réalisé à travers la classe \dev{java.util.Observable} et l'interface \dev{Observer}\footnote{Java.util.Observer}. Le Sujet hérite de la classe \dev{Observable} et les changements sont signalés par les méthodes \dev{setChanged()} et \dev{notifyObservers()} ou \dev{notifyObservers(Object message)}.
 
 \subsubsection{Les objets de données}
 
@@ -93,15 +95,15 @@ Dans le langage Java, ce patron est réalisé à travers la classe \dev{java.uti
 \label{fig:cls_dal_patient}
 \end{figure}
 
-La communication des données avec le service distant se fait à travers l'objet \dev{Patient}\footnotetext{com.tunav.tunavmedi.dal.datatype.Patient} (figure \ref{fig:cls_dal_patient}. Cet objet contient toutes les informations requises pour la synchronisation et l'affichage et la gestion des patients, en particulier le dossier médical et la position actuelle du patient.
+La communication des données avec le service distant se fait à travers l'objet \dev{Patient}\footnote{com.tunav.tunavmedi.dal.datatype.Patient} (figure \ref{fig:cls_dal_patient}. Cet objet contient toutes les informations requises pour la synchronisation et l'affichage et la gestion des patients, en particulier le dossier médical et la position actuelle du patient.
 
 \paragraph{Synchronisation:}
 
-Étant sujet aux modifications de la part de l'application et du serveur distant, Un problème se pose pour connaître la version la plus à jour. Pour cela chaque modification apportée est suivi par une mise à jour de variable \dev{mUpdated} par le temps à cette instance précise (cette opération est interne à l'objet). En cas ou deux versions différentes de l'objet \dev{Patient} avec le même \dev{mID} et \dev{mUpdated}, le service est supposé favoriser sa version.
+Étant sujet aux modifications de la part de l'application et du serveur distant, un problème se pose pour connaître la version la plus à jour. Pour cela chaque modification apportée est suivi par une mise à jour de variable \dev{mUpdated} par le temps à cette instance précise (cette opération est interne à l'objet). En cas oú deux versions différentes de l'objet \dev{Patient} avec le même \dev{mID} et \dev{mUpdated}, le service est supposé favoriser sa version.
 
 \paragraph{Dossier médical:}
 
-Le dossier médical est fourni sous le format \en{HTML}. Cette représentation est idéale car elle nous permet de faire abstraction sur le format du dossier tel que sauvegardé par l'établissement client, la couche d’accès assurant éventuellement la conversion.
+Le dossier médical est fournit sous le format \en{HTML}. Cette représentation est idéale car elle nous permet de faire abstraction sur le format du dossier tel que sauvegardé par l'établissement client, la couche d’accès assurant éventuellement la conversion.
 
 
 \paragraph{Position:}
@@ -165,7 +167,7 @@ L'application est subdivisée en deux parties majeures représentés par deux cl
 
 \subsection{LoginActivity}
 
-%TODO AsyncTask
+La \dev{LoginActivity} s'occupe de la partie d'authentification et de dé-authentification. Elle utilise un \dev{AsyncTask}\footnote{android.os.AsyncTask} pour effectuer ces opérations de manière non bloquante.
 
 \begin{lstlisting}[language=xml, caption=Déclaration de LoginActivity dans AndroidManifest]
 
@@ -182,6 +184,8 @@ L'application est subdivisée en deux parties majeures représentés par deux cl
         </activity>
 
 \end{lstlisting}
+
+
 
 \subsection{MainActivity}
 
@@ -414,5 +418,3 @@ Le dossier étant sous la forme d'un document HTML, pour l'afficher on utilise u
         android:singleLine="false"/>
 
 \end{lstlisting}
-
-\section{Conclusion du Chapitre}
