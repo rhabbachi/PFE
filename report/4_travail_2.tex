@@ -8,7 +8,7 @@ Dans ce chapitre on présente la structure globale de l'application
 
 \section[Couche d'Accès aux Données]{Couche D'Accés aux Données}
 
-Un des objectifs principals de ce projet étant de fournir une solution
+Un des objectifs principaux de ce projet étant de fournir une solution
 d’accès aux données flexibles afin de couvrir les besoins de chaque
 client de manière individuelle. On a opté donc pour un modèle basé sur
 l’implémentation de deux interfaces (figure \ref{fig:cls_dal}):
@@ -35,7 +35,7 @@ Ces ensembles d'interfaces nous permettent de construire notre application.
 
 \dev{AuthenticationHandler}\footnotetext{com.tunav.tunavmedi.dal.abstraction.AuthenticationHandler} (figure
 \ref{fig:cls_dal}) est une classe abstraite comportant les méthodes
-requise par notre application pour effectuer les actions
+requises par notre application pour effectuer les actions
 d'authentification, de dé-authentification, de vérification
 d'authenticité ainsi l'obtention des informations associées à l'utilisateur
 authentifié.
@@ -70,9 +70,9 @@ Le patron \textbf{Observateur} (\en{observer pattern}) (fig
 \ref{fig:observer}) et un patron de conception couramment utilisé et qui
 nous permet d'avoir une relation 1$\rightarrow$N entre divers objets. Le
 patron observateur assume que l'objet qui contient les données est
-séparé des objets qui les affiche et ces dites objets observent le
+séparé de l'objets qui les affiche et ces dits objets observent le
 changement de ces données~\cite{jdp_observer}. Quand on implémente le
-patron observateur, on réfère communément à l'objet contenant les
+patron observateur, on se réfère communément à l'objet contenant les
 données par "Sujet"; et chacun des consommateurs des données par
 "Observateur", Et chaque Observateur implémente une interface préconçue
 que le Sujet invoque quant les données changent~\cite{jdp_observer}.
@@ -99,7 +99,7 @@ La communication des données avec le service distant se fait à travers l'objet
 
 \paragraph{Synchronisation:}
 
-Étant sujet aux modifications de la part de l'application et du serveur distant, un problème se pose pour connaître la version la plus à jour. Pour cela chaque modification apportée est suivi par une mise à jour de variable \dev{mUpdated} par le temps à cette instance précise (cette opération est interne à l'objet). En cas oú deux versions différentes de l'objet \dev{Patient} avec le même \dev{mID} et \dev{mUpdated}, le service est supposé favoriser sa version.
+Étant sujet aux modifications de la part de l'application et du serveur distant, un problème se pose pour connaître la version la plus à jour. Pour cela chaque modification apportée est suivi par une mise à jour de variable \dev{mUpdated} par le temps à cet instant précis (cette opération est interne à l'objet). En cas oú deux versions différentes de l'objet \dev{Patient} avec le même \dev{mID} et \dev{mUpdated}, le service est supposé favoriser sa version.
 
 \paragraph{Dossier médical:}
 
@@ -155,7 +155,7 @@ contrôler la création et l’accès à notre base de données de tests.
 
 \section{Structure de l'Application}
 
-L'application est subdivisée en deux parties majeures représentés par deux classes de type \dev{Activity}\footnotetext{android.app.Activity} :
+L'application est subdivisée en deux parties majeures représentées par deux classes de type \dev{Activity}\footnotetext{android.app.Activity} :
 
 \begin{description}
 
@@ -238,7 +238,7 @@ facilement.
 
 \item La nature même de cette procédure d’accès - à savoir l’aspect
 abstrait, donc plus fragile - nous conduit à réduire les composants en
-relations pour réduire la marge d'erreur possible et facilité les tests d’intégration.
+relations pour réduire la marge d'erreur possible et faciliter les tests d’intégration.
 
 \end{itemize}
 
@@ -309,7 +309,7 @@ Le tableau \ref{tab:status} représente la configuration que le contrôleur suit
 
 \subparagraph{Connectivité:}
 
-Les permissions citées dans le listing \ref{lst:permission_network} sont nécessaires pour s’abonner aux événement liés à la connectivité du terminal. Le \dev{NetworkReceiver}\footnote{com.tunav.tunavmedi.broadcastreceiver.NetworkReceiver} (listing \ref{lst:receiver_network}) s'occupe de notifier les intéressés, dans notre cas le contrôleur, via des \dev{SharedPreferences}.
+Les permissions citées dans le listing \ref{lst:permission_network} sont nécessaires pour s’abonner aux événements liés à la connectivité du terminal. Le \dev{NetworkReceiver}\footnote{com.tunav.tunavmedi.broadcastreceiver.NetworkReceiver} (listing \ref{lst:receiver_network}) s'occupe de notifier les intéressés, dans notre cas le contrôleur, via des \dev{SharedPreferences}.
 
 \begin{lstlisting}[language=xml, label=lst:permission_network, caption=Déclaration dans AndroidManifest des permissions d’accès à l’état des interfaces réseaux.]
 
@@ -369,7 +369,7 @@ Le \dev{ChargingReceiver}\footnote{com.tunav.tunavmedi.broadcastreceiver.Chargin
 \includegraphics[width=0.8\textwidth]{diagrams/cls_view}
 \end{figure}
 
-Le système d'exploitation \android{} rend facile le développement des applications qui tournent sur des appareils qui possèdent des formes et des tailles d’écrans différentes, une des améliorations apportées dans \android{} 3.0 Honeycomb sont les \dev{Fragment} censé décomposé les fonctionnalité et les interfaces utilisateur d'une l'application \android{} en des modules réutilisables. Notre implémentation de la Vue prend avantage de cette introduction en utilisant des \dev{Fragments} et se compose essentiellement de 4 composants:
+Le système d'exploitation \android{} rend facile le développement des applications qui tournent sur des appareils qui possèdent des formes et des tailles d’écrans différentes, une des améliorations apportées dans \android{} 3.0 Honeycomb sont les \dev{Fragments} censés décomposer les fonctionnalités et les interfaces utilisateur d'une l'application \android{} en des modules réutilisables. Notre implémentation de la Vue prend avantage de cette introduction en utilisant des \dev{Fragments} et se compose essentiellement de 4 composants:
 
 \begin{description}
 
@@ -385,7 +385,7 @@ Le système d'exploitation \android{} rend facile le développement des applicat
 
 \paragraph{Algorithme de Trie}
 
-L'or de l'affichage de la liste des patients, une opération de trie est appliquée pour faciliter la tache du docteur en mettant en valeur les cas qui requièrent le plus son attention.
+Lors de l'affichage de la liste des patients, une opération de trie est appliquée pour faciliter la tache du docteur en mettant en valeur les cas qui requièrent le plus son attention.
 L’algorithme se base sur les conditions suivantes (dans l'ordre):
 
 \begin{enumerate}

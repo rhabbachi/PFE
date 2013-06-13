@@ -39,7 +39,7 @@ La figure \ref{fig:uml_act_ui} modélise par un diagramme \gls{uml} d'états le 
 \begin{figure}
 \center
 \includegraphics[height=0.4\textheight]{sc_options}
-\caption{Capture écran de l'interface utilisateur affichée l'or de la modification de l’état du patient}
+\caption{Capture écran de l'interface utilisateur affichée lors de la modification de l’état du patient}
 \label{fig:sc_options}
 \end{figure}
 
@@ -58,9 +58,9 @@ La figure \ref{fig:seq_auth} présente le comportement de l'application pour ré
 
 \item[Acteurs:] Docteur.
 
-\item[Pré-condition:] Le docteur est déjà inscrit dans la base de données du service et son identifiant et mot de passe lui sont fournit.
+\item[Pré-condition:] Le docteur est déjà inscrit dans la base de données du service et son identifiant et mot de passe lui sont fournits.
 
-\item[Post-condition:] L'utilisateur est authentifier.
+\item[Post-condition:] L'utilisateur est authentifié.
 
 \item[Scénario nominal:]
 
@@ -74,7 +74,7 @@ La figure \ref{fig:seq_auth} présente le comportement de l'application pour ré
 
 \item L'application interpelle le service pour vérifier que la combinaison identifiant / mot de passe est correcte.
 
-\item Le service distant retourne une réponse favorable, \dev{LoginActivity} enregistre les données relative à l'utilisateur.
+\item Le service distant retourne une réponse favorable, \dev{LoginActivity} enregistre les données relatives à l'utilisateur.
 
 \item \dev{LoginActivity} invoque \dev{MainActivity}.
 
@@ -130,15 +130,15 @@ La figure \ref{fig:seq_display} présente le comportement de l'application pour 
 
 \item[Acteurs:] Docteur.
 
-\item[Pré-condition:] Le docteur s'est déjà authentifier et il se trouve sur l'interface de la liste des patients.
+\item[Pré-condition:] Le docteur s'est déjà authentifié et il se trouve sur l'interface de la liste des patients.
 
-\item[Post-condition:] Le docteur à peut visualiser le dossier médical du patient qu'il à sélectionné.
+\item[Post-condition:] Le docteur peut visualiser le dossier médical du patient qu'il à sélectionné.
 
 \item[Scénario nominal:]
 
 \begin{enumerate}
 
-\item Le docteur clic sur un patient de la liste
+\item Le docteur clique sur un patient de la liste
 
 \item \dev{PatientListFragment} détecte le clic et demande l'objet de type \dev{Patient} qui correspond au patient sélectionné par la méthode \dev{PatientAdapter.getItem()}.
 
@@ -146,7 +146,7 @@ La figure \ref{fig:seq_display} présente le comportement de l'application pour 
 
 \item \dev{PatientDisplay} affiche le dossier médical du patient.
 
-\item Le docteur peut retourné à la liste des patient par un clic en dehors de la boite de dialogue ou par le bouton (retour).
+\item Le docteur peut retourner à la liste des patients par un clic en dehors de la boite de dialogue ou par le bouton (retour).
 
 \end{enumerate}
 
@@ -167,7 +167,7 @@ La figure \ref{fig:seq_edit} présente le comportement de l'application pour ré
 
 \item[Acteurs:] Docteur.
 
-\item[Pré-condition:] Le docteur s'est déjà authentifier et il se trouve sur l'interface de la liste des patients.
+\item[Pré-condition:] Le docteur s'est déjà authentifié et il se trouve sur l'interface de la liste des patients.
 
 \item[Post-condition:] Le docteur à peut modifier le status du patient qu'il a sélectionné.
 
@@ -175,7 +175,7 @@ La figure \ref{fig:seq_edit} présente le comportement de l'application pour ré
 
 \begin{enumerate}
 
-\item Pour modifier le status d'un patient (cet patient est un cas urgent ou non) le médecin localise le patient dans la liste est fait un clic long sur son entrée.
+\item Pour modifier le status d'un patient (ce patient est un cas urgent ou non) le médecin localise le patient dans la liste est fait un clic long sur son entrée.
 
 \item Le \dev{PatientListFragment} détecte le clic long sur l'entrée du patient et demande au \dev{PatientAdapter} un objet patient à partir de sa position dans la liste à travers la méthode \dev{getItem()}.
 
@@ -183,7 +183,7 @@ La figure \ref{fig:seq_edit} présente le comportement de l'application pour ré
 
 \item La boite de dialogue \dev{PatientOptions} présente à l'utilisateur un checkbox avec deux boutons: bouton (OK) et bouton (Cancel) (figure \ref{fig:sc_options}).
 
-\item Le médecin effectue le changement selon ses souhait et clic sur le bouton (OK).\label{item:alt}
+\item Le médecin effectue le changement selon ses souhaits et clique sur le bouton (OK).\label{item:alt}
 
 \item \dev{PatientOptions} retourne à la \dev{PatientListFragment} l'objet Patient
 mis à jour ainsi que sa position dans la liste et un drapeau
@@ -199,7 +199,7 @@ mis à jour ainsi que sa position dans la liste et un drapeau
 
 \begin{itemize}
 
-\item \ref{item:alt}.a Le docteur clic sur le bouton (Cancel) au lieu du bouton (OK).
+\item \ref{item:alt}.a Le docteur clique sur le bouton (Cancel) au lieu du bouton (OK).
 \begin{enumerate}
 
 \item \dev{PatientOptions} retourne à la \dev{PatientListFragment} avec le drapeau (RESULT\_CANCELED).
@@ -228,9 +228,9 @@ La figure \ref{fig:seq_uploadpatients} présente le comportement de l'applicatio
 
 \item[Acteurs:] Docteur.
 
-\item[Pré-conditions:] Le patient mis à jour par le docteur est disponible au \dev{PatientsService}, Le terminal est connecter au service distant.
+\item[Pré-conditions:] Le patient mis à jour par le docteur est disponible au \dev{PatientsService}, Le terminal est connecté au service distant.
 
-\item[Post-conditions:] Le patient mis à jour par le docteur est transférer vers le service distant ou en cas de problème sauvegarder pour une mis à jour ultérieur.
+\item[Post-conditions:] Le patient mis à jour par le docteur est transféreré vers le service distant ou en cas de problème sauvegarder pour une mis à jour ultérieure.
 
 \end{description}
 
@@ -238,19 +238,19 @@ La figure \ref{fig:seq_uploadpatients} présente le comportement de l'applicatio
 
 \begin{enumerate}
 
-\item Le \dev{PatientsService} procède à la mise à jour de deux \dev{ArrayList}: \dev{mPatientSyncQueue} qui sert pour le fils d'attente pour les mises à jour et \dev{mPatientCache} que contient la liste des patients utilisé par notre application.
+\item Le \dev{PatientsService} procède à la mise à jour de deux \dev{ArrayList}: \dev{mPatientSyncQueue} qui sert pour le fils d'attente pour les mises à jour et \dev{mPatientCache} qui contient la liste des patients utilisé par notre application.
 
 \item Deux démarches sont exécutées en parallèle:\label{enu:par}
 
 \begin{enumerate}[label=\ref{enu:par}.\Alph*]
 
-\item Premier démarche.\label{enu:par1}
+\item Premiére démarche.\label{enu:par1}
 
 \begin{enumerate}[label=\ref{enu:par1}.\arabic*]
 
-\item \dev{PatientService} fait appel au \dev{PatientHelper} pour le transfer, en retour il reçoi le nombre des patients mis à jour.
+\item \dev{PatientService} fait appel au \dev{PatientHelper} pour le transfert, en retour il reçoit le nombre des patients mis à jour.
 
-\item Le nombre des patients reçu correspond au patients dans la file d'attente alors on vide celle çi.\label{enu:equalpatients}
+\item Le nombre des patients reçu correspond au patients dans la file d'attente alors on vide celle ci.\label{enu:equalpatients}
 
 \end{enumerate}
 
@@ -258,7 +258,7 @@ La figure \ref{fig:seq_uploadpatients} présente le comportement de l'applicatio
 
 \begin{enumerate}[label=\ref{enu:par2}.\arabic*]
 
-\item Le \dev{PatientAdapter} est notifier par les changements effectuer dans la liste des patients courante.
+\item Le \dev{PatientAdapter} est notifié par les changements effectués dans la liste des patients courante.
 
 \end{enumerate}
 
@@ -266,17 +266,17 @@ La figure \ref{fig:seq_uploadpatients} présente le comportement de l'applicatio
 
 \end{enumerate}
 
-\paragraph{Scénarios alternatives:}
+\paragraph{Scénarios alternatifs:}
 
 \begin{enumerate}[label=\ref{enu:equalpatients}.\alph*]
 
-\item Le nombre des patients mis à jour telque retourner à par \dev{PatientsHelper} est différant de celui des patients dans la file d'attente:\label{enu:alt_equalSpatients}
+\item Le nombre des patients mis à jour tel que retourné à par \dev{PatientsHelper} est différant de celui des patients dans la file d'attente:\label{enu:alt_equalSpatients}
 
 \begin{enumerate}[label=\ref{enu:alt_equalSpatients}.\arabic*]
 
-\item \dev{PatientsService} notifie le docteur de ce probléme.
+\item \dev{PatientsService} notifie le docteur de ce problème.
 
-\item Puis une autre mise à jour est configuré pour se déclanché apres un SYNC\_DELAY.
+\item Puis une autre mise à jour est configurée pour se déclencher aprés un SYNC\_DELAY.
 
 \end{enumerate}
 

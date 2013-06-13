@@ -28,15 +28,15 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
 
     static class TaskViewHolder {
         TextView patient_name;
-        TextView patient_timer;
+        TextView patient_distance;
         ImageView patient_photo;
     }
 
     private static final String tag = "PatientsAdapter";
 
+    private float OUT_OF_REACH = 100;
     private volatile ArrayList<Patient> mAllPatients = new ArrayList<Patient>();
     private volatile ArrayList<Patient> mUrgentPatients = new ArrayList<Patient>();
-
     private Context mContext = null;
     private final LayoutInflater mInflater;
     private Boolean showUrgent;
@@ -90,7 +90,7 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
                             Location rhsLocation = rhs.getPlacemark().getLocation();
                             float lhsDistance = lhsLocation.distanceTo(currentLocation);
                             float rhsDistance = rhsLocation.distanceTo(currentLocation);
-                            float diffDist = lhsDistance - rhsDistance;
+                            float diffDist = rhsDistance - lhsDistance;
                             if (diffDist > 0) {
                                 result = SUP;
                             } else if (diffDist < 0) {
@@ -164,7 +164,7 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
             assert convertView != null;
             viewHolder.patient_name = (TextView) convertView
                     .findViewById(R.id.task_item_title);
-            viewHolder.patient_timer = (TextView) convertView
+            viewHolder.patient_distance = (TextView) convertView
                     .findViewById(R.id.task_item_timer);
             viewHolder.patient_photo = (ImageView) convertView
                     .findViewById(R.id.task_item_image);
@@ -184,8 +184,14 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
 
         viewHolder.patient_name.setText(patient.getName());
 
-        viewHolder.patient_timer.setText(android.text.format.DateUtils
-                .getRelativeTimeSpanString(patient.getInterned()));
+        Location patientLocation = patient.getPlacemark().getLocation();
+        if (currentLocation != null && patientLocation != null
+                && patientLocation.distanceTo(currentLocation) < OUT_OF_REACH) {
+            float dist = patientLocation.distanceTo(currentLocation);
+            viewHolder.patient_distance.setText((int) Math.ceil(dist) + "m");
+        } else {
+            viewHolder.patient_distance.setText(null);
+        }
 
         if (patient.isUrgent()) {
             viewHolder.patient_name.setTextColor

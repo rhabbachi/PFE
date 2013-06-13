@@ -7,121 +7,92 @@
 \subsection{Architecture}
 
 \begin{frame}{Architecture Globale}
+
 \only<+>{
-   \begin{figure}
-    \centering
-    \pgfuseimage{architecture_overview} 
-    \end{figure} 
+\begin{block}{}
+    \begin{itemize}
+        \item LoginActivity
+        \item MainActivity
+    \end{itemize}
+\end{block}
 }
+
 \only<+>{
-   \begin{figure}
-    \centering
-    \pgfuseimage{architecture_overview_separation} 
-    \end{figure} 
+\begin{figure}
+\center
+\pgfuseimage{mvp}
+\caption{Modéle-View-Controller: Passive View}
+\end{figure}
 }
+
 \only<+>{
-   \begin{figure}
-    \centering
-    \pgfuseimage{architecture_overview_double} 
-    \end{figure} 
+\begin{figure}
+\center
+\pgfuseimage{cls_global}
+\caption{Diagramme de classe UML de MainActivity}
+\end{figure}
 }
-\only<+>{
-   \begin{figure}
-    \centering
-    \pgfuseimage{architecture_interfaces} 
-    \end{figure} 
-}
-\only<+>{
-   \begin{figure}
-    \centering
-    \pgfuseimage{architecture_overview_detailed} 
-    \end{figure}
-    %Speech: separation, convention de nommage, anecdote nomenclature
-}
+
 \end{frame}
 
-\begin{frame}{Interface d'Authentification}
+\section{Localisation}
+\begin{frame}{Localisation}
+
 \only<+>{
-    \begin{figure}
-        \centering
-        \pgfuseimage{architecture_overview_detailed_auth} 
-    \end{figure} 
+\begin{block}{Critéres}
+    \begin{itemize}
+        \item Provider.
+        \item Power.
+        \item Min Time.
+        \item Min Distance.
+    \end{itemize}
+\end{block}
 }
+
+\end{frame}
+
+\section{Threading}
+\begin{frame}{Threading} %FIXME
+% Consideration pour une application android.
+\only<+>{
+\begin{figure}
+\centering
+\pgfuseimage{anr}
+\end{figure}
+    \begin{itemize}
+        \item ANR (Application Not Responding).
+        \item Pas de réponse au événement d'entrée (touches et/ou taps) pendants 5 secondes ou un \dev{BroadcastReceiver} exécuter pendant plus de 10s.
+        \item  Par défaut, les apps android fonctionne dans un thread unique...
+    \end{itemize}
+    %%%SPEECH en tant que developpeur android, non selement vous
+    %%%developpez des applications, mais aussi des reflexe et des manies
+    %%%s "esque ca va block la si j'effectue une transaction ici..."
+}
+
+\only<+>{
+\begin{block}{Techniques}
+    \begin{itemize}
+        \item AsyncTask.
+        \item Handler.
+        \item ScheduledExecutorService.
+    \end{itemize}
+\end{block}
+}
+
+\end{frame}
+
+\section{Conscience de l'état du terminal}
+\begin{frame}{Conscience de l'état du terminal}
+\only<+>{
+    \begin{itemize}
+        \item Connectivité.
+        \item En charge ou pas.
+        \item Battery.
+    \end{itemize}
+}
+
 %Speech: Faudra fair attention ici, notre but n'ai pas d'assuré l'authentification, c'est le travail
 % de la class final qui implémente cette interface. L'idée ici est de passé l'information - sous entendu
 % l'identifiant et le mot de pass - à la class spécialisé dans les meilleurs conditions.
-\only<+>{
-    \begin{block}{Mechanismes d'authentification supportés}
-        \begin{itemize}
-            \item Simple (Keyring).
-            %Speech: 
-            \item SRP.
-            %Speech: Secure Remote Password Protocol
-            \item Token (à Jeton).
-            %Speech: 
-        \end{itemize}
-    \end{block}
-}
-\only<+>{
-    \begin{figure}
-        \centering
-%         \pgfuseimage{architecture-class-access}
-    \end{figure}
-}
-\end{frame}
 
-\begin{frame}{Interfaces des Taches et des Dossiers Médicaux}
-\only<+>{
-    \begin{figure}
-        \centering
-        \pgfuseimage{architecture_overview_detailed_tasks_records} 
-    \end{figure} 
-}
-
-\only<+>{
-    \begin{block}{Contents Providers}
-        \begin{itemize}
-            \item android.content.ContentProvider
-        \end{itemize}
-    \end{block}
-}
-
-\only<+>{
-    \begin{figure}
-        \centering
-%         \pgfuseimage{architecture-class-tasks}
-    \end{figure}
-}
-\end{frame}
-
-\begin{frame}{Service de Localisation}
-\only<+>{
-    \begin{figure}
-        \centering
-        \pgfuseimage{architecture_overview_detailed_location} 
-    \end{figure} 
-}
-
-\only<+>{
-    \begin{block}{IntentService}
-        \begin{itemize}
-            \item
-        \end{itemize}
-    \end{block}
-}
-\only<+>{
-    \begin{figure}
-        \centering
-%         \pgfuseimage{architecture-class-location} 
-    \end{figure}
-}
- \end{frame}
-
-\begin{frame}{Interface Utilisateurs}
-\only<+>{
-   \begin{figure}
-        \centering
-        \pgfuseimage{architecture_overview_detailed_gui} 
-    \end{figure} 
-}
 \end{frame}

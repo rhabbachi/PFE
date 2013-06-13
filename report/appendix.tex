@@ -94,25 +94,25 @@ Events injected: 300
 \label{fig:git}
 \end{figure}
 
-\en{Git}\cite{wikipedia:git} est un système de gestion de versions et un gestionnaire de code source connu pour sa rapidité. Conçu et développée initialement par \textsf{Linus Torvalds} pour le développement du \en{Kernel} \en{Linux}, Git a depuis éte adopter par plusieurs autre projets.
+\en{Git}\cite{wikipedia:git} est un système de gestion de versions et un gestionnaire de code source connu pour sa rapidité. Conçu et développée initialement par \textsf{Linus Torvalds} pour le développement du \en{Kernel} \en{Linux}, Git a depuis été adopté par plusieurs autres projets.
 
-Chaque répertoire de travail de Git est un dépôt complet avec un historique complet et des capacité de suivit de version, il est indépendant d'un accès réseau ou d'un serveur centrale.
+Chaque répertoire de travail de Git est un dépôt complet avec un historique complet et des capacités de suivi de version, il est indépendant d'un accès réseau ou d'un serveur central.
 
-Git est un logiciel libre distribuer sous les termes de la licence  \en{GNU General Public License} version 2.
+Git est un logiciel libre distribué sous les termes de la licence  \en{GNU General Public License} version 2.
 
-L'usage de Git est très simple, un des workflow simplifier serai comme suit:
+L'usage de Git est très simple, un des workflow simplifié serai comme suit:
 
 \begin{itemize}
 
 \item La branche master contient la dernière version de l'application. Malheureusement, cette version contient un bug dans le \dev{MenuItem}
 
-\item Pour éviter, pendant qu'on corrige le bug, d'altérer la version courante de  l'application de façon nuisible, on crée une branche différente ou on peut tester nos modification tranquillement (listing \ref{lst:git_branch}).
+\item Pour éviter, pendant qu'on corrige le bug, d'altérer la version courante de  l'application de façon nuisible, on crée une branche différente où on peut tester nos modifications tranquillement (listing \ref{lst:git_branch}).
 
 \item On peut passer vers la nouvelle branche crée précédemment (listing \ref{lst:git_checkout}).
 
-\item On à maintenant réussi a corrigé le bug en question, et aussi travailler un peut sur notre rapport. On peut avoir un rapport sur les fichiers modifier pendant ce processus (listing \ref{lst:git_status}).
+\item On a maintenant réussi à corriger le bug en question, et aussi travailler un peu sur le rapport. On peut avoir un rapport sur les fichiers modifiés pendant ce processus (listing \ref{lst:git_status}).
 
-\item Vérification faite, on valide nos modification pour les enregistrés dons l'historique des modifications, chaque validation est accompagné par un message détaillant les ajouts effectuées (listing \ref{lst:git_commit}).
+\item Vérification faite, on valide nos modifications pour les enregistrer dons l'historique des modifications, chaque validation est accompagné par un message détaillant les ajouts effectuées (listing \ref{lst:git_commit}).
 
 \item Après on peut appliquer nos changements dans la branche master de notre répertoire Git (listing \ref{lst:git_merge}).
 
