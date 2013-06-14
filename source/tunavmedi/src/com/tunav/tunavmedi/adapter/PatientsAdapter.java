@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tunav.tunavmedi.R;
+import com.tunav.tunavmedi.TunavMedi;
 import com.tunav.tunavmedi.dal.datatype.Patient;
 import com.tunav.tunavmedi.service.PatientsService.PatientsListener;
 
@@ -34,7 +35,6 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
 
     private static final String tag = "PatientsAdapter";
 
-    private float OUT_OF_REACH = 100;
     private volatile ArrayList<Patient> mAllPatients = new ArrayList<Patient>();
     private volatile ArrayList<Patient> mUrgentPatients = new ArrayList<Patient>();
     private Context mContext = null;
@@ -185,14 +185,17 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
         viewHolder.patient_name.setText(patient.getName());
 
         Location patientLocation = patient.getPlacemark().getLocation();
-        if (currentLocation != null && patientLocation != null
-                && patientLocation.distanceTo(currentLocation) < OUT_OF_REACH) {
-            float dist = patientLocation.distanceTo(currentLocation);
-            viewHolder.patient_distance.setText((int) Math.ceil(dist) + "m");
-        } else {
-            viewHolder.patient_distance.setText(null);
-        }
 
+        if (currentLocation != null && patientLocation != null) {
+            if (patientLocation.distanceTo(currentLocation) < TunavMedi.OUT_OF_REACH) {
+                float dist = patientLocation.distanceTo(currentLocation);
+                viewHolder.patient_distance.setText((int) Math.ceil(dist) + "m");
+            } else {
+                viewHolder.patient_distance.setText("too far");
+            }
+        } else {
+            viewHolder.patient_distance.setText("Unknown Location");
+        }
         if (patient.isUrgent()) {
             viewHolder.patient_name.setTextColor
                     (mContext.getResources().getColor(
@@ -249,7 +252,12 @@ public class PatientsAdapter extends BaseAdapter implements OnSharedPreferenceCh
                 mUrgentPatients.add(patient);
             }
         }
-        currentLocation = new Location(newLocation);
+
+        if (newLocation == null) {
+            currentLocation = null;
+        } else {
+            currentLocation = new Location(newLocation);
+        }
         sort();
     }
 }

@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import java.util.Observer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class PatientsService extends Service implements
         OnSharedPreferenceChangeListener,
@@ -48,6 +50,16 @@ public class PatientsService extends Service implements
 
     public static final String tag = "PatientsService";
 
+    private OnSharedPreferenceChangeListener devListener = new OnSharedPreferenceChangeListener() {
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals(getResources().getString(R.string.spkey_fakelocation))) {
+                devUseFakeLocation = sharedPreferences.getBoolean(key, false);
+                updateListeners();
+            }
+        }
+    };
     // This is the object that receives interactions from clients. See
     // RemoteService for a more complete example.
     private final IBinder mBinder = new SelfBinder();
@@ -72,17 +84,18 @@ public class PatientsService extends Service implements
     private volatile ArrayList<Patient> mPatientsCache = new ArrayList<Patient>();
     private volatile ArrayList<PatientsListener> mPatientsListeners = new ArrayList<PatientsService.PatientsListener>();
     private volatile Location mLocationCache;
+    private boolean devUseFakeLocation;
     private PatientsHelper mHelper = null;
     private ScheduledExecutorService mScheduler = null;
     private Future<?> mPatientsFuture = null;
-    private static final int MIN_TIME = 1000 * 60 * 15;
-    private static final int MIN_DIST = 30;
+    private static final long MIN_TIME = 1000 * 60 * 15;
+    private static final float MIN_DIST = 5;
     private boolean isLogged;
     private boolean batteryOk;
     private boolean powerConnected;
     private boolean isConnected;
-
-    private static final int LOCATION_THRESHOLD = 50;
+    private final int LOCATION_BATTERY_THRESHOLD = 50;
+    private final long LOCATION_TOO_OLD = TimeUnit.HOURS.toNanos(1);
 
     public void addPatientsListener(PatientsListener listener) {
         if (listener != null && !mPatientsListeners.contains(listener)) {
@@ -92,7 +105,7 @@ public class PatientsService extends Service implements
     }
 
     private int getPowerCriteria() {
-        if (BatteryReceiver.getBatteryLevel(this) > LOCATION_THRESHOLD) {
+        if (BatteryReceiver.getBatteryLevel(this) > LOCATION_BATTERY_THRESHOLD) {
             return Criteria.POWER_HIGH;
         } else {
             return Criteria.POWER_LOW;
@@ -133,7 +146,19 @@ public class PatientsService extends Service implements
         syncPatients(mHelper.pullPatients());
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mLocationCache = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location LastKnown = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        Log.i(tag, "Last known location elapsed time: " + LastKnown.getElapsedRealtimeNanos());
+        Log.i(tag, "Current elapsed time: " + SystemClock.elapsedRealtimeNanos());
+        Log.i(tag,
+                "Difference: "
+                        + (SystemClock.elapsedRealtimeNanos() - LastKnown.getElapsedRealtimeNanos()));
+        Log.i(tag, "Max difference : " + LOCATION_TOO_OLD);
+
+        if (SystemClock.elapsedRealtimeNanos() - LastKnown.getElapsedRealtimeNanos() <= LOCATION_TOO_OLD) {
+            Log.i(tag, "Last Known Location Accepted!");
+            mLocationCache = new Location(LastKnown);
+        }
 
         SharedPreferences spUser = getSharedPreferences(getResources()
                 .getString(R.string.sp_user), MODE_PRIVATE);
@@ -145,6 +170,13 @@ public class PatientsService extends Service implements
         SharedPreferences spStatus = getSharedPreferences(
                 getResources().getString(R.string.sp_status), MODE_PRIVATE);
         spStatus.registerOnSharedPreferenceChangeListener(this);
+
+        SharedPreferences spDev = getSharedPreferences(getResources().getString(R.string.sp_dev),
+                MODE_PRIVATE);
+        spDev.registerOnSharedPreferenceChangeListener(devListener);
+
+        devUseFakeLocation = spDev.getBoolean(getResources()
+                .getString(R.string.spkey_fakelocation), false);
 
         batteryOk = BatteryReceiver.getBatteryOk(this);
         powerConnected = ChargingReceiver.isCharging(this);
@@ -181,20 +213,19 @@ public class PatientsService extends Service implements
         Log.i(tag, location.toString());
 
         mLocationCache = new Location(location);
+        updateListeners();
     }
 
     @Override
     public void onProviderDisabled(String provider) {
         Log.v(tag, "onProviderDisabled()");
-        // TODO Auto-generated method stub
-
+        onConfigure();
     }
 
     @Override
     public void onProviderEnabled(String provider) {
         Log.v(tag, "onProviderEnabled()");
-        // TODO Auto-generated method stub
-
+        onConfigure();
     }
 
     @Override
@@ -223,6 +254,7 @@ public class PatientsService extends Service implements
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
         Log.v(tag, "onStatusChanged()");
+        Log.i(tag, provider + "status" + status);
         // TODO Auto-generated method stub
 
     }
@@ -305,7 +337,8 @@ public class PatientsService extends Service implements
     public void updateListeners() {
         Log.v(tag, "updateListeners()");
         for (PatientsListener listener : mPatientsListeners) {
-            listener.updateDataSet(mPatientsCache, mLocationCache);
+            listener.updateDataSet(mPatientsCache, devUseFakeLocation ? TunavMedi.devFakeLocation
+                    : mLocationCache);
         }
     }
 }

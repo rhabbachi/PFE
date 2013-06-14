@@ -58,31 +58,59 @@ public class PlacemarksContract implements BaseColumns {
             "room1.png", "room2.png", "room3.png", "room4.png", "room5.png"
     };
 
-    public static final double[] DUMMIES_LONGITUDE = {
-            10.19544666, 10.19544418, 10.19605976, 10.19560026, 10.19551413
+    public static final double[][] DUMMIES_LOCATIONS_HOME = {
+            {
+                    36.83911707, 10.19574105, 0
+            },
+            {
+                    36.83919173, 10.1957513, 0
+            },
+            {
+                    36.83807939, 10.19529068, 0
+            },
+            {
+                    36.83892536, 10.19512774, 0
+            },
+            {
+                    36.8385787, 10.19697297, 0
+            }
     };
 
-    public static final double[] DUMMIES_LATITUDE = {
-            36.8378091, 36.83809698, 36.83864308, 36.83805462, 36.83887902
+    public static final double[][] DUMMIES_LOCATIONS_TUNAV = {
+            {
+                    36.89558244, 10.18611391, 0
+            },
+            {
+                    36.89518587, 10.18502959, 0
+            },
+            {
+                    36.89560655, 10.1866753, 0
+            },
+            {
+                    36.89564166, 10.18693307, 0
+            },
+            {
+                    36.89502938, 10.18655187, 0
+            }
     };
 
-    public static final double[] DUMMIES_ALTITUDE = {
-            0, 0, 0, 0, 0
-    };
+    public static double[][] getDummyLocations() {
+        return DUMMIES_LOCATIONS_TUNAV;
+    }
 
     public static final String getInsert(int i) {
         String sql = "INSERT INTO "
                 + TABLE_NAME
                 + String.format(
                         "(%s, %s, %s, %s, %s)"//
-                        , KEY_NAME, KEY_MAP, KEY_LONGITUDE, KEY_LATITUDE, KEY_ALTITUDE)
+                        , KEY_NAME, KEY_MAP, KEY_LATITUDE, KEY_LONGITUDE, KEY_ALTITUDE)
                 + String.format(
                         " VALUES ('%s', '%s', %f, %f, %f);"//
                         , DUMMIES_NAME[i]
                         , DUMMIES_MAP[i]
-                        , DUMMIES_LONGITUDE[i]
-                        , DUMMIES_LATITUDE[i]
-                        , DUMMIES_ALTITUDE[i]);
+                        , getDummyLocations()[i][0]
+                        , getDummyLocations()[i][1]
+                        , getDummyLocations()[i][2]);
         return sql;
     }
 }

@@ -18,4 +18,8 @@
     <string name="spkey_name">NAME</string>
     <string name="spkey_photo">PHOTO</string>
 
+    <!-- dev mode -->
+    <string name="sp_dev">DEVELOPER_MODE</string>
+    <string name="spkey_fakelocation">FAKELOCATION</string>
+
 </resources>

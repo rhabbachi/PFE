@@ -4,8 +4,6 @@
     <string name="app_name">TunavMedi (Demo)</string>
     <string name="action_settings_title">Settings</string>
     <string name="branding_name">Your Name Here</string>
-    <string name="action_logout_title">Logout</string>
-    <string name="action_about_title">About</string>
     <string name="tab_all_text">All Tasks</string>
     <string name="tab_mail_text">Mails</string>
     <string name="tab_contacts_text">Contacts</string>

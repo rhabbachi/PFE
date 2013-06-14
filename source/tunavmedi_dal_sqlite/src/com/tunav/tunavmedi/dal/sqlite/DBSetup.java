@@ -32,7 +32,7 @@ public class DBSetup extends SQLiteOpenHelper {
             db.execSQL(PlacemarksContract.SQL_CREATE_TABLE);
             Log.v(tag, "executing:" + PlacemarksContract.SQL_CREATE_INDEX_ID);
             db.execSQL(PlacemarksContract.SQL_CREATE_INDEX_ID);
-            for (int i = 0; i < PlacemarksContract.DUMMIES_LATITUDE.length; i++) {
+            for (int i = 0; i < PlacemarksContract.DUMMIES_LOCATIONS_HOME.length; i++) {
                 String sql = PlacemarksContract.getInsert(i);
                 Log.v(tag, "executing: " + sql);
                 db.execSQL(sql);

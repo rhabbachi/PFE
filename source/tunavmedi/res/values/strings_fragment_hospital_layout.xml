@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="longitude_text">Longitude</string>
+    <string name="latitude_text">Latitude</string>
+    <string name="checkbox_enable_fakelocation_text">Enable Fake Location</string>
+    <string name="altitude_text">Altitude</string>
+    
+</resources>

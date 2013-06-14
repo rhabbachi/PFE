@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/longitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4" >
+
+        <TextView
+            android:id="@+id/textview_logitude_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/longitude_text" />
+
+        <SeekBar
+            android:id="@+id/seekbar_longitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/latitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4" >
+
+        <TextView
+            android:id="@+id/textview_latitude_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/latitude_text" />
+
+        <SeekBar
+            android:id="@+id/seekbar_latitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+<!--     <LinearLayout -->
+<!--         android:id="@+id/altitude" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:orientation="horizontal" -->
+<!--         android:weightSum="4" > -->
+
+<!--         <TextView -->
+<!--             android:id="@+id/textview_altitude_text" -->
+<!--             android:layout_width="wrap_content" -->
+<!--             android:layout_height="wrap_content" -->
+<!--             android:layout_gravity="center" -->
+<!--             android:text="@string/altitude_text" /> -->
+
+<!--         <SeekBar -->
+<!--             android:id="@+id/seekbar_altitude" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="wrap_content" /> -->
+<!--     </LinearLayout> -->
+
+    <CheckBox
+        android:id="@+id/checkbox_enbale_fakelocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/checkbox_enable_fakelocation_text" />
+
+</LinearLayout>

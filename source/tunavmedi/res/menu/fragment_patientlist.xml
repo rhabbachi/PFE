@@ -13,4 +13,10 @@
             android:title="@string/patientlist_menu_location_on"/>
     </group>
 
+    <item
+        android:id="@+id/menu_item_fake_location"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/menu_item_fake_location_title"/>
+
 </menu>

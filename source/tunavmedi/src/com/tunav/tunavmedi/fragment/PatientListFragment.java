@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -24,10 +25,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.tunav.tunavmedi.R;
+import com.tunav.tunavmedi.TunavMedi;
 import com.tunav.tunavmedi.adapter.PatientsAdapter;
 import com.tunav.tunavmedi.dal.datatype.Patient;
 import com.tunav.tunavmedi.fragment.dialog.PatientDisplay;
 import com.tunav.tunavmedi.fragment.dialog.PatientOptions;
+import com.tunav.tunavmedi.fragment.dialog.RandomFakeLocation;
 import com.tunav.tunavmedi.service.PatientsService;
 import com.tunav.tunavmedi.service.PatientsService.SelfBinder;
 
@@ -39,9 +42,11 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
     private PatientsService mPatientService;
 
     public static final int REQUESTCODE_TASKDISPLAY = 0;
-    public static final int REQUESTCODE_TASKOPTIONS = 1;
+    public static final int RC_TASKOPTIONS = 1;
 
     private boolean isBound = false;
+
+    public static final int RC_FAKE_LOCATION = 2;
 
     private void doBindService() {
         Log.v(tag, "doBindService()");
@@ -87,7 +92,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         Log.v(tag, "onActivityResult()");
 
         switch (requestCode) {
-            case REQUESTCODE_TASKOPTIONS:
+            case RC_TASKOPTIONS:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         int position = data.getIntExtra(PatientOptions.BDL_POSITION, -1);
@@ -102,7 +107,36 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
                                 mPatientService.syncPatient(toUpdate);
                             }
                         }
+                }
+                break;
+
+            case RC_FAKE_LOCATION:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        // double fakeAltitude = data
+                        // .getDoubleExtra(
+                        // HospitalLayoutDialog.BDL_FAKE_ALTITUDE,
+                        // TunavMedi.getDebugLocation()[TunavMedi.LOCATION_NOMINAL][TunavMedi.LOCATION_ALTITUDE]);
+                        double fakeLatitude = data
+                                .getDoubleExtra(
+                                        RandomFakeLocation.BDL_FAKE_LATITUDE,
+                                        TunavMedi.getDebugLocation()[TunavMedi.LOCATION_NOMINAL][TunavMedi.LOCATION_LATITUDE]);
+                        double fakeLongitude = data
+                                .getDoubleExtra(
+                                        RandomFakeLocation.BDL_FAKE_LONGITUDE,
+                                        TunavMedi.getDebugLocation()[TunavMedi.LOCATION_NOMINAL][TunavMedi.LOCATION_LONGITUDE]);
+
+                        if (TunavMedi.devFakeLocation == null) {
+                            TunavMedi.devFakeLocation = new Location("FAKE_PROVIDER");
+                        }
+                        // TunavMedi.devFakeLocation.setAltitude(fakeAltitude);
+                        TunavMedi.devFakeLocation.setLatitude(fakeLatitude);
+                        TunavMedi.devFakeLocation.setLongitude(fakeLongitude);
+
+                        mPatientService.updateListeners();
                         break;
+                    case Activity.RESULT_CANCELED:
+                        mPatientService.updateListeners();
                     default:
                         break;
                 }
@@ -149,14 +183,23 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         SharedPreferences sharedPref = getActivity().getSharedPreferences(spPatientList,
                 Context.MODE_PRIVATE);
 
-        MenuItem item = menu.findItem(R.id.patientlist_menu_show);
+        MenuItem itemShowAll = menu.findItem(R.id.patientlist_menu_show);
 
         boolean showAll = sharedPref.getBoolean(spkeyShowAll, true);
 
         if (showAll) {
-            item.setTitle(R.string.patientlist_menu_show_all_on);
+            itemShowAll.setTitle(R.string.patientlist_menu_show_all_on);
         } else {
-            item.setTitle(R.string.patientlist_menu_show_all_off);
+            itemShowAll.setTitle(R.string.patientlist_menu_show_all_off);
+        }
+
+        boolean locationSort = sharedPref.getBoolean(spkeySortLocation, true);
+        MenuItem itemLocationSort = menu.findItem(R.id.patientlist_menu_location);
+
+        if (locationSort) {
+            itemLocationSort.setTitle(R.string.patientlist_menu_location_on);
+        } else {
+            itemLocationSort.setTitle(R.string.patientlist_menu_location_off);
         }
     }
 
@@ -212,7 +255,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         }
         ft.addToBackStack(null);
 
-        // Create and show the dialog.
+        // Create and show the dialog.);
         assert patient != null;
         PatientDisplay patientDisplay = PatientDisplay.newInstance(patient.getName(),
                 patient.getPhoto(),
@@ -242,7 +285,7 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         PatientOptions taskOptions = PatientOptions.newInstance(position, patient.getName(),
                 patient.getPhoto(),
                 patient.isUrgent());
-        taskOptions.setTargetFragment(this, REQUESTCODE_TASKOPTIONS);
+        taskOptions.setTargetFragment(this, RC_TASKOPTIONS);
         ft.add(taskOptions, PatientOptions.tag);
         ft.commit();
         return true;
@@ -259,6 +302,35 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
                         Context.MODE_PRIVATE).edit();
 
         switch (item.getItemId()) {
+            case R.id.menu_item_fake_location:
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                // clean up prev dialog fragments.
+                Fragment prevHospitalMap = getFragmentManager().findFragmentByTag(
+                        RandomFakeLocation.tag);
+                if (prevHospitalMap != null) {
+                    ft.remove(prevHospitalMap);
+                }
+                ft.addToBackStack(null);
+
+                // Create and show the dialog.
+
+                RandomFakeLocation hospitalLayoutDialog;
+
+                if (TunavMedi.devFakeLocation == null) {
+                    hospitalLayoutDialog = RandomFakeLocation.newInstance();
+                } else {
+                    hospitalLayoutDialog = RandomFakeLocation.newInstance(
+                            TunavMedi.devFakeLocation.getLatitude(),
+                            TunavMedi.devFakeLocation.getLongitude(),
+                            TunavMedi.devFakeLocation.getAltitude());
+                }
+                hospitalLayoutDialog.setTargetFragment(this, RC_FAKE_LOCATION);
+                ft.add(hospitalLayoutDialog, RandomFakeLocation.tag);
+                ft.commit();
+                // FragmentManager manager = getActivity().getFragmentManager();
+                // manager.popBackStack();
+                return true;
+
             case R.id.patientlist_menu_show:
                 spEditor.putBoolean(
                         getActivity().getResources().getString(
@@ -302,6 +374,14 @@ public class PatientListFragment extends ListFragment implements ServiceConnecti
         doUnBindService();
         setListAdapter(null);
         super.onPause();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        if (!TunavMedi.DEVELOPER_MODE) {
+            MenuItem fakeLocation = menu.findItem(R.id.menu_item_fake_location);
+            fakeLocation.setEnabled(false);
+        }
     }
 
     // Called at the start of the active lifetime.

@@ -83,7 +83,8 @@ public class MainActivity extends Activity {
         @Override
         public void onTabReselected(Tab tab, FragmentTransaction ft) {
             Log.v(tag, "onTabReselected()");
-            Toast.makeText(mActivity, "Reselected!", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(mActivity, "Reselected!",
+            // Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -135,7 +136,6 @@ public class MainActivity extends Activity {
                     default:
                         break;
                 }
-                break;
 
             default:
                 break;
@@ -260,6 +260,7 @@ public class MainActivity extends Activity {
         Log.v(tag, "onOptionItemSelected()");
         Log.i(tag, "item selected: " + item.toString());
         switch (item.getItemId()) {
+
             case R.id.action_about:
                 about(this);
                 return true;
@@ -342,7 +343,6 @@ public class MainActivity extends Activity {
         // Persist all edits or state changes
         // as after this call the process is likely to be killed.
         Log.v(tag, "onStop()");
-
         super.onStop();
     }
 
