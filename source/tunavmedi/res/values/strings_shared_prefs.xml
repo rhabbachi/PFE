@@ -18,6 +18,10 @@
     <string name="spkey_name">NAME</string>
     <string name="spkey_photo">PHOTO</string>
 
+    <!--  ModuleLoader -->
+    <string name="sp_moduleLoader">MODULE_LOADER</string>
+    <string name="spkey_initialized">INITIALIZED</string>
+    
     <!-- dev mode -->
     <string name="sp_dev">DEVELOPER_MODE</string>
     <string name="spkey_fakelocation">FAKELOCATION</string>

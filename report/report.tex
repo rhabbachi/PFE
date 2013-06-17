@@ -75,7 +75,7 @@ a4paper,
 \fancyhead[L]{\textbf{ENIG}}
 \fancyhead[R]{\textbf{TUNAV}}
 \fancyfoot[L]{Riadh \textsc{Habbachi}}
-\fancyfoot[R]{\thepage{} / \pageref{LastPage}}
+\fancyfoot[R]{\thepage{}}
 
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
@@ -89,25 +89,34 @@ a4paper,
 \usepackage{enumitem}
 
 \begin{document}
+\pagenumbering{roman}
 
 \includepdf[pages=-]{page_de_garde_pfe_2013.pdf}
 
-\input{dedicace}
+\input{remerciment}
 
 \tableofcontents
-\listoftables
+
 \listoffigures
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\listfigurename}
+
+\listoftables
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\listtablename}
+
 
 \glsaddall
 \printglossary[type=\acronymtype,title={Liste d'Abréviations},toctitle={Liste d'Abréviations}]
 
+\cleardoublepage
+\pagenumbering{arabic}
+
 \input{1_intro}
-\input{2_cadre_general}
-\input{3_etat_art}
+\input{3_etude_projet}
 \input{4_travail_1}
 \input{4_travail_2}
 \input{4_travail_3}
-% \input{4_travail_4}
 \input{5_conclusion}
 \input{appendix}
 
